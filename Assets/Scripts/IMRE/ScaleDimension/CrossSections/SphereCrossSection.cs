@@ -21,7 +21,7 @@
             gameObject.AddComponent<UnityEngine.MeshFilter>();
             GetComponent<UnityEngine.MeshRenderer>().material = sphereMaterial;
             gameObject.GetComponent<UnityEngine.MeshRenderer>().enabled = debugRenderer;
-            IMRE.HandWaver.ScaleDimension.RenderMethods.RenderSphere(radius, new Unity.Mathematics.float3(0f, 0f, 0f),
+            IMRE.ScaleDimension.RenderMethods.RenderSphere(radius, new Unity.Mathematics.float3(0f, 0f, 0f),
                 sphereRenderer, n);
 
             UnityEngine.GameObject child = new UnityEngine.GameObject();

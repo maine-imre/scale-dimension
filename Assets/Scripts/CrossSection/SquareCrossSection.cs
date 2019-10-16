@@ -74,7 +74,7 @@ namespace IMRE.HandWaver.ScaleStudy
                 
                 if(!ab_star.Equals(bc_star))
                 {
-                    if ()
+                    if (true)
                     {
                         
                     }

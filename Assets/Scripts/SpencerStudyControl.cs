@@ -1,9 +1,5 @@
 ﻿using Enumerable = System.Linq.Enumerable;
 
-#if Photon
-using Photon.Pun;
-#endif
-
 namespace IMRE.HandWaver.ScaleStudy
 {
     /// <summary>
@@ -87,31 +83,28 @@ namespace IMRE.HandWaver.ScaleStudy
 
                 percent = percentFolded;
 
-                IMRE.EmbodiedUserInput.TouchSlider.ins.SliderValue = percent;
+                //IMRE.EmbodiedUserInput.TouchSlider.ins.SliderValue = percent;
             }
             else if (foldOverride)
             {
                 percent = foldOverrideValue;
-
-                IMRE.EmbodiedUserInput.TouchSlider.ins.SliderValue = percent;
+                //currenlty no touch slider.
+                //IMRE.EmbodiedUserInput.TouchSlider.ins.SliderValue = percent;
             }
             // if the participant is directly manipulating the slider
             else
             {
-                percent = IMRE.EmbodiedUserInput.TouchSlider.ins.SliderValue;
+                //TODO fix this.
+                percent = 0f;
+                //currently no touch slider.
+                //percent = IMRE.EmbodiedUserInput.TouchSlider.ins.SliderValue;
             }
-#if Photon
-	   		 photonView.RPC("setPercentFolded", PhotonTargets.All, percent);
-#else
+
             setPercentFolded(percent);
-#endif
         }
 
         public System.Collections.Generic.List<UnityEngine.GameObject> _sliderInputs;
 
-#if Photon
-        [PunRPC]
-#endif
         private void setPercentFolded(float percent)
         {
             foldOverrideValue = percent;

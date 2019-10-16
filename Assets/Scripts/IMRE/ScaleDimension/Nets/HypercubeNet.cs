@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using IMRE.Math;
 using UnityEngine;
 
 namespace IMRE.ScaleDimension.Nets
@@ -7,7 +8,7 @@ namespace IMRE.ScaleDimension.Nets
     /// Net of hypercube for scale and dimension study
     /// Projected to 3D
     /// </summary>
-    public class HypercubeNet : AbstractHigherDimSolid, IMRE.HandWaver.ScaleStudy.ISliderInput
+    public class HypercubeNet : AbstractHigherDimSolid, ISliderInput
     {
         //basic vector4 values for computations
         private static readonly Unity.Mathematics.float4 up = new UnityEngine.Vector4(0, 1, 0, 0);

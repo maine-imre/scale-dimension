@@ -1,4 +1,4 @@
-﻿namespace IMRE.ScaleDimension.Nets
+﻿namespace IMRE.ScaleDimension
 {
     public interface ISliderInput
     {

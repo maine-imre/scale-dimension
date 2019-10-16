@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using IMRE.Math;
+using UnityEngine;
 
 namespace IMRE.ScaleDimension.Nets
 {
     /// <summary>
     /// Net of five cell for scale and dimension study.
     /// </summary>
-    public class fiveCellNet : AbstractHigherDimSolid, IMRE.HandWaver.ScaleStudy.ISliderInput
+    public class fiveCellNet : AbstractHigherDimSolid, ISliderInput
     {
         public static Unity.Mathematics.float4 offset = new Unity.Mathematics.float4(2f, 2f, 2f, 2f);
 

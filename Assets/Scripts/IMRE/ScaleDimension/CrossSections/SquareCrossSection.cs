@@ -75,6 +75,7 @@ namespace IMRE.ScaleDimension.CrossSections
 
                 if (!ab_star.Equals(bc_star))
                 {
+                    //TODO camden fill in case where edge is the intersection
                     if (true)
                     {
                     }

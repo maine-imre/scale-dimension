@@ -15,20 +15,26 @@ namespace IMRE.ScaleDimension.CrossSections
         public void crossSectTri(float3 point, float3 direction, Vector3[] vertices, LineRenderer crossSectionRenderer)
         {
             //Vertices are organized in clockwise manner starting from top
+            //top vertex
             float3 a = vertices[0];
+            //bottom right
             float3 b = vertices[1];
+            //bottom left
             float3 c = vertices[2];
 
             float3 lineDirection = direction - point;
 
+            //intermediate calculations 
             float3 ac_hat = (c - a) / Vector3.Magnitude(c - a);
             float3 ab_hat = (b - a) / Vector3.Magnitude(b - a);
             float3 bc_hat = (c - b) / Vector3.Magnitude(c - b);
 
+            //points of intersection on each line segment
             float3 ac_star = intersectLines(point, lineDirection, a, ac_hat);
             float3 ab_star = intersectLines(point, lineDirection, a, ab_hat);
             float3 bc_star = intersectLines(point, lineDirection, b, bc_hat);
 
+            //boolean values for if intersection hits only a vertex of the triangle
             bool ac_star_isEndpoint;
             ac_star_isEndpoint = ac_star.Equals(a) || ac_star.Equals(c);
             bool ab_star_isEndpoint;
@@ -36,7 +42,7 @@ namespace IMRE.ScaleDimension.CrossSections
             bool bc_star_isEndpoint;
             bc_star_isEndpoint = bc_star.Equals(c) || bc_star.Equals(c);
 
-            //correct Vec3 arithmetic to float3
+            //booleans for if intersection hits somewhere on the segments
             bool ac_star_onSegment = (Vector3.Magnitude(ac_star - a) > Vector3.Magnitude(c - a) ||
                                       Vector3.Magnitude(ac_star - c) > Vector3.Magnitude(c - a));
             bool ab_star_onSegment = (Vector3.Magnitude(ab_star - a) > Vector3.Magnitude(b - a) ||
@@ -44,6 +50,7 @@ namespace IMRE.ScaleDimension.CrossSections
             bool bc_star_onSegment = (Vector3.Magnitude(bc_star - b) > Vector3.Magnitude(c - b) ||
                                       Vector3.Magnitude(bc_star - c) > Vector3.Magnitude(c - b));
 
+            //track how many vertices the intersection hits
             int endpointCount = 0;
             if (ac_star_isEndpoint)
                 endpointCount++;
@@ -59,46 +66,50 @@ namespace IMRE.ScaleDimension.CrossSections
                 Debug.Log("Line does not intersect with any of triangle sides.");
             }
 
-            //intersection is a side of the triangle
+            //intersection is a segment (edge) of the triangle
+            //the concept for choosing the right points of the cross section is the same for each of these subcases
             else if (endpointCount >= 2 &&
                      (!ab_star.Equals(ac_star) || !ab_star.Equals(bc_star) || !ac_star.Equals(bc_star)))
             {
                 crossSectionRenderer.enabled = true;
-
+                //ab_star and ac_star both do not equal a
                 if (!ab_star.Equals(ac_star))
                 {
-                    if (intersectLines(point, direction, a, ab_star).Equals(point) ||
-                        intersectLines(point, direction, a, ab_star).Equals(point))
+                    //find out which case is trivial and use the other two vertices; if it is trivial the intersection will just be the value passed in to the function
+                    //a is trivial
+                    if (intersectLines(point, lineDirection, a, ab_star).Equals(point) ||
+                        intersectLines(point, lineDirection, a, ac_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, b);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, direction, b, ab_star).Equals(point))
+                    //b is trivial
+                    else if (intersectLines(point, lineDirection, b, ab_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, direction, c, ac_star).Equals(point))
+                    //c is trivial
+                    else if (intersectLines(point, lineDirection, c, ac_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, b);
                     }
                 }
-
                 else if (!ab_star.Equals(bc_star))
                 {
-                    if (intersectLines(point, direction, a, ab_star).Equals(point))
+                    if (intersectLines(point, lineDirection, a, ab_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, b);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, direction, b, ab_star).Equals(point) ||
-                             intersectLines(point, direction, b, bc_star).Equals(point))
+                    else if (intersectLines(point, lineDirection, b, ab_star).Equals(point) ||
+                             intersectLines(point, lineDirection, b, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, direction, c, bc_star).Equals(point))
+                    else if (intersectLines(point, lineDirection, c, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, b);
@@ -107,18 +118,18 @@ namespace IMRE.ScaleDimension.CrossSections
 
                 if (!ac_star.Equals(bc_star))
                 {
-                    if (intersectLines(point, direction, a, ac_star).Equals(point))
+                    if (intersectLines(point, lineDirection, a, ac_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, b);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, direction, c, ac_star).Equals(point) ||
-                             intersectLines(point, direction, c, bc_star).Equals(point))
+                    else if (intersectLines(point, lineDirection, c, ac_star).Equals(point) ||
+                             intersectLines(point, lineDirection, c, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, b);
                     }
-                    else if (intersectLines(point, direction, b, bc_star).Equals(point))
+                    else if (intersectLines(point, lineDirection, b, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, c);
@@ -126,12 +137,13 @@ namespace IMRE.ScaleDimension.CrossSections
                 }
             }
 
-            //intersection hits one vertex on triangle and one segment
+            //intersection hits one vertex on triangle and one of the segments
             else if (endpointCount == 2 && (ab_star.Equals(ac_star)) || ab_star.Equals(bc_star) ||
                      ac_star.Equals(bc_star))
             {
                 crossSectionRenderer.enabled = true;
 
+                //if point of intersection hits a, it must hit bc_star; same logic applies to remaining subcases
                 if (ab_star.Equals(ac_star))
                 {
                     crossSectionRenderer.SetPosition(0, a);
@@ -148,11 +160,12 @@ namespace IMRE.ScaleDimension.CrossSections
                     crossSectionRenderer.SetPosition(1, ab_star);
                 }
             }
-            //intersection hits two segments of triangle
+            //intersection hits somewhere on two different segments of triangle; last remaining case
             else
             {
                 crossSectionRenderer.enabled = true;
 
+                //find out which two segments are intersected and use their calculated intersections
                 if (ac_star_onSegment && ab_star_onSegment)
                 {
                     crossSectionRenderer.SetPosition(0, ac_star);
@@ -204,7 +217,7 @@ namespace IMRE.ScaleDimension.CrossSections
             }
             else
             {
-                Debug.Log("Intersection failed");
+                Debug.Log
                 return new float3(0, 0, 0);
             }
         }

@@ -40,7 +40,7 @@ namespace IMRE.ScaleDimension.CrossSections
             bool ab_star_isEndpoint = ab_star.Equals(a) || ab_star.Equals(b);
             bool bc_star_isEndpoint = bc_star.Equals(b) || bc_star.Equals(c);
             bool cd_star_isEndpoint = cd_star.Equals(c) || cd_star.Equals(d);
-            bool ad_star_isEndpoint = da_star.Equals(d) || da_star.Equals(a);
+            bool da_star_isEndpoint = da_star.Equals(d) || da_star.Equals(a);
 
             bool ab_star_onSegment = Vector3.Magnitude(ab_star - a) > Vector3.Magnitude(b - a) ||
                                      Vector3.Magnitude(ab_star - b) > Vector3.Magnitude(b - a);
@@ -58,7 +58,7 @@ namespace IMRE.ScaleDimension.CrossSections
                 endpointCount++;
             if (cd_star_isEndpoint)
                 endpointCount++;
-            if (ad_star_isEndpoint)
+            if (da_star_isEndpoint)
                 endpointCount++;
 
             if (!(ab_star_onSegment || bc_star_onSegment || cd_star_onSegment || da_star_onSegment))
@@ -73,13 +73,21 @@ namespace IMRE.ScaleDimension.CrossSections
             {
                 crossSectionRenderer.enabled = true;
 
-                if (!ab_star.Equals(bc_star))
+                //Case where edge is the intersection
+
+                //drop the two trivial cases, keep the two non-trivial cases.
+                Vector3 result0 = ab_star;
+                Vector3 result1 = cd_star;
+                if (result0.Equals(point) || result1.Equals(point))
                 {
-                    //TODO camden fill in case where edge is the intersection
-                    if (true)
-                    {
-                    }
+                    //I know that the trivial cases are on opposite sides, because this is the case where the edge is the intersection.
+                    //there are only two pairs of opposite sides.  if it's not one, it's the other.
+                    result0 = bc_star;
+                    result1 = da_star;
                 }
+
+                crossSectionRenderer.SetPosition(0, result0);
+                crossSectionRenderer.SetPosition(1, result1);
             }
 
             if (endpointCount == 2 && (ab_star.Equals(bc_star) || bc_star.Equals(cd_star) || cd_star.Equals(da_star)))

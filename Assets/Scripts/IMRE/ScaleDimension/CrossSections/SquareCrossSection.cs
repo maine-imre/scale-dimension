@@ -228,8 +228,8 @@ namespace IMRE.ScaleDimension.CrossSections
             }
             else
             {
-                Debug.Log("Intersection failed");
-                return new float3(0, 0, 0);
+                Debug.LogWarning("Invalid Solution to Intersection of Lines");
+                return new float3(Mathf.Infinity,Mathf.Infinity,Mathf.Infinity);
             }
         }
 

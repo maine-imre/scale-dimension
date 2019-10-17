@@ -1,4 +1,5 @@
-﻿using Enumerable = System.Linq.Enumerable;
+﻿using UnityEngine;
+using Enumerable = System.Linq.Enumerable;
 
 namespace IMRE.ScaleDimension
 {
@@ -20,8 +21,8 @@ namespace IMRE.ScaleDimension
         public static float lineRendererWidth = 0.001f;
         private System.Collections.Generic.List<I4D_Perspective> _dPerspectives;
 
-        public System.Collections.Generic.List<UnityEngine.GameObject> _sliderInputs;
-        private System.Collections.Generic.List<UnityEngine.GameObject> allFigures;
+        private System.Collections.Generic.List<UnityEngine.GameObject> _sliderInputs;
+        public System.Collections.Generic.List<UnityEngine.GameObject> allFigures;
 
         /// <summary>
         ///     An override that automatically animates the slider and the folding process
@@ -29,7 +30,6 @@ namespace IMRE.ScaleDimension
         public bool animateFold;
 
         public bool animateUp = true;
-        public System.Collections.Generic.List<UnityEngine.GameObject> crossSections;
 
         /// <summary>
         ///     A boolean for debugging that allows the fold to be manipulated in the editor at play
@@ -41,23 +41,12 @@ namespace IMRE.ScaleDimension
         /// </summary>
         [UnityEngine.RangeAttribute(0, 1)] public float foldOverrideValue;
 
-        private int itemId = -1;
-        public System.Collections.Generic.List<UnityEngine.GameObject> measures;
-
-        public System.Collections.Generic.List<UnityEngine.GameObject> nets;
-
+       
         public UnityEngine.GameObject pointPrefab;
 
         private void Start()
         {
             ins = this;
-            if (allFigures == null)
-            {
-                allFigures = new System.Collections.Generic.List<UnityEngine.GameObject>();
-                allFigures.AddRange(nets);
-                allFigures.AddRange(crossSections);
-                allFigures.AddRange(measures);
-            }
 
             //_sliderInputs = allFigures.OfType<ISliderInput>().ToList();
             _sliderInputs =
@@ -67,8 +56,6 @@ namespace IMRE.ScaleDimension
 
         private void Update()
         {
-            setActiveObjects();
-
             float percent;
             //if the override bool is set, use in editor override value
 
@@ -124,39 +111,6 @@ namespace IMRE.ScaleDimension
                         si.GetComponent<ISliderInput>().slider = percent;
                 }
             );
-        }
-
-        private void setActiveObjects()
-        {
-            if (allFigures == null)
-            {
-                allFigures = new System.Collections.Generic.List<UnityEngine.GameObject>();
-                allFigures.AddRange(nets);
-                allFigures.AddRange(crossSections);
-                allFigures.AddRange(measures);
-            }
-
-            if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F1)) allFigures.ForEach(net => net.SetActive(false));
-
-            if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F2))
-            {
-                allFigures.ForEach(net => net.SetActive(false));
-                itemId--;
-                itemId = itemId % allFigures.Count;
-                allFigures[itemId].SetActive(true);
-            }
-
-            if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F3))
-            {
-                allFigures.ForEach(net => net.SetActive(false));
-                itemId++;
-                if (itemId < allFigures.Count)
-                    allFigures[itemId].SetActive(true);
-                else
-                    UnityEngine.Application.Quit();
-            }
-
-            if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F5)) animateFold = !animateFold;
         }
     }
 }

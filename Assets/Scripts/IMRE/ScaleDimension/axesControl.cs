@@ -21,8 +21,13 @@ public class axesControl : MonoBehaviour
             return new float4[] {right, up, forward, wforward};
         }
     }
-    
-    
+
+    private float scale
+    {
+        get { return scaleCondition ? .1f : 10f; }
+    }
+
+    public bool scaleCondition;
 
     // Start is called before the first frame update
     void Start()
@@ -43,8 +48,8 @@ public class axesControl : MonoBehaviour
         float3 zero = projectPosition(float4.zero);
         for(int i = 0; i < 4; i++)
         {
-            axes[i].SetPosition(0,zero);
-            axes[i].SetPosition(1,projectPosition(endpoints[i]));
+            axes[i].SetPosition(0,scale*zero);
+            axes[i].SetPosition(1,scale*projectPosition(endpoints[i]));
         }
     }
 

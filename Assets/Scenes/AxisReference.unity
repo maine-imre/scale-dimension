@@ -291,10 +291,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 695321946}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 280f04d36390fae5699c0dc8fcfb5940, type: 3}
+  m_Script: {fileID: 11500000, guid: 4bb8e544eccfa88bf9e65030f1a3143d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: []
+  axes:
+  - {fileID: 671453775}
+  - {fileID: 1841068256}
+  - {fileID: 1438911005}
+  - {fileID: 2005742011}
+  axesColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.9291744, g: 1, b: 0, a: 0}
+  - {r: 0.0138732195, g: 1, b: 0, a: 0}
+  - {r: 0, g: 0.10851765, b: 1, a: 0}
+  viewingRadius: 0
+  eyePosition:
+    x: 0
+    y: 1
+    z: 0
+    w: 1
+  Vangle: 60
+  method: 1
+  inputBasis:
+    c0:
+      x: 1
+      y: 0
+      z: 0
+      w: 0
+    c1:
+      x: 0
+      y: 1
+      z: 0
+      w: 0
+    c2:
+      x: 0
+      y: 0
+      z: 1
+      w: 0
 --- !u!1 &1229481451
 GameObject:
   m_ObjectHideFlags: 0

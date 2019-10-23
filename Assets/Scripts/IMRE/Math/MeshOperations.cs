@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace IMRE.HandWaver.ScaleDimension
 {
     public static class MeshOperations
@@ -5,8 +7,8 @@ namespace IMRE.HandWaver.ScaleDimension
         public static UnityEngine.Mesh projectedMesh(Unity.Mathematics.float4[] verts, int[] tris)
         {
             UnityEngine.Mesh mesh = new UnityEngine.Mesh();
-            UnityEngine.Vector3[] verticies = new UnityEngine.Vector3[1];
-            int[] triangles = new int[1];
+            System.Collections.Generic.List<UnityEngine.Vector3> verticies = new System.Collections.Generic.List<UnityEngine.Vector3>();
+            System.Collections.Generic.List<int> triangles = new System.Collections.Generic.List<int>();
             //Vector2[] uvs;
             //Vector3[] normals;
             //iterate through each face of the mesh
@@ -20,26 +22,35 @@ namespace IMRE.HandWaver.ScaleDimension
                 projectTriangle(inputVerts, IMRE.ScaleDimension.SpencerStudyControl.ins.subdiv,
                     out tmpVerts, out tmpTris, IMRE.ScaleDimension.SpencerStudyControl.ins.projectionMethod);
                 //stich faces into common mesh
-                if (i == 0)
-                {
-                    verticies = new UnityEngine.Vector3[tmpVerts.Length * (tris.Length / 3)];
-                    triangles = new int[tmpTris.Length * (tris.Length / 3)];
-                    //normals = new Vector3[(tmpTris.Length/3)*(tris.Length/3)];
-                }
 
-                tmpVerts.CopyTo(verticies, i * tmpVerts.Length);
-                tmpTris.CopyTo(verticies, i * tmpTris.Length);
+                tmpTris.ToList().ForEach(idx => triangles.Add(idx + verticies.Count));
+                tmpVerts.ToList().ForEach(vert => verticies.Add(vert));
+
                 //TODO handle uvs;
                 //TODO handle normals;
             }
 
-            mesh.vertices = verticies;
-            mesh.triangles = triangles;
+            mesh.vertices = verticies.ToArray();
+            mesh.triangles = triangles.ToArray();
             //mesh.uv = uvs;
             //mesh.normals = normals;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
+        }
+        
+        /// <summary>
+        /// Typecasting
+        /// </summary>
+        /// <param name="vList"></param>
+        /// <param name="dest"></param>
+        /// <param name="start"></param>
+        private static void CastArrayCopyTo(this Unity.Mathematics.float3[] vList, ref UnityEngine.Vector3[] dest, int start)
+        {
+            for (int i = 0; i < vList.Length; i++)
+            {
+                dest[i + start] = vList[i];
+            }
         }
 
         public static void projectTriangle(Unity.Mathematics.float4[] verts, int subdiv,
@@ -49,26 +60,13 @@ namespace IMRE.HandWaver.ScaleDimension
             //break triangle into smaller triangles
             //use a modified Sierpiński triangle as a division mechanic (partition every triangle into 3 triangles each round). Then there are always 3^n triangles
             Unity.Mathematics.float4[] tmp_verts = verts;
-            out_verts = new Unity.Mathematics.float3[tmp_verts.Length];
             out_tris = new[] {0, 1, 2};
             for (int i = 0; i < subdiv; i++) subdivideVerts(tmp_verts, out_tris, out tmp_verts, out out_tris);
+            out_verts = new Unity.Mathematics.float3[tmp_verts.Length];
 
             for (int i = 0; i < tmp_verts.Length; i++)
             {
-                switch (method)
-                {
-                    case IMRE.Math.ProjectionMethod.stereographic:
-                        out_verts[i] = stereographicProjection(tmp_verts[i]);
-                        break;
-                    case IMRE.Math.ProjectionMethod.projective:
-                        out_verts[i] = projectiveProjection(tmp_verts[i]);
-                        break;
-                    case IMRE.Math.ProjectionMethod.parallel:
-                        out_verts[i] = parallelProjection(tmp_verts[i]);
-                        break;
-                    default:
-                        throw new System.ArgumentOutOfRangeException(nameof(method), method, null);
-                }
+                out_verts[i] = projectPosition(tmp_verts[i]);
             }
         }
 
@@ -82,18 +80,20 @@ namespace IMRE.HandWaver.ScaleDimension
             {
                 Unity.Mathematics.float4[] tmpVerts;
                 int[] tempTris;
-                subdivideVerts(verts.GetRange(0, verts.Length / 2 - 1), tris, out tmpVerts, out tempTris);
+                subdivideVerts(verts.GetRange(0, verts.Length / 2), tris, out tmpVerts, out tempTris);
                 tmpVerts.CopyToRange(ref out_verts, 0, verts.Length - 1);
                 tempTris.CopyTo(out_tris, 0);
 
                 //symmetric case
-                subdivideVerts(verts.GetRange(verts.Length / 2, verts.Length - 1),
+                subdivideVerts(verts.GetRange(verts.Length / 2, verts.Length),
                     tris, out tmpVerts, out tempTris);
                 tmpVerts.CopyToRange(ref out_verts, verts.Length, verts.Length * 2 - 1);
                 tempTris.CopyTo(out_tris, tempTris.Length);
             }
             else
             {
+                if(verts.Length != 3)
+                UnityEngine.Debug.LogWarning("ARRAY LENGTH SHOULD BE 3" + verts.Length);
                 //assume that verts.Length = 3
                 out_verts[0] = verts[0];
                 out_verts[1] = verts[1];
@@ -126,11 +126,11 @@ namespace IMRE.HandWaver.ScaleDimension
             //then inflate each vert to the edge of the sphere and keep that value.
             pos = pos / IMRE.Math.Operations.magnitude(pos);
 
-            //turn to make north pole float4.right
-            IMRE.Math.HigherDimensionsMaths.rotate(pos, new UnityEngine.Vector4(1, 0, 0, 0),
-                IMRE.ScaleDimension.SpencerStudyControl.ins.NorthPole,
-                IMRE.Math.Operations.Angle(new UnityEngine.Vector4(1, 0, 0, 0),
-                    IMRE.ScaleDimension.SpencerStudyControl.ins.NorthPole));
+            //TODO turn to make north pole float4.right
+//            IMRE.Math.HigherDimensionsMaths.rotate(pos, new UnityEngine.Vector4(1, 0, 0, 0),
+//                IMRE.ScaleDimension.SpencerStudyControl.ins.NorthPole,
+//                IMRE.Math.Operations.Angle(new UnityEngine.Vector4(1, 0, 0, 0),
+//                    IMRE.ScaleDimension.SpencerStudyControl.ins.NorthPole));
 
             //take stereographic projection in a given direction.
             //this assumes that the north pole is in the (x) direction.
@@ -147,7 +147,7 @@ namespace IMRE.HandWaver.ScaleDimension
             return result;
         }
 
-        private static Unity.Mathematics.float3 parallelProjection(Unity.Mathematics.float4 tmpVert)
+        public static Unity.Mathematics.float3 parallelProjection(Unity.Mathematics.float4 tmpVert)
         {
             Unity.Mathematics.float4 planePos = IMRE.ScaleDimension.SpencerStudyControl.ins.hyperPlane;
             Unity.Mathematics.float4 planeNormal = IMRE.ScaleDimension.SpencerStudyControl.ins.hyperPlaneNormal;
@@ -161,7 +161,7 @@ namespace IMRE.HandWaver.ScaleDimension
                 UnityEngine.Vector4.Dot(pos, basis.c1), UnityEngine.Vector4.Dot(pos, basis.c2));
         }
 
-        private static Unity.Mathematics.float3 projectiveProjection(Unity.Mathematics.float4 tmpVert)
+        public static Unity.Mathematics.float3 projectiveProjection(Unity.Mathematics.float4 tmpVert)
         {
             Unity.Mathematics.float4 origin = IMRE.ScaleDimension.SpencerStudyControl.ins.origin;
             Unity.Mathematics.float4 planePos = IMRE.ScaleDimension.SpencerStudyControl.ins.hyperPlane;
@@ -180,6 +180,22 @@ namespace IMRE.HandWaver.ScaleDimension
             Unity.Mathematics.float4x3 basis = IMRE.Math.HigherDimensionsMaths.basisSystem(planeNormal);
             return new Unity.Mathematics.float3(UnityEngine.Vector4.Dot(pos, basis.c0),
                 UnityEngine.Vector4.Dot(pos, basis.c1), UnityEngine.Vector4.Dot(pos, basis.c2));
+        }
+
+        public static Unity.Mathematics.float3 projectPosition(Unity.Mathematics.float4 pos)
+        {
+            switch (IMRE.ScaleDimension.SpencerStudyControl.ins.projectionMethod)
+            {
+                case IMRE.Math.ProjectionMethod.stereographic:
+                    return stereographicProjection(pos);
+                case IMRE.Math.ProjectionMethod.projective:
+                    return projectiveProjection(pos);
+                case IMRE.Math.ProjectionMethod.parallel:
+                    return parallelProjection(pos);
+                default:
+                    UnityEngine.Debug.LogWarning("Failed to Project, Method not Implemented");
+                    return Unity.Mathematics.float3.zero;
+            }
         }
     }
 }

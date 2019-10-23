@@ -267,7 +267,7 @@
                     idx = i;
             }
 
-            if (determinants[idx] == 0) UnityEngine.Debug.LogError("No non-zero determinant");
+            if (determinants[idx] != 0) UnityEngine.Debug.LogError("No non-zero determinant");
 
             //choose bottom row of det matrix to generate next basis vector
             Unity.Mathematics.float4 bottomRow;
@@ -287,8 +287,8 @@
             //returns the basis that spans the hyperplane orthogonal to v
             Unity.Mathematics.float4x3 basis = new Unity.Mathematics.float4x3(basis0, basis1, basis2);
             //check that v is orthogonal.
-            v.projectDownDimension(basis, ProjectionMethod.parallel, null, null, null);
-            if (v.x != 0 || v.y != 0 || v.z != 0) UnityEngine.Debug.LogError("Basis is not orthogonal to v");
+//            v.projectDownDimension(basis, ProjectionMethod.parallel, null, null, null);
+//            if (v.x != 0 || v.y != 0 || v.z != 0) UnityEngine.Debug.LogError("Basis is not orthogonal to v");
 
             return basis;
         }

@@ -7,17 +7,7 @@
     public System.Collections.Generic.List<UnityEngine.LineRenderer> axes;
     public System.Collections.Generic.List<UnityEngine.Color> axesColors;
 
-    public Unity.Mathematics.float4 eyePosition;
-
-    public Unity.Mathematics.float4x3 inputBasis;
-
-    public IMRE.Math.ProjectionMethod method;
-
     public bool scaleCondition;
-
-    public float Vangle;
-
-    public float viewingRadius;
 
     private static Unity.Mathematics.float4[] endpoints => new[] {right, up, forward, wforward};
 
@@ -39,17 +29,11 @@
     // Update is called once per frame
     private void Update()
     {
-        Unity.Mathematics.float3 zero = projectPosition(Unity.Mathematics.float4.zero);
+        Unity.Mathematics.float3 zero = IMRE.HandWaver.ScaleDimension.MeshOperations.projectPosition(Unity.Mathematics.float4.zero);
         for (int i = 0; i < 4; i++)
         {
             axes[i].SetPosition(0, scale * zero);
-            axes[i].SetPosition(1, scale * projectPosition(endpoints[i]));
+            axes[i].SetPosition(1, scale * IMRE.HandWaver.ScaleDimension.MeshOperations.projectPosition(endpoints[i]));
         }
-    }
-
-    private Unity.Mathematics.float3 projectPosition(Unity.Mathematics.float4 pos)
-    {
-        return IMRE.Math.HigherDimensionsMaths.projectDownDimension(pos, inputBasis, method, Vangle, eyePosition,
-            viewingRadius);
     }
 }

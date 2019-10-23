@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &129607235
 Transform:
   m_ObjectHideFlags: 0
@@ -297,17 +297,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allFigures:
-  - {fileID: 2095154245}
-  - {fileID: 129607234}
-  - {fileID: 238493597}
-  - {fileID: 1339456170}
-  - {fileID: 1324381050}
   - {fileID: 984079431}
   animateFold: 0
   animateUp: 1
   foldOverride: 0
   foldOverrideValue: 0
+  hyperPlane:
+    x: 0
+    y: 0
+    z: 0
+    w: 0
+  NorthPole:
+    x: 1
+    y: 0
+    z: 0
+    w: 0
+  obliquePlaneNormal:
+    x: 0
+    y: 0
+    z: 0
+    w: 0
+  origin:
+    x: 0
+    y: 0
+    z: 0
+    w: 0
+  orthographicOverride: 0
   pointPrefab: {fileID: 0}
+  projectionMethod: 2
+  subdiv: 3
 --- !u!1 &238493597
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &238493598
 Transform:
   m_ObjectHideFlags: 0
@@ -445,30 +463,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2482741b1b6464c8b06602c08faec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  method: 1
-  viewingAngle: 0
-  viewingBasis:
-    c0:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-    c1:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-    c2:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-  viewingPosition:
-    x: 0
-    y: 0
-    z: 0
-    w: 0
-  viewingRadius: 0
   sliderOverride: 0
 --- !u!23 &984079434
 MeshRenderer:
@@ -534,7 +528,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1324381051
 Transform:
   m_ObjectHideFlags: 0
@@ -561,30 +555,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 973af7c7331b1a647b7b47f20ecefd5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  method: 1
-  viewingAngle: 0
-  viewingBasis:
-    c0:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-    c1:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-    c2:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-  viewingPosition:
-    x: 0
-    y: 0
-    z: 0
-    w: 0
-  viewingRadius: 0
   sliderOverride: 0
 --- !u!23 &1324381053
 MeshRenderer:
@@ -650,7 +620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1339456171
 Transform:
   m_ObjectHideFlags: 0
@@ -824,7 +794,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2095154246
 Transform:
   m_ObjectHideFlags: 0

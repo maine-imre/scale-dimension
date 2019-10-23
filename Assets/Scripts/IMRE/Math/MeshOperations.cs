@@ -87,8 +87,13 @@ namespace IMRE.HandWaver.ScaleDimension
                 //symmetric case
                 subdivideVerts(verts.GetRange(verts.Length / 2, verts.Length),
                     tris, out tmpVerts, out tempTris);
+                UnityEngine.Debug.Log(out_tris.Length + " : " + tmpVerts.Length);
                 tmpVerts.CopyToRange(ref out_verts, verts.Length, verts.Length * 2 - 1);
-                tempTris.CopyTo(out_tris, tempTris.Length);
+                //tempTris.CopyTo(out_tris, tempTris.Length);
+                for (int i = 0; i < tmpVerts.Length; i++)
+                {
+                    out_tris[i + tempTris.Length] = tempTris[i];
+                }
             }
             else
             {

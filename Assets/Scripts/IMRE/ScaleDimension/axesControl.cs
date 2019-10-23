@@ -1,38 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using IMRE.Math;
-using Unity.Mathematics;
-using UnityEngine;
-using UnityEngine.Networking;
-
-public class axesControl : MonoBehaviour
+﻿public class axesControl : UnityEngine.MonoBehaviour
 {
-    public List<LineRenderer> axes;
-    private static float4 right = new float4(1f,0f,0f,0f);
-    private static float4 up = new float4(0f, 1f, 0f, 0f);
-    private static float4 forward = new float4(0f,0f,1f,0f);
-    private static float4 wforward = new float4(0f,0f,0f,1f);
-    public List<Color> axesColors;
+    private static readonly Unity.Mathematics.float4 right = new Unity.Mathematics.float4(1f, 0f, 0f, 0f);
+    private static readonly Unity.Mathematics.float4 up = new Unity.Mathematics.float4(0f, 1f, 0f, 0f);
+    private static readonly Unity.Mathematics.float4 forward = new Unity.Mathematics.float4(0f, 0f, 1f, 0f);
+    private static readonly Unity.Mathematics.float4 wforward = new Unity.Mathematics.float4(0f, 0f, 0f, 1f);
+    public System.Collections.Generic.List<UnityEngine.LineRenderer> axes;
+    public System.Collections.Generic.List<UnityEngine.Color> axesColors;
 
-    private static float4[] endpoints
-    {
-        get
-        {
-            return new float4[] {right, up, forward, wforward};
-        }
-    }
+    public Unity.Mathematics.float4 eyePosition;
 
-    private float scale
-    {
-        get { return scaleCondition ? .1f : 10f; }
-    }
+    public Unity.Mathematics.float4x3 inputBasis;
+
+    public IMRE.Math.ProjectionMethod method;
 
     public bool scaleCondition;
 
+    public float Vangle;
+
+    public float viewingRadius;
+
+    private static Unity.Mathematics.float4[] endpoints => new[] {right, up, forward, wforward};
+
+    private float scale => scaleCondition ? .1f : 10f;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             axes[i].startWidth = 0.001f;
             axes[i].endWidth = 0.001f;
@@ -43,29 +37,19 @@ public class axesControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        float3 zero = projectPosition(float4.zero);
-        for(int i = 0; i < 4; i++)
+        Unity.Mathematics.float3 zero = projectPosition(Unity.Mathematics.float4.zero);
+        for (int i = 0; i < 4; i++)
         {
-            axes[i].SetPosition(0,scale*zero);
-            axes[i].SetPosition(1,scale*projectPosition(endpoints[i]));
+            axes[i].SetPosition(0, scale * zero);
+            axes[i].SetPosition(1, scale * projectPosition(endpoints[i]));
         }
     }
 
-    private float3 projectPosition(float4 pos)
+    private Unity.Mathematics.float3 projectPosition(Unity.Mathematics.float4 pos)
     {
-        return IMRE.Math.HigherDimensionsMaths.projectDownDimension(pos,
-            inputBasis, method, Vangle, eyePosition, viewingRadius);
+        return IMRE.Math.HigherDimensionsMaths.projectDownDimension(pos, inputBasis, method, Vangle, eyePosition,
+            viewingRadius);
     }
-
-    public float viewingRadius;
-
-    public float4 eyePosition;
-
-    public float Vangle;
-
-    public ProjectionMethod method;
-
-    public float4x3 inputBasis;
 }

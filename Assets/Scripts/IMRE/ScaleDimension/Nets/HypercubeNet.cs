@@ -1,14 +1,10 @@
-﻿using System.Linq;
-using IMRE.Math;
-using UnityEngine;
-
-namespace IMRE.ScaleDimension.Nets
+﻿namespace IMRE.ScaleDimension.Nets
 {
     /// <summary>
-    /// Net of hypercube for scale and dimension study
-    /// Projected to 3D
+    ///     Net of hypercube for scale and dimension study
+    ///     Projected to 3D
     /// </summary>
-    public class HypercubeNet : AbstractHigherDimSolid, ISliderInput
+    public class HypercubeNet : IMRE.Math.AbstractHigherDimSolid, ISliderInput
     {
         //basic vector4 values for computations
         private static readonly Unity.Mathematics.float4 up = new UnityEngine.Vector4(0, 1, 0, 0);
@@ -57,11 +53,11 @@ namespace IMRE.ScaleDimension.Nets
                     for (int i = 0; i < numFaces; i++)
                     {
                         _uvs[6 * i] = uv0;
-                        _uvs[(6 * i) + 1] = uv1;
-                        _uvs[(6 * i) + 2] = uv2;
-                        _uvs[(6 * i) + 3] = uv0;
-                        _uvs[(6 * i) + 4] = uv1;
-                        _uvs[(6 * i) + 5] = uv2;
+                        _uvs[6 * i + 1] = uv1;
+                        _uvs[6 * i + 2] = uv2;
+                        _uvs[6 * i + 3] = uv0;
+                        _uvs[6 * i + 4] = uv1;
+                        _uvs[6 * i + 5] = uv2;
                     }
                 }
 
@@ -70,7 +66,6 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public override int[] triangles
         {
@@ -82,75 +77,75 @@ namespace IMRE.ScaleDimension.Nets
                 for (int i = 0; i < numFaces; i++)
                 {
                     _triangles[6 * i] = faces[4 * i];
-                    _triangles[(6 * i) + 1] = faces[(4 * i) + 1];
-                    _triangles[(6 * i) + 2] = faces[(4 * i) + 2];
-                    _triangles[(6 * i) + 3] = faces[4 * i];
-                    _triangles[(6 * i) + 4] = faces[(4 * i) + 2];
-                    _triangles[(6 * i) + 5] = faces[(4 * i) + 3];
+                    _triangles[6 * i + 1] = faces[4 * i + 1];
+                    _triangles[6 * i + 2] = faces[4 * i + 2];
+                    _triangles[6 * i + 3] = faces[4 * i];
+                    _triangles[6 * i + 4] = faces[4 * i + 2];
+                    _triangles[6 * i + 5] = faces[4 * i + 3];
                 }
 
                 return _triangles;
             }
         }
 
-        public override Color[] colors
+        public override UnityEngine.Color[] colors
         {
             get
             {
-                Color[] result = new Color[4 * 9];
+                UnityEngine.Color[] result = new UnityEngine.Color[4 * 9];
 
                 //core cube (does not fold)
-                result[0] = Color.cyan;
-                result[1] = Color.cyan;
-                result[2] = Color.cyan;
-                result[3] = Color.cyan;
+                result[0] = UnityEngine.Color.cyan;
+                result[1] = UnityEngine.Color.cyan;
+                result[2] = UnityEngine.Color.cyan;
+                result[3] = UnityEngine.Color.cyan;
 
-                result[4] = Color.cyan;
-                result[5] = Color.cyan;
-                result[6] = Color.cyan;
-                result[7] = Color.cyan;
+                result[4] = UnityEngine.Color.cyan;
+                result[5] = UnityEngine.Color.cyan;
+                result[6] = UnityEngine.Color.cyan;
+                result[7] = UnityEngine.Color.cyan;
 
                 //above up face.            
-                result[8] = Color.magenta;
-                result[9] = Color.magenta;
-                result[10] = Color.magenta;
-                result[11] = Color.magenta;
+                result[8] = UnityEngine.Color.magenta;
+                result[9] = UnityEngine.Color.magenta;
+                result[10] = UnityEngine.Color.magenta;
+                result[11] = UnityEngine.Color.magenta;
 
                 //below down face
-                result[12] = Color.red;
-                result[13] = Color.red;
-                result[14] = Color.red;
-                result[15] = Color.red;
+                result[12] = UnityEngine.Color.red;
+                result[13] = UnityEngine.Color.red;
+                result[14] = UnityEngine.Color.red;
+                result[15] = UnityEngine.Color.red;
 
                 //right of right face;
-                result[16] = Color.yellow;
-                result[17] = Color.yellow;
-                result[18] = Color.yellow;
-                result[19] = Color.yellow;
+                result[16] = UnityEngine.Color.yellow;
+                result[17] = UnityEngine.Color.yellow;
+                result[18] = UnityEngine.Color.yellow;
+                result[19] = UnityEngine.Color.yellow;
 
                 //left of left face
-                result[20] = Color.green;
-                result[21] = Color.green;
-                result[22] = Color.green;
-                result[23] = Color.green;
+                result[20] = UnityEngine.Color.green;
+                result[21] = UnityEngine.Color.green;
+                result[22] = UnityEngine.Color.green;
+                result[23] = UnityEngine.Color.green;
 
                 //forward of forward face.
-                result[24] = Color.white;
-                result[25] = Color.white;
-                result[26] = Color.white;
-                result[27] = Color.white;
+                result[24] = UnityEngine.Color.white;
+                result[25] = UnityEngine.Color.white;
+                result[26] = UnityEngine.Color.white;
+                result[27] = UnityEngine.Color.white;
 
                 //back of back face.
-                result[28] = Color.blue;
-                result[29] = Color.blue;
-                result[30] = Color.blue;
-                result[31] = Color.blue;
+                result[28] = UnityEngine.Color.blue;
+                result[29] = UnityEngine.Color.blue;
+                result[30] = UnityEngine.Color.blue;
+                result[31] = UnityEngine.Color.blue;
 
                 //down of double down.
-                result[32] = Color.grey;
-                result[33] = Color.grey;
-                result[34] = Color.grey;
-                result[35] = Color.grey;
+                result[32] = UnityEngine.Color.grey;
+                result[33] = UnityEngine.Color.grey;
+                result[34] = UnityEngine.Color.grey;
+                result[35] = UnityEngine.Color.grey;
 
                 return result;
             }
@@ -163,17 +158,17 @@ namespace IMRE.ScaleDimension.Nets
                 //8 cubes for hypercube
                 if (_faces == null)
                 {
-                    int[] result = new int[24 + (20 * 8)];
+                    int[] result = new int[24 + 20 * 8];
                     //main cube
                     cubeFaces(0, 1, 2, 3, 4, 5, 6, 7).CopyTo(result, 0); //core
                     //other cubes
-                    cubeFacesNoTop(0, 1, 2, 3, 8, 9, 10, 11).CopyTo(result, 24 + (20 * 1)); //up
-                    cubeFacesNoTop(0, 1, 2, 3, 12, 13, 14, 15).CopyTo(result, 24 + (20 * 2)); //down
-                    cubeFacesNoTop(32, 33, 34, 35, 12, 13, 14, 15).CopyTo(result, 24 + (20 * 3)); //down of down
-                    cubeFacesNoTop(0, 3, 7, 4, 16, 17, 18, 19).CopyTo(result, 24 + (20 * 4)); //right
-                    cubeFacesNoTop(1, 2, 6, 5, 20, 21, 22, 23).CopyTo(result, 24 + (20 * 5)); //left
-                    cubeFacesNoTop(0, 1, 5, 4, 24, 25, 26, 27).CopyTo(result, 24 + (20 * 6)); //forward
-                    cubeFacesNoTop(2, 3, 7, 6, 28, 29, 30, 31).CopyTo(result, 24 + (20 * 7)); //back
+                    cubeFacesNoTop(0, 1, 2, 3, 8, 9, 10, 11).CopyTo(result, 24 + 20 * 1); //up
+                    cubeFacesNoTop(0, 1, 2, 3, 12, 13, 14, 15).CopyTo(result, 24 + 20 * 2); //down
+                    cubeFacesNoTop(32, 33, 34, 35, 12, 13, 14, 15).CopyTo(result, 24 + 20 * 3); //down of down
+                    cubeFacesNoTop(0, 3, 7, 4, 16, 17, 18, 19).CopyTo(result, 24 + 20 * 4); //right
+                    cubeFacesNoTop(1, 2, 6, 5, 20, 21, 22, 23).CopyTo(result, 24 + 20 * 5); //left
+                    cubeFacesNoTop(0, 1, 5, 4, 24, 25, 26, 27).CopyTo(result, 24 + 20 * 6); //forward
+                    cubeFacesNoTop(2, 3, 7, 6, 28, 29, 30, 31).CopyTo(result, 24 + 20 * 7); //back
                     _faces = result;
                 }
 
@@ -192,7 +187,7 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// configure vertices of each cube based around core cube
+        ///     configure vertices of each cube based around core cube
         /// </summary>
         /// <param name="degreeFolded"></param>
         /// <returns></returns>
@@ -253,10 +248,7 @@ namespace IMRE.ScaleDimension.Nets
             result[34] = result[14] + IMRE.Math.Operations.rotate(down, wForward, 2f * degreeFolded);
             result[35] = result[15] + IMRE.Math.Operations.rotate(down, wForward, 2f * degreeFolded);
 
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] += offset;
-            }
+            for (int i = 0; i < result.Length; i++) result[i] += offset;
 
             return result;
         }

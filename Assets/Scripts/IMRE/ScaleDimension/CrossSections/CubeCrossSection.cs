@@ -1,11 +1,9 @@
-﻿using Unity.Mathematics;
-using UnityEngine;
-
-namespace IMRE.ScaleDimension.CrossSections
+﻿namespace IMRE.ScaleDimension.CrossSections
 {
-    public class CubeCrossSection : MonoBehaviour
+    public class CubeCrossSection : UnityEngine.MonoBehaviour
     {
-        public void crossSectCube(float3 point, float3 direction, Vector3[] vertices)
+        public void crossSectCube(Unity.Mathematics.float3 point, Unity.Mathematics.float3 direction,
+            UnityEngine.Vector3[] vertices)
         {
         }
     }

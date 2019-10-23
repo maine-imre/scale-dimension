@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace IMRE.Math
+﻿namespace IMRE.Math
 {
     [UnityEngine.RequireComponent(typeof(UnityEngine.MeshFilter))]
     [UnityEngine.RequireComponent(typeof(UnityEngine.MeshRenderer))]
@@ -22,7 +20,6 @@ namespace IMRE.Math
         public float viewingRadius;
 
         /// <summary>
-        /// 
         /// </summary>
         internal Unity.Mathematics.float3[] ProjectedVertices
         {
@@ -55,7 +52,7 @@ namespace IMRE.Math
 
         public abstract UnityEngine.Vector2[] uvs { get; }
         public abstract int[] triangles { get; }
-        public abstract Color[] colors { get; }
+        public abstract UnityEngine.Color[] colors { get; }
 
         private void Start()
         {

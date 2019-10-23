@@ -1,7 +1,7 @@
 ﻿namespace IMRE.ScaleDimension.CrossSections
 {
     /// <summary>
-    /// cross section of hypersphere and hyperplane, resulting in a sphere with varying size
+    ///     cross section of hypersphere and hyperplane, resulting in a sphere with varying size
     /// </summary>
     public class HyperSphereCrossSection : UnityEngine.MonoBehaviour, ISliderInput
     {
@@ -11,10 +11,10 @@
             set
             {
                 //using solution from here:  https://math.stackexchange.com/questions/1159613/would-the-cross-section-of-a-hypersphere-be-a-sphere
-                float sliderval = -1 + (2 * value);
+                float sliderval = -1 + 2 * value;
 
-                IMRE.ScaleDimension.RenderMethods.RenderSphere(
-                    UnityEngine.Mathf.Sqrt((radius * radius) - (sliderval * sliderval)),
+                RenderMethods.RenderSphere(
+                    UnityEngine.Mathf.Sqrt(radius * radius - sliderval * sliderval),
                     new Unity.Mathematics.float3(0f, 0f, 0f), crossSectionRenderer, n);
             }
         }

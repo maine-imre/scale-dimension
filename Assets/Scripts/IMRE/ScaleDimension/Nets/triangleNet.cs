@@ -1,9 +1,9 @@
 ﻿namespace IMRE.ScaleDimension.Nets
 {
     /// <summary>
-    /// A net of a triangle that folds into a triangle.
-    /// Used in study of scale and dimension
-    /// not integrated with kernel.
+    ///     A net of a triangle that folds into a triangle.
+    ///     Used in study of scale and dimension
+    ///     not integrated with kernel.
     /// </summary>
     public class triangleNet : net2D
     {
@@ -24,7 +24,7 @@
         }
 
         /// <summary>
-        /// fold outer two line segments up around stationary middle line segment by angle t
+        ///     fold outer two line segments up around stationary middle line segment by angle t
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
@@ -37,10 +37,10 @@
             result[2] = UnityEngine.Vector3.zero;
             result[1] = UnityEngine.Vector3.right;
             //rotate vertex by t or -t around (0, 1, 0) with appropriate vector manipulation to connect triangle
-            result[0] = result[1] + (UnityEngine.Quaternion.AngleAxis(t, UnityEngine.Vector3.up) *
-                                     UnityEngine.Vector3.right);
-            result[3] = result[2] + (UnityEngine.Quaternion.AngleAxis(-t, UnityEngine.Vector3.up) *
-                                     UnityEngine.Vector3.left);
+            result[0] = result[1] + UnityEngine.Quaternion.AngleAxis(t, UnityEngine.Vector3.up) *
+                        UnityEngine.Vector3.right;
+            result[3] = result[2] + UnityEngine.Quaternion.AngleAxis(-t, UnityEngine.Vector3.up) *
+                        UnityEngine.Vector3.left;
 
             if (percentFolded == 1)
             {

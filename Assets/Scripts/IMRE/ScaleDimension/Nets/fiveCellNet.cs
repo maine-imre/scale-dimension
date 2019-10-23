@@ -1,12 +1,9 @@
-﻿using IMRE.Math;
-using UnityEngine;
-
-namespace IMRE.ScaleDimension.Nets
+﻿namespace IMRE.ScaleDimension.Nets
 {
     /// <summary>
-    /// Net of five cell for scale and dimension study.
+    ///     Net of five cell for scale and dimension study.
     /// </summary>
-    public class fiveCellNet : AbstractHigherDimSolid, ISliderInput
+    public class fiveCellNet : IMRE.Math.AbstractHigherDimSolid, ISliderInput
     {
         public static Unity.Mathematics.float4 offset = new Unity.Mathematics.float4(2f, 2f, 2f, 2f);
 
@@ -63,7 +60,7 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// vertex values for triangles of each tetrahedron
+        ///     vertex values for triangles of each tetrahedron
         /// </summary>
         public override int[] triangles =>
             new[]
@@ -99,26 +96,26 @@ namespace IMRE.ScaleDimension.Nets
                 3, 1, 7
             };
 
-        public override Color[] colors
+        public override UnityEngine.Color[] colors
         {
             get
             {
-                Color[] result = new Color[8];
+                UnityEngine.Color[] result = new UnityEngine.Color[8];
 
                 //core tetrahedron
-                result[0] = Color.white;
-                result[1] = Color.white;
-                result[2] = Color.white;
-                result[3] = Color.white;
+                result[0] = UnityEngine.Color.white;
+                result[1] = UnityEngine.Color.white;
+                result[2] = UnityEngine.Color.white;
+                result[3] = UnityEngine.Color.white;
 
                 //apex of tetrahedron for each additional tetrahedron(from faces of first)
-                result[4] = Color.red;
+                result[4] = UnityEngine.Color.red;
 
-                result[5] = Color.green;
+                result[5] = UnityEngine.Color.green;
 
-                result[6] = Color.yellow;
+                result[6] = UnityEngine.Color.yellow;
 
-                result[7] = Color.magenta;
+                result[7] = UnityEngine.Color.magenta;
 
                 return result;
             }
@@ -135,7 +132,7 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// configure vertices of fivecell around core tetrahedron
+        ///     configure vertices of fivecell around core tetrahedron
         /// </summary>
         /// <param name="degreeFolded"></param>
         /// <returns></returns>
@@ -178,10 +175,7 @@ namespace IMRE.ScaleDimension.Nets
 
             //Debug.Log(Math.Operations.Angle(dir1, apex-center1) + " : " + Math.Operations.Angle(dir2, apex-center2) + " : " + Math.Operations.Angle(dir3, apex-center3) + " : " + Math.Operations.Angle(dir4, apex-center4));
 
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] += offset;
-            }
+            for (int i = 0; i < result.Length; i++) result[i] += offset;
 
             return result;
         }
@@ -192,7 +186,7 @@ namespace IMRE.ScaleDimension.Nets
             Unity.Mathematics.float4 apex =
                 new Unity.Mathematics.float4(-2 * Unity.Mathematics.math.sqrt(2f / 5f), 0f, 0f, 0f);
             if (!areEqual(apex, verts[4], verts[5], verts[6], verts[7]))
-                Debug.Log(apex + " : " + verts[4] + " : " + verts[5] + " : " + verts[6] + " : " + verts[7]);
+                UnityEngine.Debug.Log(apex + " : " + verts[4] + " : " + verts[5] + " : " + verts[6] + " : " + verts[7]);
         }
 
         private static bool areEqual(Unity.Mathematics.float4 a, Unity.Mathematics.float4 b, Unity.Mathematics.float4 c,

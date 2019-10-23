@@ -1,9 +1,9 @@
 ﻿namespace IMRE.ScaleDimension.Nets
 {
     /// <summary>
-    /// A net of a square that folds from a sequence of parallel line segments.
-    /// Not integrated with kernel.
-    /// used in study of scale and dimension
+    ///     A net of a square that folds from a sequence of parallel line segments.
+    ///     Not integrated with kernel.
+    ///     used in study of scale and dimension
     /// </summary>
     public class squareNet : net2D
     {
@@ -26,8 +26,8 @@
         }
 
         /// <summary>
-        /// calculate position of vertices for folding of square 
-        /// by rotating three line segments around one stationary line segment
+        ///     calculate position of vertices for folding of square
+        ///     by rotating three line segments around one stationary line segment
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
@@ -40,13 +40,13 @@
             result[2] = UnityEngine.Vector3.zero;
             result[1] = UnityEngine.Vector3.right;
             //rotate vertice by t or -t around (0, 1, 0) 
-            result[0] = result[1] + (UnityEngine.Quaternion.AngleAxis(angle, UnityEngine.Vector3.up) *
-                                     UnityEngine.Vector3.right);
-            result[3] = result[2] + (UnityEngine.Quaternion.AngleAxis(-angle, UnityEngine.Vector3.up) *
-                                     UnityEngine.Vector3.left);
+            result[0] = result[1] + UnityEngine.Quaternion.AngleAxis(angle, UnityEngine.Vector3.up) *
+                        UnityEngine.Vector3.right;
+            result[3] = result[2] + UnityEngine.Quaternion.AngleAxis(-angle, UnityEngine.Vector3.up) *
+                        UnityEngine.Vector3.left;
             //rotate vertice by -2t around (0, 1, 0)
-            result[4] = result[3] + (UnityEngine.Quaternion.AngleAxis(-2 * angle, UnityEngine.Vector3.up) *
-                                     UnityEngine.Vector3.left);
+            result[4] = result[3] + UnityEngine.Quaternion.AngleAxis(-2 * angle, UnityEngine.Vector3.up) *
+                        UnityEngine.Vector3.left;
 
             if (percentFolded == 1)
             {

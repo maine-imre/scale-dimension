@@ -10,7 +10,7 @@
         public bool sliderOverride;
 
         /// <summary>
-        /// float to set fold percentage to position vertices
+        ///     float to set fold percentage to position vertices
         /// </summary>
         public float PercentFolded
         {
@@ -25,7 +25,7 @@
         }
 
         /// <summary>
-        /// slider to control fold percent
+        ///     slider to control fold percent
         /// </summary>
         public float slider
         {
@@ -33,7 +33,7 @@
         }
 
         /// <summary>
-        /// abstract function for positioning vertices based on how folded the 2d net is
+        ///     abstract function for positioning vertices based on how folded the 2d net is
         /// </summary>
         /// <param name="percentFolded"></param>
         /// <returns></returns>

@@ -1,31 +1,29 @@
-﻿using UnityEngine;
-
-namespace IMRE.ScaleDimension.Nets
+﻿namespace IMRE.ScaleDimension.Nets
 {
     /// <summary>
-    /// A net of a cube that folds into a cube
-    /// The main contributor(s) to this script is __
+    ///     A net of a cube that folds into a cube
+    ///     The main contributor(s) to this script is __
     /// </summary>
     public class cubeNet : net3D
     {
         private void Start()
         {
             //uvs
-            Vector2[] uvs = new Vector2[14];
-            uvs[0] = new Vector2(0.25f, 2f / 3f);
-            uvs[1] = new Vector2(0.5f, 2f / 3f);
-            uvs[2] = new Vector2(0.5f, 1f / 3f);
-            uvs[3] = new Vector2(0.25f, 1f / 3f);
-            uvs[4] = new Vector2(0f, 2f / 3f);
-            uvs[5] = new Vector2(0f, 1f / 3f);
-            uvs[6] = new Vector2(0.25f, 1f);
-            uvs[7] = new Vector2(0.5f, 1f);
-            uvs[8] = new Vector2(0.5f, 0f);
-            uvs[9] = new Vector2(0.25f, 0f);
-            uvs[10] = new Vector2(0.75f, 2f / 3f);
-            uvs[11] = new Vector2(0.75f, 1f / 3f);
-            uvs[12] = new Vector2(1f, 2f / 3);
-            uvs[13] = new Vector2(1f, 1f / 3f);
+            UnityEngine.Vector2[] uvs = new UnityEngine.Vector2[14];
+            uvs[0] = new UnityEngine.Vector2(0.25f, 2f / 3f);
+            uvs[1] = new UnityEngine.Vector2(0.5f, 2f / 3f);
+            uvs[2] = new UnityEngine.Vector2(0.5f, 1f / 3f);
+            uvs[3] = new UnityEngine.Vector2(0.25f, 1f / 3f);
+            uvs[4] = new UnityEngine.Vector2(0f, 2f / 3f);
+            uvs[5] = new UnityEngine.Vector2(0f, 1f / 3f);
+            uvs[6] = new UnityEngine.Vector2(0.25f, 1f);
+            uvs[7] = new UnityEngine.Vector2(0.5f, 1f);
+            uvs[8] = new UnityEngine.Vector2(0.5f, 0f);
+            uvs[9] = new UnityEngine.Vector2(0.25f, 0f);
+            uvs[10] = new UnityEngine.Vector2(0.75f, 2f / 3f);
+            uvs[11] = new UnityEngine.Vector2(0.75f, 1f / 3f);
+            uvs[12] = new UnityEngine.Vector2(1f, 2f / 3);
+            uvs[13] = new UnityEngine.Vector2(1f, 1f / 3f);
 
             //assign mesh
             mesh.vertices = meshVerts(0);
@@ -43,13 +41,13 @@ namespace IMRE.ScaleDimension.Nets
         //startTime = DateTime.Now
 
         /// <summary>
-        /// configure vertices of cube around base square
+        ///     configure vertices of cube around base square
         /// </summary>
         /// <param name="percentFolded"></param>
         /// <returns></returns>
         public override UnityEngine.Vector3[] meshVerts(float percentFolded)
         {
-            float degreeFolded = (percentFolded * 90f) + 180f;
+            float degreeFolded = percentFolded * 90f + 180f;
             //14 points on cube net
             UnityEngine.Vector3[] result = new UnityEngine.Vector3[14];
 
@@ -79,7 +77,7 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// function to calculate vertices on outer faces
+        ///     function to calculate vertices on outer faces
         /// </summary>
         /// <param name="nSegmentA"></param>
         /// <param name="nSegmentB"></param>
@@ -91,12 +89,12 @@ namespace IMRE.ScaleDimension.Nets
             float degreeFolded)
         {
             //
-            return (UnityEngine.Quaternion.AngleAxis(degreeFolded, (nSegmentA - nSegmentB).normalized) *
-                    (oppositePoint - ((nSegmentA + nSegmentB) / 2f))) + ((nSegmentA + nSegmentB) / 2f);
+            return UnityEngine.Quaternion.AngleAxis(degreeFolded, (nSegmentA - nSegmentB).normalized) *
+                   (oppositePoint - (nSegmentA + nSegmentB) / 2f) + (nSegmentA + nSegmentB) / 2f;
         }
 
         /// <summary>
-        /// create an array for each square that divides it into two triangles
+        ///     create an array for each square that divides it into two triangles
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -109,7 +107,7 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// divide each face of the cube net into two triangles and copy them into a new array of the triangles
+        ///     divide each face of the cube net into two triangles and copy them into a new array of the triangles
         /// </summary>
         /// <returns></returns>
         private static int[] meshTris()
@@ -125,7 +123,7 @@ namespace IMRE.ScaleDimension.Nets
         }
 
         /// <summary>
-        /// mapping of outline of unfold
+        ///     mapping of outline of unfold
         /// </summary>
         /// <param name="percentFolded"></param>
         /// <returns></returns>

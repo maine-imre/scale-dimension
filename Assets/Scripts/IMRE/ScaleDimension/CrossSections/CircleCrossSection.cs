@@ -1,8 +1,8 @@
 ﻿namespace IMRE.ScaleDimension.CrossSections
 {
     /// <summary>
-    /// cross-section of a circle represented by two points where intersection occurs in circle
-    /// or one point if it only hits an edge 
+    ///     cross-section of a circle represented by two points where intersection occurs in circle
+    ///     or one point if it only hits an edge
     /// </summary>
     public class CircleCrossSection : UnityEngine.MonoBehaviour, ISliderInput
     {
@@ -10,7 +10,7 @@
         public float slider
         {
             //value ranges from 0 to 1, scale to -1 to 1
-            set => crossSectCirc(-1 + (value * 2));
+            set => crossSectCirc(-1 + value * 2);
         }
 
         // Start is called before the first frame update
@@ -43,7 +43,7 @@
         }
 
         /// <summary>
-        /// Function to calculate cross section of circle by connecting points of intersection
+        ///     Function to calculate cross section of circle by connecting points of intersection
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="height"></param>
@@ -92,8 +92,8 @@
                 float segmentLength = UnityEngine.Mathf.Sqrt(1f - UnityEngine.Mathf.Pow(height, 2));
 
                 //calculations for endpoint coordinates of line segment
-                segmentEndPoint0 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.left * segmentLength);
-                segmentEndPoint1 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.right * segmentLength);
+                segmentEndPoint0 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.left * segmentLength;
+                segmentEndPoint1 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.right * segmentLength;
 
                 crossSectionRenderer.enabled = true;
                 crossSectionRenderer.SetPosition(0, segmentEndPoint0);
@@ -120,7 +120,7 @@
         }
 
         /// <summary>
-        /// Function to render the outline of a circle
+        ///     Function to render the outline of a circle
         /// </summary>
         public void renderCircle()
         {
@@ -134,8 +134,8 @@
             //math for rendering circle
             for (int i = 0; i < n; i++)
             {
-                vertices[i] = (radius * (UnityEngine.Mathf.Sin((i * UnityEngine.Mathf.PI * 2) / (n - 1)) * norm1)) +
-                              (radius * (UnityEngine.Mathf.Cos((i * UnityEngine.Mathf.PI * 2) / (n - 1)) * norm2));
+                vertices[i] = radius * (UnityEngine.Mathf.Sin(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm1) +
+                              radius * (UnityEngine.Mathf.Cos(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm2);
             }
 
             //Render circle

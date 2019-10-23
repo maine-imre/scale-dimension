@@ -1,7 +1,7 @@
 ﻿namespace IMRE.ScaleDimension.CrossSections
 {
     /// <summary>
-    /// cross section of a sphere, resulting in either a circle, a point, or nothing
+    ///     cross section of a sphere, resulting in either a circle, a point, or nothing
     /// </summary>
     public class SphereCrossSection : UnityEngine.MonoBehaviour, ISliderInput
     {
@@ -9,7 +9,7 @@
         public float slider
         {
             //scale value from 0 to 1 range to -1 to 1 range.
-            set => crossSectSphere(-1 + (value * 2));
+            set => crossSectSphere(-1 + value * 2);
         }
 
         // Start is called before the first frame update
@@ -21,7 +21,7 @@
             gameObject.AddComponent<UnityEngine.MeshFilter>();
             GetComponent<UnityEngine.MeshRenderer>().material = sphereMaterial;
             gameObject.GetComponent<UnityEngine.MeshRenderer>().enabled = debugRenderer;
-            IMRE.ScaleDimension.RenderMethods.RenderSphere(radius, new Unity.Mathematics.float3(0f, 0f, 0f),
+            RenderMethods.RenderSphere(radius, new Unity.Mathematics.float3(0f, 0f, 0f),
                 sphereRenderer, n);
 
             UnityEngine.GameObject child = new UnityEngine.GameObject();
@@ -39,7 +39,7 @@
         }
 
         /// <summary>
-        /// Function to calculate cross section of sphere
+        ///     Function to calculate cross section of sphere
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="height"></param>
@@ -90,7 +90,7 @@
         }
 
         /// <summary>
-        /// Function that renders a circle using a centerpoint coordinate and a radius
+        ///     Function that renders a circle using a centerpoint coordinate and a radius
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="center"></param>
@@ -108,8 +108,8 @@
             //math for rendering circle
             for (int i = 0; i < n; i++)
             {
-                vertices[i] = (radius * ((UnityEngine.Mathf.Sin((i * UnityEngine.Mathf.PI * 2) / (n - 1)) * norm1) +
-                                         (UnityEngine.Mathf.Cos((i * UnityEngine.Mathf.PI * 2) / (n - 1)) * norm2))) +
+                vertices[i] = radius * (UnityEngine.Mathf.Sin(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm1 +
+                                        UnityEngine.Mathf.Cos(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm2) +
                               center;
             }
 

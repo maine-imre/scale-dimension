@@ -2,7 +2,6 @@
 {
     public enum ProjectionMethod
     {
-        orthographic,
         projective,
         parallel,
         stereographic
@@ -10,11 +9,11 @@
 
     public struct ProjectionData
     {
-        ProjectionMethod method;
-        Unity.Mathematics.float4x3 inputBasis;
-        float Vangle;
-        Unity.Mathematics.float4 eyePosition;
-        float viewingRadius;
+        private ProjectionMethod method;
+        private Unity.Mathematics.float4x3 inputBasis;
+        private float Vangle;
+        private Unity.Mathematics.float4 eyePosition;
+        private float viewingRadius;
     }
 
     /// <summary>
@@ -23,7 +22,7 @@
     public static class HigherDimensionsMaths
     {
         /// <summary>
-        /// Rotate the vector v around a plane for a given angle, in degrees.
+        ///     Rotate the vector v around a plane for a given angle, in degrees.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="basis0"></param>
@@ -41,17 +40,17 @@
 
             if (UnityEngine.Vector3.Dot(basis0, basis1) != 0f)
                 UnityEngine.Debug.LogWarning("Basis is not orthagonal");
-            else if ((UnityEngine.Vector4.Dot(v.normalized, basis0) != 1f) || (UnityEngine.Vector4.Dot(v, basis1) != 0f)
+            else if (UnityEngine.Vector4.Dot(v.normalized, basis0) != 1f || UnityEngine.Vector4.Dot(v, basis1) != 0f
             ) UnityEngine.Debug.LogWarning("Original Vector does not lie in the same plane as the first basis vector.");
 
-            return (UnityEngine.Vector4.Dot(v, basis0) *
-                    ((UnityEngine.Mathf.Cos(theta) * basis0) + (basis1 * UnityEngine.Mathf.Sin(theta)))) +
-                   (UnityEngine.Vector4.Dot(v, basis1) *
-                    ((UnityEngine.Mathf.Cos(theta) * basis1) + (UnityEngine.Mathf.Sin(theta) * basis0))) + remainder;
+            return UnityEngine.Vector4.Dot(v, basis0) *
+                   (UnityEngine.Mathf.Cos(theta) * basis0 + basis1 * UnityEngine.Mathf.Sin(theta)) +
+                   UnityEngine.Vector4.Dot(v, basis1) *
+                   (UnityEngine.Mathf.Cos(theta) * basis1 + UnityEngine.Mathf.Sin(theta) * basis0) + remainder;
         }
 
         /// <summary>
-        /// Projects a vector onto another vector using a dot product.
+        ///     Projects a vector onto another vector using a dot product.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="axis"></param>
@@ -63,7 +62,7 @@
         }
 
         /// <summary>
-        /// Writes the projection of a float4 onto a new basis for the hyperplane.
+        ///     Writes the projection of a float4 onto a new basis for the hyperplane.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="basis"> viewing basis </param>
@@ -82,14 +81,14 @@
 
             switch (method)
             {
-                case ProjectionMethod.orthographic:
+/*                case ProjectionMethod.orthographic:
                     Unity.Mathematics.math.normalize(inputBasis.c0);
                     Unity.Mathematics.math.normalize(inputBasis.c1);
                     Unity.Mathematics.math.normalize(inputBasis.c2);
 
                     return new Unity.Mathematics.float3(Unity.Mathematics.math.dot(v, inputBasis.c0),
                         Unity.Mathematics.math.dot(v, inputBasis.c1),
-                        Unity.Mathematics.math.dot(v, inputBasis.c2));
+                        Unity.Mathematics.math.dot(v, inputBasis.c2));*/
                 case ProjectionMethod.projective:
                     //using http://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html#chapter3
                     T = 1f / Unity.Mathematics.math.tan(Vangle.Value / 2f);
@@ -111,12 +110,12 @@
                         S * Unity.Mathematics.math.dot(tmp, basis.c1),
                         S * Unity.Mathematics.math.dot(tmp, basis.c2));
                 case ProjectionMethod.stereographic:
-                    float r = Math.Operations.magnitude(v);
+                    float r = Operations.magnitude(v);
                     //assume north pole is at (0,0,0,1);
                     Unity.Mathematics.float4 north = new Unity.Mathematics.float4(0, 0, 0, 1) * r;
                     Unity.Mathematics.float4 vPrime =
-                        (north - v) * (Math.Operations.magnitude(north) /
-                                       Unity.Mathematics.math.dot((north - v),
+                        (north - v) * (Operations.magnitude(north) /
+                                       Unity.Mathematics.math.dot(north - v,
                                            Unity.Mathematics.math.normalize(north))) + north;
                     return new Unity.Mathematics.float3(vPrime.x, vPrime.y, vPrime.z);
                 default: return new Unity.Mathematics.float3(0f, 0f, 0f);
@@ -130,13 +129,9 @@
             Unity.Mathematics.float3[] result = new Unity.Mathematics.float3[n];
             for (int i = 0; i < n; i++)
             {
-                Unity.Mathematics.float4 v = ((float) i / ((float) n - 1f)) * (b - a) + a;
+                Unity.Mathematics.float4 v = i / (n - 1f) * (b - a) + a;
                 if (method == ProjectionMethod.stereographic)
-                {
-                    //assume center == Vector4.zero;
-                    //assume a and b are on surface of sp
-                    v = Unity.Mathematics.math.normalize(v) * Math.Operations.magnitude(a);
-                }
+                    v = Unity.Mathematics.math.normalize(v) * Operations.magnitude(a);
 
                 result[i] = projectDownDimension(v, inputBasis, method, Vangle, eyePosition, viewingRadius);
             }
@@ -153,14 +148,14 @@
 
             for (int i = 0; i < n; i++)
             {
-                Unity.Mathematics.float4 a1 = ((float) i / ((float) n - 1f)) * (b - a) + a;
-                Unity.Mathematics.float4 b1 = ((float) i / ((float) n - 1f)) * (c - d) + d;
+                Unity.Mathematics.float4 a1 = i / (n - 1f) * (b - a) + a;
+                Unity.Mathematics.float4 b1 = i / (n - 1f) * (c - d) + d;
                 if (method == ProjectionMethod.stereographic)
                 {
                     //assume center == Vector4.zero;
                     //assume a and b are on surface of sp
-                    a1 = Unity.Mathematics.math.normalize(a1) * Math.Operations.magnitude(a);
-                    b1 = Unity.Mathematics.math.normalize(b1) * Math.Operations.magnitude(b);
+                    a1 = Unity.Mathematics.math.normalize(a1) * Operations.magnitude(a);
+                    b1 = Unity.Mathematics.math.normalize(b1) * Operations.magnitude(b);
                 }
 
                 Unity.Mathematics.float3[] seg = projectSegment(a1, b1, n, inputBasis, method,
@@ -179,9 +174,7 @@
             return projectQuad(a, b, c, c, n, inputBasis, method, Vangle, eyePosition, viewingRadius);
         }
 
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="from"></param>
         /// <param name="basis"></param>
@@ -195,33 +188,32 @@
             Unity.Mathematics.float4 Over = basis.c2;
             //Get the normalized Wd column vector.
             Unity.Mathematics.float4 Wd = basis.c0;
-            float norm = IMRE.Math.Operations.magnitude(Wd);
+            float norm = Operations.magnitude(Wd);
             if (norm == 0f)
                 UnityEngine.Debug.LogError("To point and from point are the same");
             Unity.Mathematics.math.normalize(Wd);
 
             //calculated the normalized Wa column vector.
-            Unity.Mathematics.float4 Wa = IMRE.Math.Operations.cross(Up, Over, Wd);
-            norm = IMRE.Math.Operations.magnitude(Wa);
+            Unity.Mathematics.float4 Wa = Operations.cross(Up, Over, Wd);
+            norm = Operations.magnitude(Wa);
             if (norm == 0f)
                 UnityEngine.Debug.LogError("Invalid Up Vector");
             Unity.Mathematics.math.normalize(Wa);
 
             //Calculate the normalized Wb column vector
-            Unity.Mathematics.float4 Wb = IMRE.Math.Operations.cross(Over, Wd, Wa);
-            norm = IMRE.Math.Operations.magnitude(Wb);
+            Unity.Mathematics.float4 Wb = Operations.cross(Over, Wd, Wa);
+            norm = Operations.magnitude(Wb);
             if (norm == 0f)
                 UnityEngine.Debug.LogError("Invalid Over Vector");
             Unity.Mathematics.math.normalize(Wb);
 
-            Unity.Mathematics.float4 Wc = IMRE.Math.Operations.cross(Wd, Wa, Wb);
+            Unity.Mathematics.float4 Wc = Operations.cross(Wd, Wa, Wb);
             Unity.Mathematics.math.normalize(Wc); //theoretically redundant.
 
             return new Unity.Mathematics.float4x4(Wa, Wb, Wc, Wd);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="vectors"></param>
         /// <param name="axis"></param>
@@ -243,7 +235,7 @@
         }
 
         /// <summary>
-        ///  Return the basis of a hyper plane orthagonal to a given vector
+        ///     Return the basis of a hyper plane orthagonal to a given vector
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -251,14 +243,14 @@
         {
             Unity.Mathematics.math.normalize(v);
             //use method described here:  https://www.geometrictools.com/Documentation/OrthonormalSets.pdf
-            if ((v.x == 0) && (v.y == 0) && (v.z == 0) && (v.w == 0))
+            if (v.x == 0 && v.y == 0 && v.z == 0 && v.w == 0)
                 UnityEngine.Debug.LogError("Can't form basis from zero vector");
 
             //the vector is the first basis vector for the 4-space, orthag to the hyperplane
             Unity.Mathematics.math.normalize(v);
             //establish a second basis vector
             Unity.Mathematics.float4 basis0;
-            if ((v.x != 0) || (v.y != 0))
+            if (v.x != 0 || v.y != 0)
                 basis0 = new UnityEngine.Vector4(v.y, v.x, 0, 0);
             else
                 basis0 = new UnityEngine.Vector4(0, 0, v.w, v.z);
@@ -270,16 +262,18 @@
             //index of largest determinant
             int idx = 0;
             for (int i = 0; i < 6; i++)
+            {
                 if (determinants[i] > determinants[idx])
                     idx = i;
+            }
 
             if (determinants[idx] == 0) UnityEngine.Debug.LogError("No non-zero determinant");
 
             //choose bottom row of det matrix to generate next basis vector
             Unity.Mathematics.float4 bottomRow;
-            if ((idx == 0) || (idx == 1) || (idx == 3))
+            if (idx == 0 || idx == 1 || idx == 3)
                 bottomRow = new Unity.Mathematics.float4(0, 0, 0, 1);
-            else if ((idx == 2) || (idx == 4))
+            else if (idx == 2 || idx == 4)
                 bottomRow = new Unity.Mathematics.float4(0, 0, 1, 0);
             else
                 bottomRow = new Unity.Mathematics.float4(0, 1, 0, 0);
@@ -294,7 +288,7 @@
             Unity.Mathematics.float4x3 basis = new Unity.Mathematics.float4x3(basis0, basis1, basis2);
             //check that v is orthogonal.
             v.projectDownDimension(basis, ProjectionMethod.parallel, null, null, null);
-            if ((v.x != 0) || (v.y != 0) || (v.z != 0)) UnityEngine.Debug.LogError("Basis is not orthogonal to v");
+            if (v.x != 0 || v.y != 0 || v.z != 0) UnityEngine.Debug.LogError("Basis is not orthogonal to v");
 
             return basis;
         }
@@ -303,21 +297,21 @@
         {
             //find largest determinant of 2x2
             float[] determinants = new float[6];
-            determinants[0] = (v0.x * v1.y) - (v0.y * v1.x);
-            determinants[1] = (v0.x * v1.z) - (v0.z * v1.x);
-            determinants[2] = (v0.x * v1.w) - (v0.w * v1.x);
-            determinants[3] = (v0.y * v1.z) - (v0.z * v1.y);
-            determinants[4] = (v0.y * v1.w) - (v0.w * v1.y);
-            determinants[5] = (v0.z * v1.w) - (v0.w * v1.z);
+            determinants[0] = v0.x * v1.y - v0.y * v1.x;
+            determinants[1] = v0.x * v1.z - v0.z * v1.x;
+            determinants[2] = v0.x * v1.w - v0.w * v1.x;
+            determinants[3] = v0.y * v1.z - v0.z * v1.y;
+            determinants[4] = v0.y * v1.w - v0.w * v1.y;
+            determinants[5] = v0.z * v1.w - v0.w * v1.z;
             return determinants;
         }
 
         /// <summary>
-        /// Assume the following structure, return the determinant coeficients for v0, v1, v2, v3
-        /// v0 v1 v2 v3
-        /// x00 x01 x02 x03
-        /// x10 x11 x12 x13
-        /// x20 x21 x22 x23
+        ///     Assume the following structure, return the determinant coeficients for v0, v1, v2, v3
+        ///     v0 v1 v2 v3
+        ///     x00 x01 x02 x03
+        ///     x10 x11 x12 x13
+        ///     x20 x21 x22 x23
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -326,11 +320,11 @@
             Unity.Mathematics.float4 bottomRow = matrix.c2;
             float[] determinants = Determinant2X2(matrix.c0, matrix.c1);
             return new Unity.Mathematics.float4(
-                ((bottomRow.y * determinants[5]) - (bottomRow.z * determinants[4])) + (bottomRow.w * determinants[3]),
-                -(((bottomRow.x * determinants[5]) - (bottomRow.z * determinants[2])) +
-                  (bottomRow.w * determinants[3])),
-                ((bottomRow.x * determinants[4]) - (bottomRow.y * determinants[2])) + (bottomRow.w * determinants[0]),
-                -(((bottomRow.x * determinants[3]) - (bottomRow.y * determinants[1])) + (bottomRow.z * determinants[0]))
+                bottomRow.y * determinants[5] - bottomRow.z * determinants[4] + bottomRow.w * determinants[3],
+                -(bottomRow.x * determinants[5] - bottomRow.z * determinants[2] +
+                  bottomRow.w * determinants[3]),
+                bottomRow.x * determinants[4] - bottomRow.y * determinants[2] + bottomRow.w * determinants[0],
+                -(bottomRow.x * determinants[3] - bottomRow.y * determinants[1] + bottomRow.z * determinants[0])
             );
         }
     }

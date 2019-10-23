@@ -3,8 +3,8 @@ namespace IMRE.ScaleDimension
     public static class RenderMethods
     {
         /// <summary>
-        /// method for rendering a sphere
-        /// by taking a centerpoint, radius, mesh, and n vertices
+        ///     method for rendering a sphere
+        ///     by taking a centerpoint, radius, mesh, and n vertices
         /// </summary>
         /// <param name="crossSectionRadius"></param>
         /// <param name="center"></param>
@@ -19,24 +19,24 @@ namespace IMRE.ScaleDimension
 
             #region Vertices
 
-            UnityEngine.Vector3[] vertices = new UnityEngine.Vector3[((nbLong + 1) * nbLat) + 2];
+            UnityEngine.Vector3[] vertices = new UnityEngine.Vector3[(nbLong + 1) * nbLat + 2];
             float pi = UnityEngine.Mathf.PI;
             float _2pi = pi * 2f;
 
             vertices[0] = UnityEngine.Vector3.up * crossSectionRadius;
             for (int lat = 0; lat < nbLat; lat++)
             {
-                float a1 = (pi * (lat + 1)) / (nbLat + 1);
+                float a1 = pi * (lat + 1) / (nbLat + 1);
                 float sin1 = UnityEngine.Mathf.Sin(a1);
                 float cos1 = UnityEngine.Mathf.Cos(a1);
 
                 for (int lon = 0; lon <= nbLong; lon++)
                 {
-                    float a2 = (_2pi * (lon == nbLong ? 0 : lon)) / nbLong;
+                    float a2 = _2pi * (lon == nbLong ? 0 : lon) / nbLong;
                     float sin2 = UnityEngine.Mathf.Sin(a2);
                     float cos2 = UnityEngine.Mathf.Cos(a2);
 
-                    vertices[lon + (lat * (nbLong + 1)) + 1] =
+                    vertices[lon + lat * (nbLong + 1) + 1] =
                         new UnityEngine.Vector3(sin1 * cos2, cos1, sin1 * sin2) * crossSectionRadius;
                 }
             }
@@ -61,8 +61,8 @@ namespace IMRE.ScaleDimension
             for (int lat = 0; lat < nbLat; lat++)
             for (int lon = 0; lon <= nbLong; lon++)
             {
-                uvs[lon + (lat * (nbLong + 1)) + 1] =
-                    new UnityEngine.Vector2((float) lon / nbLong, 1f - ((float) (lat + 1) / (nbLat + 1)));
+                uvs[lon + lat * (nbLong + 1) + 1] =
+                    new UnityEngine.Vector2((float) lon / nbLong, 1f - (float) (lat + 1) / (nbLat + 1));
             }
 
             #endregion
@@ -84,11 +84,11 @@ namespace IMRE.ScaleDimension
             }
 
             //Middle
-            for (int lat = 0; lat < (nbLat - 1); lat++)
+            for (int lat = 0; lat < nbLat - 1; lat++)
             {
                 for (int lon = 0; lon < nbLong; lon++)
                 {
-                    int current = lon + (lat * (nbLong + 1)) + 1;
+                    int current = lon + lat * (nbLong + 1) + 1;
                     int next = current + nbLong + 1;
 
                     triangles[i++] = current;
@@ -119,18 +119,17 @@ namespace IMRE.ScaleDimension
             crossSectionRenderer.RecalculateBounds();
         }
 
-
         /// <summary>
-        /// Finds the vertex indices for the kth triangle
-        /// returns the mth vertex index of the kth triangle
-        /// Triangles indexed for clockwise front face
+        ///     Finds the vertex indices for the kth triangle
+        ///     returns the mth vertex index of the kth triangle
+        ///     Triangles indexed for clockwise front face
         /// </summary>
         /// <param name="k"></param>
         /// <param name="m"></param>
         /// <returns></returns>
         public static int ToricTriangle(int k, int m, int n)
         {
-            if (k < (n * n))
+            if (k < n * n)
             {
                 //lower half triangle
                 switch (m)
@@ -138,23 +137,23 @@ namespace IMRE.ScaleDimension
                     case 0:
                         return k;
                     case 2:
-                        return (UnityEngine.Mathf.FloorToInt(k / n) * n) + ((k + 1) % n);
+                        return UnityEngine.Mathf.FloorToInt(k / n) * n + (k + 1) % n;
                     case 1:
-                        return (((UnityEngine.Mathf.FloorToInt(k / n) + 1) % n) * n) + ((k + 1) % n);
+                        return (UnityEngine.Mathf.FloorToInt(k / n) + 1) % n * n + (k + 1) % n;
                 }
             }
             else
             {
-                k = k - (n * n);
+                k = k - n * n;
 
                 switch (m)
                 {
                     case 0:
                         return k;
                     case 2:
-                        return (((UnityEngine.Mathf.FloorToInt(k / n) + 1) % n) * n) + ((k + 1) % n);
+                        return (UnityEngine.Mathf.FloorToInt(k / n) + 1) % n * n + (k + 1) % n;
                     case 1:
-                        return (((UnityEngine.Mathf.FloorToInt(k / n) + 1) % n) * n) + (k % n);
+                        return (UnityEngine.Mathf.FloorToInt(k / n) + 1) % n * n + k % n;
                 }
             }
 

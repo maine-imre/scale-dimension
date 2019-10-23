@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using Enumerable = System.Linq.Enumerable;
-
-namespace IMRE.ScaleDimension
+﻿namespace IMRE.ScaleDimension
 {
     /// <summary>
     ///     Central control for scale and dimension study.
@@ -19,7 +16,6 @@ namespace IMRE.ScaleDimension
 
         public static bool debugRendererXC;
         public static float lineRendererWidth = 0.001f;
-        private System.Collections.Generic.List<I4D_Perspective> _dPerspectives;
 
         private System.Collections.Generic.List<UnityEngine.GameObject> _sliderInputs;
         public System.Collections.Generic.List<UnityEngine.GameObject> allFigures;
@@ -41,8 +37,44 @@ namespace IMRE.ScaleDimension
         /// </summary>
         [UnityEngine.RangeAttribute(0, 1)] public float foldOverrideValue;
 
-       
+        /// <summary>
+        ///     A point on the 3-plane we are projecting onto
+        /// </summary>
+        public Unity.Mathematics.float4 hyperPlane;
+
+        //Projection Information
+        //Stereographic data
+        /// <summary>
+        ///     The north pole for the 3-sphere.  Assume radius = 1
+        /// </summary>
+        public Unity.Mathematics.float4 NorthPole;
+
+        /// <summary>
+        ///     The normal direction for the plane for oblique
+        /// </summary>
+        public Unity.Mathematics.float4 obliquePlaneNormal;
+
+        //Projective and Parallel Data.  Note origin is not used for parallel projection
+        /// <summary>
+        ///     The origin of the projection.
+        ///     Should this be the user's "eye"
+        /// </summary>
+        public Unity.Mathematics.float4 origin;
+
+        public bool orthographicOverride;
+
         public UnityEngine.GameObject pointPrefab;
+        public IMRE.Math.ProjectionMethod projectionMethod;
+
+        public int subdiv = 1;
+
+        /// <summary>
+        ///     Auto-overrides for orthographic projection
+        /// </summary>
+        public Unity.Mathematics.float4 hyperPlaneNormal =>
+            orthographicOverride
+                ? (hyperPlane - origin) / IMRE.Math.Operations.magnitude(hyperPlane - origin)
+                : obliquePlaneNormal;
 
         private void Start()
         {
@@ -50,8 +82,8 @@ namespace IMRE.ScaleDimension
 
             //_sliderInputs = allFigures.OfType<ISliderInput>().ToList();
             _sliderInputs =
-                Enumerable.ToList(Enumerable.Where(allFigures, go => go.GetComponent(typeof(ISliderInput)) != null));
-            _dPerspectives = Enumerable.ToList(Enumerable.OfType<I4D_Perspective>(allFigures));
+                System.Linq.Enumerable.ToList(System.Linq.Enumerable.Where(allFigures,
+                    go => go.GetComponent(typeof(ISliderInput)) != null));
         }
 
         private void Update()

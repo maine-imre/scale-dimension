@@ -1,9 +1,7 @@
-﻿using System.Linq;
-
-namespace IMRE.ScaleDimension.CrossSections
+﻿namespace IMRE.ScaleDimension.CrossSections
 {
     /// <summary>
-    /// cross-section of an annulus represented by points where intersection between annulus and line segment occurs 
+    ///     cross-section of an annulus represented by points where intersection between annulus and line segment occurs
     /// </summary>
     public class AnnulusCrossSection : UnityEngine.MonoBehaviour, ISliderInput
     {
@@ -13,7 +11,7 @@ namespace IMRE.ScaleDimension.CrossSections
         public float slider
         {
             //value ranges from 0 to 1, scale to -1 to 1
-            set => crossSectAnnulus(-1 + (value * 2));
+            set => crossSectAnnulus(-1 + value * 2);
         }
 
         // Start is called before the first frame update
@@ -36,10 +34,10 @@ namespace IMRE.ScaleDimension.CrossSections
 
             for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < (n - 1); j++)
+                for (int j = 0; j < n - 1; j++)
                 {
                     //index value computation
-                    int idx = i + (n * j);
+                    int idx = i + n * j;
 
                     //find radian value of length of curve
                     float alpha = i * oneNth;
@@ -56,11 +54,11 @@ namespace IMRE.ScaleDimension.CrossSections
             //3 vertices x 2 triangles per square x dimension of square
             int[] triangles = new int[6 * n * n];
 
-            for (int k = 0; k < (2 * n * n); k++)
+            for (int k = 0; k < 2 * n * n; k++)
             {
                 //for each vertex on each triangle
                 for (int m = 0; m < 3; m++)
-                    triangles[(3 * k) + m] = triangle(k, m);
+                    triangles[3 * k + m] = triangle(k, m);
             }
 
             annulusRenderer.vertices = verts;
@@ -93,7 +91,7 @@ namespace IMRE.ScaleDimension.CrossSections
             child2.GetComponent<UnityEngine.LineRenderer>().useWorldSpace = false;
             child.GetComponent<UnityEngine.LineRenderer>().useWorldSpace = false;
 
-            Enumerable.ToList(crossSectionRenderer).ForEach(r => r.material = crossSectionMaterial);
+            System.Linq.Enumerable.ToList(crossSectionRenderer).ForEach(r => r.material = crossSectionMaterial);
 
             //generate four points to show crossSections.
             crossSectionPoints.Add(Instantiate(SpencerStudyControl.ins.pointPrefab));
@@ -106,7 +104,7 @@ namespace IMRE.ScaleDimension.CrossSections
         }
 
         /// <summary>
-        /// Function to calculate cross section of an annulus by finding points of intersection and connecting them
+        ///     Function to calculate cross section of an annulus by finding points of intersection and connecting them
         /// </summary>
         /// <param name="height"></param>
         public void crossSectAnnulus(float height)
@@ -140,15 +138,15 @@ namespace IMRE.ScaleDimension.CrossSections
                 crossSectionPoints[3].SetActive(false);
             }
             //cross section is a line segment in between the inner circle and outer circle
-            else if ((Unity.Mathematics.math.abs(height) < outerRadius) &&
-                     (Unity.Mathematics.math.abs(height) >= innerRadius))
+            else if (Unity.Mathematics.math.abs(height) < outerRadius &&
+                     Unity.Mathematics.math.abs(height) >= innerRadius)
             {
                 //horizontal distance from center to point on outer edge of annulus
                 x1 = UnityEngine.Mathf.Sqrt(UnityEngine.Mathf.Pow(outerRadius, 2) - UnityEngine.Mathf.Pow(height, 2));
 
                 //calculations for coordinates of line segment endpoints
-                segmentAEndPoint0 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.right * x1);
-                segmentAEndPoint1 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.left * x1);
+                segmentAEndPoint0 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.right * x1;
+                segmentAEndPoint1 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.left * x1;
 
                 crossSectionRenderer[0].enabled = true && SpencerStudyControl.debugRendererXC;
                 crossSectionRenderer[0].SetPosition(0, segmentAEndPoint0);
@@ -170,11 +168,11 @@ namespace IMRE.ScaleDimension.CrossSections
                 x2 = UnityEngine.Mathf.Sqrt(UnityEngine.Mathf.Pow(innerRadius, 2) - UnityEngine.Mathf.Pow(height, 2));
 
                 //calculations for inner and outer endpoints for each line segment
-                segmentAEndPoint0 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.left * x1);
-                segmentAEndPoint1 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.left * x2);
+                segmentAEndPoint0 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.left * x1;
+                segmentAEndPoint1 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.left * x2;
 
-                segmentBEndPoint0 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.right * x2);
-                segmentBEndPoint1 = (UnityEngine.Vector3.up * height) + (UnityEngine.Vector3.right * x1);
+                segmentBEndPoint0 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.right * x2;
+                segmentBEndPoint1 = UnityEngine.Vector3.up * height + UnityEngine.Vector3.right * x1;
                 crossSectionRenderer[0].enabled = true && SpencerStudyControl.debugRendererXC;
                 crossSectionRenderer[1].enabled = true && SpencerStudyControl.debugRendererXC;
 
@@ -208,9 +206,9 @@ namespace IMRE.ScaleDimension.CrossSections
         }
 
         /// <summary>
-        /// Take alpha to be the angle describing the rotation around a center axis to form the annulus
-        /// and beta as the length to be converted
-        /// Find position on annulus
+        ///     Take alpha to be the angle describing the rotation around a center axis to form the annulus
+        ///     and beta as the length to be converted
+        ///     Find position on annulus
         /// </summary>
         /// <param name="alpha">angle</param>
         /// <param name="beta">length</param>
@@ -218,25 +216,25 @@ namespace IMRE.ScaleDimension.CrossSections
         private UnityEngine.Vector3 annulusPosition(float alpha, float beta)
         {
             //conversion factor
-            float length = (beta * (outerRadius - innerRadius)) + innerRadius;
+            float length = beta * (outerRadius - innerRadius) + innerRadius;
             //rotation mapping
             UnityEngine.Vector3 result =
-                ((UnityEngine.Vector3.right * UnityEngine.Mathf.Cos(alpha * 2 * UnityEngine.Mathf.PI)) +
-                 (UnityEngine.Vector3.up * UnityEngine.Mathf.Sin(alpha * 2 * UnityEngine.Mathf.PI))) * length;
+                (UnityEngine.Vector3.right * UnityEngine.Mathf.Cos(alpha * 2 * UnityEngine.Mathf.PI) +
+                 UnityEngine.Vector3.up * UnityEngine.Mathf.Sin(alpha * 2 * UnityEngine.Mathf.PI)) * length;
 
             return result;
         }
 
         /// <summary>
-        /// Function to map vertices on each triangle
-        /// Mapping was copied from torusRevolve script in horizon scene
+        ///     Function to map vertices on each triangle
+        ///     Mapping was copied from torusRevolve script in horizon scene
         /// </summary>
         /// <param name="k">triangle</param>
         /// <param name="m">vertex</param>
         /// <returns>index value of vertex</returns>
         private int triangle(int k, int m)
         {
-            if (k < (n * n))
+            if (k < n * n)
             {
                 //lower half triangles first 
                 switch (m)
@@ -246,16 +244,16 @@ namespace IMRE.ScaleDimension.CrossSections
                         return k;
                     //2nd vertex-same thing
                     case 1:
-                        return ((UnityEngine.Mathf.FloorToInt(k / n) + 1) * n) + ((k + 1) % n);
+                        return (UnityEngine.Mathf.FloorToInt(k / n) + 1) * n + (k + 1) % n;
                     //3rd vertex calculation-wrap around horizontally but not vertically
                     case 2:
-                        return (UnityEngine.Mathf.FloorToInt(k / n) * n) + ((k + 1) % n);
+                        return UnityEngine.Mathf.FloorToInt(k / n) * n + (k + 1) % n;
                 }
             }
             //upper half triangles
             else
             {
-                k = k - (n * n);
+                k = k - n * n;
 
                 switch (m)
                 {
@@ -263,9 +261,9 @@ namespace IMRE.ScaleDimension.CrossSections
                     case 0:
                         return k;
                     case 1:
-                        return ((UnityEngine.Mathf.FloorToInt(k / n) + 1) * n) + (k % n);
+                        return (UnityEngine.Mathf.FloorToInt(k / n) + 1) * n + k % n;
                     case 2:
-                        return (((UnityEngine.Mathf.FloorToInt(k / n) + 1) % n) * n) + ((k + 1) % n);
+                        return (UnityEngine.Mathf.FloorToInt(k / n) + 1) % n * n + (k + 1) % n;
                 }
             }
 

@@ -1,9 +1,8 @@
-﻿using Enumerable = System.Linq.Enumerable;
-
-/// <summary>
+﻿/// <summary>
 ///     script for copying and scaling mesh and line segments
 ///     so that the net folding of shapes can be observed on figures of different sizes
 /// </summary>
+
 namespace IMRE.ScaleDimension
 {
     public class meshCopyandScale : UnityEngine.MonoBehaviour
@@ -55,7 +54,8 @@ namespace IMRE.ScaleDimension
         {
             if (GetComponent<UnityEngine.MeshFilter>() != null)
             {
-                childmeshFilt.mesh.SetVertices(Enumerable.ToList(GetComponent<UnityEngine.MeshFilter>().mesh.vertices));
+                childmeshFilt.mesh.SetVertices(
+                    System.Linq.Enumerable.ToList(GetComponent<UnityEngine.MeshFilter>().mesh.vertices));
                 childmeshFilt.mesh.triangles = GetComponent<UnityEngine.MeshFilter>().mesh.triangles;
 
                 childGameObject.GetComponentInParent<UnityEngine.MeshFilter>().mesh.uv =
@@ -79,7 +79,7 @@ namespace IMRE.ScaleDimension
 
             for (int i = 0; i < newmeshVerts.Length; i++) newmeshVerts[i] *= scaleFactor;
 
-            mf.mesh.SetVertices(Enumerable.ToList(newmeshVerts));
+            mf.mesh.SetVertices(System.Linq.Enumerable.ToList(newmeshVerts));
         }
 
         /// <summary>

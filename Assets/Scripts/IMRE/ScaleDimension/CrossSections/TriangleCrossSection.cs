@@ -1,38 +1,36 @@
-﻿using UnityEngine;
-using Unity.Mathematics;
-
-namespace IMRE.ScaleDimension.CrossSections
+﻿namespace IMRE.ScaleDimension.CrossSections
 
 {
     public class TriangleCrossSection : UnityEngine.MonoBehaviour
     {
         /// <summary>
-        /// Function to render the intersection of a plane and a triangle
+        ///     Function to render the intersection of a plane and a triangle
         /// </summary>
         /// <param name="height"></param>
         /// <param name="vertices"></param>
         /// <param name="crossSectionRenderer"></param>
-        public void crossSectTri(float3 point, float3 direction, Vector3[] vertices, LineRenderer crossSectionRenderer)
+        public void crossSectTri(Unity.Mathematics.float3 point, Unity.Mathematics.float3 direction,
+            UnityEngine.Vector3[] vertices, UnityEngine.LineRenderer crossSectionRenderer)
         {
             //Vertices are organized in clockwise manner starting from top
             //top vertex
-            float3 a = vertices[0];
+            Unity.Mathematics.float3 a = vertices[0];
             //bottom right
-            float3 b = vertices[1];
+            Unity.Mathematics.float3 b = vertices[1];
             //bottom left
-            float3 c = vertices[2];
+            Unity.Mathematics.float3 c = vertices[2];
 
-            float3 lineDirection = direction - point;
+            Unity.Mathematics.float3 lineDirection = direction - point;
 
             //intermediate calculations 
-            float3 ac_hat = (c - a) / Vector3.Magnitude(c - a);
-            float3 ab_hat = (b - a) / Vector3.Magnitude(b - a);
-            float3 bc_hat = (c - b) / Vector3.Magnitude(c - b);
+            Unity.Mathematics.float3 ac_hat = (c - a) / UnityEngine.Vector3.Magnitude(c - a);
+            Unity.Mathematics.float3 ab_hat = (b - a) / UnityEngine.Vector3.Magnitude(b - a);
+            Unity.Mathematics.float3 bc_hat = (c - b) / UnityEngine.Vector3.Magnitude(c - b);
 
             //points of intersection on each line segment
-            float3 ac_star = intersectLines(point, lineDirection, a, ac_hat);
-            float3 ab_star = intersectLines(point, lineDirection, a, ab_hat);
-            float3 bc_star = intersectLines(point, lineDirection, b, bc_hat);
+            Unity.Mathematics.float3 ac_star = intersectLines(point, lineDirection, a, ac_hat);
+            Unity.Mathematics.float3 ab_star = intersectLines(point, lineDirection, a, ab_hat);
+            Unity.Mathematics.float3 bc_star = intersectLines(point, lineDirection, b, bc_hat);
 
             //boolean values for if intersection hits only a vertex of the triangle
             bool ac_star_isEndpoint;
@@ -43,12 +41,15 @@ namespace IMRE.ScaleDimension.CrossSections
             bc_star_isEndpoint = bc_star.Equals(c) || bc_star.Equals(c);
 
             //booleans for if intersection hits somewhere on the segments
-            bool ac_star_onSegment = (Vector3.Magnitude(ac_star - a) > Vector3.Magnitude(c - a) ||
-                                      Vector3.Magnitude(ac_star - c) > Vector3.Magnitude(c - a));
-            bool ab_star_onSegment = (Vector3.Magnitude(ab_star - a) > Vector3.Magnitude(b - a) ||
-                                      Vector3.Magnitude(ab_star - c) > Vector3.Magnitude(b - a));
-            bool bc_star_onSegment = (Vector3.Magnitude(bc_star - b) > Vector3.Magnitude(c - b) ||
-                                      Vector3.Magnitude(bc_star - c) > Vector3.Magnitude(c - b));
+            bool ac_star_onSegment =
+                UnityEngine.Vector3.Magnitude(ac_star - a) > UnityEngine.Vector3.Magnitude(c - a) ||
+                UnityEngine.Vector3.Magnitude(ac_star - c) > UnityEngine.Vector3.Magnitude(c - a);
+            bool ab_star_onSegment =
+                UnityEngine.Vector3.Magnitude(ab_star - a) > UnityEngine.Vector3.Magnitude(b - a) ||
+                UnityEngine.Vector3.Magnitude(ab_star - c) > UnityEngine.Vector3.Magnitude(b - a);
+            bool bc_star_onSegment =
+                UnityEngine.Vector3.Magnitude(bc_star - b) > UnityEngine.Vector3.Magnitude(c - b) ||
+                UnityEngine.Vector3.Magnitude(bc_star - c) > UnityEngine.Vector3.Magnitude(c - b);
 
             //track how many vertices the intersection hits
             int endpointCount = 0;
@@ -63,7 +64,7 @@ namespace IMRE.ScaleDimension.CrossSections
             if (!(ab_star_onSegment || ac_star_onSegment || bc_star_onSegment))
             {
                 crossSectionRenderer.enabled = false;
-                Debug.Log("Line does not intersect with any of triangle sides.");
+                UnityEngine.Debug.Log("Line does not intersect with any of triangle sides.");
             }
 
             //intersection is a segment (edge) of the triangle
@@ -138,7 +139,7 @@ namespace IMRE.ScaleDimension.CrossSections
             }
 
             //intersection hits one vertex on triangle and one of the segments
-            else if (endpointCount == 2 && (ab_star.Equals(ac_star)) || ab_star.Equals(bc_star) ||
+            else if (endpointCount == 2 && ab_star.Equals(ac_star) || ab_star.Equals(bc_star) ||
                      ac_star.Equals(bc_star))
             {
                 crossSectionRenderer.enabled = true;
@@ -185,41 +186,38 @@ namespace IMRE.ScaleDimension.CrossSections
         }
 
         /// <summary>
-        /// Returns the point of intersection of two lines
+        ///     Returns the point of intersection of two lines
         /// </summary>
         /// <param name="p"></param>
         /// <param name="u"></param>
         /// <param name="q"></param>
         /// <param name="v"></param>
         /// <returns></returns>
-        private float3 intersectLines(float3 p, float3 u, float3 q, float3 v)
+        private Unity.Mathematics.float3 intersectLines(Unity.Mathematics.float3 p, Unity.Mathematics.float3 u,
+            Unity.Mathematics.float3 q, Unity.Mathematics.float3 v)
         {
             //using method described here: http://geomalgorithms.com/a05-_intersect-1.html
-            float3 w = q - p;
-            float3 v_perp =
-                math.normalize(math.cross(math.cross(u, v), v));
-            float3 u_perp =
-                math.normalize(math.cross(math.cross(u, v), u));
-            float s = Unity.Mathematics.math.dot(-1 * v_perp, w) / math.dot(-1 * v_perp, u);
+            Unity.Mathematics.float3 w = q - p;
+            Unity.Mathematics.float3 v_perp =
+                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), v));
+            Unity.Mathematics.float3 u_perp =
+                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), u));
+            float s = Unity.Mathematics.math.dot(-1 * v_perp, w) / Unity.Mathematics.math.dot(-1 * v_perp, u);
 
             //note if s == 0, lines are parallel
-            float3 solution = p + s * u;
+            Unity.Mathematics.float3 solution = p + s * u;
 
             //the next couple of lines don't calculate a solution but can validate our solution.
-            float t = math.dot(-1 * u_perp, w) / math.dot(-1 * u_perp, v);
+            float t = Unity.Mathematics.math.dot(-1 * u_perp, w) / Unity.Mathematics.math.dot(-1 * u_perp, v);
 
             //note that if t == 0, lines are parallel
-            float3 solution_alt = q + t * v;
+            Unity.Mathematics.float3 solution_alt = q + t * v;
 
-            if (solution.Equals(solution_alt))
-            {
-                return solution;
-            }
-            else
-            {
-                Debug.LogWarning("Invalid Solution to Intersection of Lines");
-                return new float3(Mathf.Infinity,Mathf.Infinity,Mathf.Infinity);
-            }
+            if (solution.Equals(solution_alt)) return solution;
+
+            UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
+            return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
+                UnityEngine.Mathf.Infinity);
         }
     }
 }

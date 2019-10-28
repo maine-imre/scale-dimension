@@ -168,9 +168,10 @@ namespace IMRE.HandWaver.ScaleDimension
             //this assumes that the north pole is in the (x) direction.
             //from wikipedia
             float denom = 1 - pos.x;
-            Unity.Mathematics.float3 result = UnityEngine.Mathf.Pow(pos.y / denom, 2) +
-                                              UnityEngine.Mathf.Pow(pos.z / denom, 2) +
-                                              UnityEngine.Mathf.Pow(pos.w / denom, 2);
+            //result needs sums across y,z,w.  Map onto x,y,z in UntiySpace.
+            Unity.Mathematics.float3 result = new float3(UnityEngine.Mathf.Pow(pos.y / denom, 2),
+                UnityEngine.Mathf.Pow(pos.z / denom, 2),
+                UnityEngine.Mathf.Pow(pos.w / denom, 2));
 
             //TODO turn to restore north
             //HigherDimensionsMaths.rotate(result, new Vector4(1, 0, 0, 0),

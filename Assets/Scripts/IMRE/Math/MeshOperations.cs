@@ -1,4 +1,7 @@
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using IMRE.Math;
+using IMRE.ScaleDimension;
 using Unity.Mathematics;
 
 namespace IMRE.HandWaver.ScaleDimension
@@ -15,21 +18,34 @@ namespace IMRE.HandWaver.ScaleDimension
             //Vector3[] normals;
             //iterate through each face of the mesh
 
-            for (int i = 0; i < tris.Length / 3; i++)
+            if (SpencerStudyControl.ins.projectionMethod == ProjectionMethod.stereographic)
             {
-                Unity.Mathematics.float4[] inputVerts =
-                    {verts[tris[i * 3]], verts[tris[i * 3 + 1]], verts[tris[i * 3 + 2]]};
-                Unity.Mathematics.float3[] tmpVerts;
-                int[] tmpTris;
-                projectTriangle(inputVerts, IMRE.ScaleDimension.SpencerStudyControl.ins.subdiv,
-                    out tmpVerts, out tmpTris, IMRE.ScaleDimension.SpencerStudyControl.ins.projectionMethod);
-                //stich faces into common mesh
+                for (int i = 0; i < tris.Length / 3; i++)
+                {
+                    Unity.Mathematics.float4[] inputVerts =
+                        {verts[tris[i * 3]], verts[tris[i * 3 + 1]], verts[tris[i * 3 + 2]]};
+                    Unity.Mathematics.float3[] tmpVerts;
+                    int[] tmpTris;
+                    projectTriangle(inputVerts, IMRE.ScaleDimension.SpencerStudyControl.ins.subdiv,
+                        out tmpVerts, out tmpTris, IMRE.ScaleDimension.SpencerStudyControl.ins.projectionMethod);
+                    //stich faces into common mesh
 
-                tmpTris.ToList().ForEach(idx => triangles.Add(idx + verticies.Count));
-                tmpVerts.ToList().ForEach(vert => verticies.Add(vert));
+                    tmpTris.ToList().ForEach(idx => triangles.Add(idx + verticies.Count));
+                    tmpVerts.ToList().ForEach(vert => verticies.Add(vert));
 
-                //TODO handle uvs;
-                //TODO handle normals;
+                    //TODO handle uvs;
+                    //TODO handle normals;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < verts.Length; i++)
+                {
+                    verticies.Add(projectPosition(verts[i]));
+                    ;
+                }
+
+                triangles = tris.ToList();
             }
 
             mesh.vertices = verticies.ToArray();
@@ -77,6 +93,40 @@ namespace IMRE.HandWaver.ScaleDimension
             for (int i = 0; i < verts.Length; i++)
             {
                 out_verts[i] = projectPosition(verts[i]);
+            }
+        }
+
+        public static float3[] projectSegment(float4[] verts, int subdiv)
+        {
+            if (SpencerStudyControl.ins.projectionMethod == ProjectionMethod.stereographic)
+            {
+                float4[] newVerts = new float4[verts.Length * subdiv];
+                for (int i = 0; i < verts.Length - 1; i++)
+                {
+                    for (int j = 0; j < subdiv; j++)
+                    {
+                        newVerts[i * subdiv + j + 1] = (verts[i] * j + verts[i] * (subdiv - j)) / subdiv;
+                    }
+                }
+
+                newVerts[verts.Length * subdiv - 1] = verts[verts.Length - 1];
+                float3[] result = new float3[newVerts.Length];
+                for (int i = 0; i < newVerts.Length; i++)
+                {
+                    result[i] = projectPosition(newVerts[i]);
+                }
+
+                return result;
+            }
+            else
+            {
+                float3[] result = new float3[verts.Length];
+                for (int i = 0; i < verts.Length; i++)
+                {
+                    result[i] = projectPosition(verts[i]);
+                }
+
+                return result;
             }
         }
 
@@ -168,9 +218,10 @@ namespace IMRE.HandWaver.ScaleDimension
             //this assumes that the north pole is in the (x) direction.
             //from wikipedia
             float denom = 1 - pos.x;
-            Unity.Mathematics.float3 result = UnityEngine.Mathf.Pow(pos.y / denom, 2) +
-                                              UnityEngine.Mathf.Pow(pos.z / denom, 2) +
-                                              UnityEngine.Mathf.Pow(pos.w / denom, 2);
+            //result needs sums across y,z,w.  Map onto x,y,z in UntiySpace.
+            Unity.Mathematics.float3 result = new float3(UnityEngine.Mathf.Pow(pos.y / denom, 2),
+                UnityEngine.Mathf.Pow(pos.z / denom, 2),
+                UnityEngine.Mathf.Pow(pos.w / denom, 2));
 
             //TODO turn to restore north
             //HigherDimensionsMaths.rotate(result, new Vector4(1, 0, 0, 0),

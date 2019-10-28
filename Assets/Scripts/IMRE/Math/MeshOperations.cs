@@ -61,6 +61,14 @@ namespace IMRE.HandWaver.ScaleDimension
             //use a modified Sierpiński triangle as a division mechanic (partition every triangle into 3 triangles each round). Then there are always 3^n triangles
             Unity.Mathematics.float4[] tmp_verts = verts;
             out_tris = new[] {0, 1, 2};
+            //loop subdiv times on subdivide verts.
+            //subdivide verts calls itself, but should terminate when it reaches a case where the size of a partition is 3.
+            /*
+             * Case 1 - triangle of 3 verticies - split into 6 (hit else case)
+             * Case 2 - 6 verts - split in half (two of 3).  round 2, hit else case.
+             * Case 3 - 12 verts - split in half (two of 6). round 2, split in half (four of 3), round 3 hit else case.
+             * continue until we hit the subdiv'th case.
+             */
             for (int i = 0; i < subdiv; i++) subdivideVerts(tmp_verts, out_tris, out tmp_verts, out out_tris);
             out_verts = new Unity.Mathematics.float3[tmp_verts.Length];
 

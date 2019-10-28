@@ -1,4 +1,5 @@
 using System.Linq;
+using Unity.Mathematics;
 
 namespace IMRE.HandWaver.ScaleDimension
 {
@@ -61,7 +62,6 @@ namespace IMRE.HandWaver.ScaleDimension
         {
             //break triangle into smaller triangles
             //use a modified Sierpiński triangle as a division mechanic (partition every triangle into 3 triangles each round). Then there are always 3^n triangles
-            Unity.Mathematics.float4[] tmp_verts = verts;
             out_tris = new[] {0, 1, 2};
             //loop subdiv times on subdivide verts.
             //subdivide verts calls itself, but should terminate when it reaches a case where the size of a partition is 3.
@@ -71,54 +71,71 @@ namespace IMRE.HandWaver.ScaleDimension
              * Case 3 - 12 verts - split in half (two of 6). round 2, split in half (four of 3), round 3 hit else case.
              * continue until we hit the subdiv'th case.
              */
-            for (int i = 0; i < subdiv; i++) subdivideVerts(tmp_verts, out_tris, out tmp_verts, out out_tris);
-            out_verts = new Unity.Mathematics.float3[tmp_verts.Length];
+            for (int i = 0; i < subdiv; i++) subdivideVerts(ref verts, ref out_tris);
+            out_verts = new Unity.Mathematics.float3[verts.Length];
 
-            for (int i = 0; i < tmp_verts.Length; i++)
+            for (int i = 0; i < verts.Length; i++)
             {
-                out_verts[i] = projectPosition(tmp_verts[i]);
+                out_verts[i] = projectPosition(verts[i]);
             }
         }
 
-        private static void subdivideVerts(Unity.Mathematics.float4[] verts, int[] tris,
-            out Unity.Mathematics.float4[] out_verts, out int[] out_tris)
+        //explicit version of subdivide function
+        private static void subdivideVerts(ref Unity.Mathematics.float4[] verts, ref int[] tris)
         {
-            //recursive case.
-            out_verts = new Unity.Mathematics.float4[verts.Length == 3 ? 6 : verts.Length * 4];
-            out_tris = new int[tris.Length * 4];
-            if (verts.Length > 3)
-            {
-                Unity.Mathematics.float4[] tmpVerts;
-                int[] tempTris;
-                subdivideVerts(verts.GetRange(0, verts.Length / 2), tris, out tmpVerts, out tempTris);
-                tmpVerts.CopyToRange(ref out_verts, 0, verts.Length - 1);
-                tempTris.CopyTo(out_tris, 0);
+            //store old values in temporary locations
+            float4[] oldVerts = new float4[verts.Length];
+            int[] oldTris = new int[tris.Length];
+            verts.CopyTo(oldVerts, 0);
+            tris.CopyTo(oldTris, 0);
 
-                //symmetric case
-                subdivideVerts(verts.GetRange(verts.Length / 2, verts.Length),
-                    tris, out tmpVerts, out tempTris);
-                UnityEngine.Debug.Log(out_tris.Length + " : " + tmpVerts.Length);
-                tmpVerts.CopyToRange(ref out_verts, verts.Length, verts.Length * 2 - 1);
-                //tempTris.CopyTo(out_tris, tempTris.Length);
-                for (int i = 0; i < tmpVerts.Length; i++)
-                {
-                    out_tris[i + tempTris.Length] = tempTris[i];
-                }
-            }
-            else
-            {
-                if (verts.Length != 3)
-                    UnityEngine.Debug.LogWarning("ARRAY LENGTH SHOULD BE 3" + verts.Length);
-                //assume that verts.Length = 3
-                out_verts[0] = verts[0];
-                out_verts[1] = verts[1];
-                out_verts[2] = verts[2];
-                out_verts[3] = (verts[0] + verts[1]) / 2f;
-                out_verts[4] = (verts[1] + verts[2]) / 2f;
-                out_verts[5] = (verts[2] + verts[0]) / 2f;
+            //store new values here.
+            int oldTriCount = oldTris.Length / 3;
+            tris = new int[oldTriCount * 12];
+            verts = new Unity.Mathematics.float4[verts.Length == 3 ? 6 : verts.Length * 4];
 
-                out_tris = new[] {0, 3, 5, 1, 3, 4, 3, 4, 5, 4, 5, 2};
+            for (int i = 0; i < oldTriCount; i++)
+            {
+                int[] newTri = newTriangle(i * 6);
+                float4[] oldVertsSubSet =
+                    {oldVerts[oldTris[i * 3]], oldVerts[oldTris[i * 3 + 1]], oldVerts[oldTris[i * 3 + 2]]};
+                float4[] newVerts = MeshOperations.newVerts(oldVertsSubSet);
+                newTri.CopyTo(tris, i * 12);
+                newVerts.CopyTo(verts, i * 6);
             }
+        }
+
+        /// <summary>
+        /// Base case for triangles
+        /// </summary>
+        /// <param name="startIDX"></param>
+        /// <returns></returns>
+        private static int[] newTriangle(int startIDX)
+        {
+            int[] out_tris = new[] {0, 3, 5, 1, 3, 4, 3, 4, 5, 4, 5, 2};
+            for (int i = 0; i < out_tris.Length; i++)
+            {
+                out_tris[i] += startIDX;
+            }
+
+            return out_tris;
+        }
+
+        /// <summary>
+        /// Base case for verticies
+        /// </summary>
+        /// <param name="oldVerts"></param>
+        /// <returns></returns>
+        private static float4[] newVerts(float4[] oldVerts)
+        {
+            float4[] out_verts = new float4[6];
+            out_verts[0] = oldVerts[0];
+            out_verts[1] = oldVerts[1];
+            out_verts[2] = oldVerts[2];
+            out_verts[3] = (oldVerts[0] + oldVerts[1]) / 2f;
+            out_verts[4] = (oldVerts[1] + oldVerts[2]) / 2f;
+            out_verts[5] = (oldVerts[2] + oldVerts[0]) / 2f;
+            return out_verts;
         }
 
         private static Unity.Mathematics.float4[] GetRange(this Unity.Mathematics.float4[] v, int start, int end)

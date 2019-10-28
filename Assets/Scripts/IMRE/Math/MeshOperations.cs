@@ -112,7 +112,7 @@ namespace IMRE.HandWaver.ScaleDimension
         /// <returns></returns>
         private static int[] newTriangle(int startIDX)
         {
-            int[] out_tris = new[] {0, 3, 5, 1, 3, 4, 3, 4, 5, 4, 5, 2};
+            int[] out_tris = new[] {0, 3, 5, 1, 4,3, 3, 4, 5, 4, 2, 5};
             for (int i = 0; i < out_tris.Length; i++)
             {
                 out_tris[i] += startIDX;

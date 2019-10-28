@@ -1,4 +1,8 @@
-﻿namespace IMRE.ScaleDimension.Nets
+﻿using IMRE.HandWaver.ScaleDimension;
+using Unity.Mathematics;
+using UnityEngine;
+
+namespace IMRE.ScaleDimension.Nets
 {
     public abstract class net2D : UnityEngine.MonoBehaviour, ISliderInput
     {
@@ -20,7 +24,8 @@
             {
                 //set vertices using vert function
                 _percentFolded = value;
-                GetComponent<UnityEngine.LineRenderer>().SetPositions(verts(_percentFolded));
+                GetComponent<UnityEngine.LineRenderer>().SetPositions(projectedVerts(_percentFolded));
+                //TODO consider if the line renderer needs to be subdivided.
             }
         }
 
@@ -30,6 +35,24 @@
         public float slider
         {
             set => PercentFolded = !sliderOverride ? value : 1f;
+        }
+
+        private Vector3[] projectedVerts(float percentFolded)
+        {
+            Vector3[] verts = this.verts(percentFolded);
+
+            float4[] out_verts = new float4[verts.Length];
+            for (int i = 0; i < verts.Length; i++)
+            {
+                out_verts[i] = new float4(verts[i].x, verts[i].y, verts[i].z, 0f);
+            }
+
+            for (int i = 0; i < verts.Length; i++)
+            {
+                verts[i] = MeshOperations.projectPosition(out_verts[i]);
+            }
+
+            return verts;
         }
 
         /// <summary>

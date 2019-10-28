@@ -7,7 +7,8 @@ namespace IMRE.HandWaver.ScaleDimension
         public static UnityEngine.Mesh projectedMesh(Unity.Mathematics.float4[] verts, int[] tris)
         {
             UnityEngine.Mesh mesh = new UnityEngine.Mesh();
-            System.Collections.Generic.List<UnityEngine.Vector3> verticies = new System.Collections.Generic.List<UnityEngine.Vector3>();
+            System.Collections.Generic.List<UnityEngine.Vector3> verticies =
+                new System.Collections.Generic.List<UnityEngine.Vector3>();
             System.Collections.Generic.List<int> triangles = new System.Collections.Generic.List<int>();
             //Vector2[] uvs;
             //Vector3[] normals;
@@ -38,14 +39,15 @@ namespace IMRE.HandWaver.ScaleDimension
             mesh.RecalculateBounds();
             return mesh;
         }
-        
+
         /// <summary>
         /// Typecasting
         /// </summary>
         /// <param name="vList"></param>
         /// <param name="dest"></param>
         /// <param name="start"></param>
-        private static void CastArrayCopyTo(this Unity.Mathematics.float3[] vList, ref UnityEngine.Vector3[] dest, int start)
+        private static void CastArrayCopyTo(this Unity.Mathematics.float3[] vList, ref UnityEngine.Vector3[] dest,
+            int start)
         {
             for (int i = 0; i < vList.Length; i++)
             {
@@ -82,7 +84,7 @@ namespace IMRE.HandWaver.ScaleDimension
             out Unity.Mathematics.float4[] out_verts, out int[] out_tris)
         {
             //recursive case.
-            out_verts = new Unity.Mathematics.float4[verts.Length * 2];
+            out_verts = new Unity.Mathematics.float4[verts.Length == 3 ? 6 : verts.Length * 4];
             out_tris = new int[tris.Length * 4];
             if (verts.Length > 3)
             {
@@ -105,8 +107,8 @@ namespace IMRE.HandWaver.ScaleDimension
             }
             else
             {
-                if(verts.Length != 3)
-                UnityEngine.Debug.LogWarning("ARRAY LENGTH SHOULD BE 3" + verts.Length);
+                if (verts.Length != 3)
+                    UnityEngine.Debug.LogWarning("ARRAY LENGTH SHOULD BE 3" + verts.Length);
                 //assume that verts.Length = 3
                 out_verts[0] = verts[0];
                 out_verts[1] = verts[1];

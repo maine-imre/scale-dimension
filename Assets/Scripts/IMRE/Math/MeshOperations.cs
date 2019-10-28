@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Unity.Mathematics;
 
 namespace IMRE.HandWaver.ScaleDimension
@@ -78,6 +79,28 @@ namespace IMRE.HandWaver.ScaleDimension
             {
                 out_verts[i] = projectPosition(verts[i]);
             }
+        }
+
+        public static float3[] projectSegment(float4[] verts, int subdiv)
+        {
+            float4[] newVerts = new float4[verts.Length * subdiv];
+            for (int i = 0; i < verts.Length - 1; i++)
+            {
+                for (int j = 0; j < subdiv; j++)
+                {
+                    newVerts[i * subdiv + j + 1] = (verts[i] * j + verts[i] * (subdiv - j)) / subdiv;
+                    0
+                }
+            }
+
+            newVerts[verts.Length * subdiv - 1] = verts[verts.Length - 1];
+            float3[] result = new float3[newVerts.Length];
+            for (int i = 0; i < newVerts.Length; i++)
+            {
+                result[i] = projectPosition(newVerts[i]);
+            }
+
+            return result;
         }
 
         //explicit version of subdivide function

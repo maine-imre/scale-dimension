@@ -10,7 +10,7 @@
         /// <param name="vertices"></param>
         /// <param name="crossSectionRenderer"></param>
         public void crossSectTri(Unity.Mathematics.float3 point, Unity.Mathematics.float3 direction,
-            UnityEngine.Vector3[] vertices, UnityEngine.LineRenderer crossSectionRenderer)
+            Unity.Mathematics.float3[] vertices, UnityEngine.LineRenderer crossSectionRenderer)
         {
             //Vertices are organized in clockwise manner starting from top
             //top vertex

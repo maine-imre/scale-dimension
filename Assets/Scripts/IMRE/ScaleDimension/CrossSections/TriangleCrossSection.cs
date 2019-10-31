@@ -214,8 +214,9 @@
             Unity.Mathematics.float3 solution_alt = q + t * v;
 
             if (solution.Equals(solution_alt)) return solution;
-
+            
             UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
+            
             return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
                 UnityEngine.Mathf.Infinity);
         }

@@ -10,7 +10,7 @@
         /// <param name="vertices"></param>
         /// <param name="crossSectionRenderer"></param>
         public void crossSectTri(Unity.Mathematics.float3 point, Unity.Mathematics.float3 direction,
-            UnityEngine.Vector3[] vertices, UnityEngine.LineRenderer crossSectionRenderer)
+            Unity.Mathematics.float3[] vertices, UnityEngine.LineRenderer crossSectionRenderer)
         {
             //Vertices are organized in clockwise manner starting from top
             //top vertex
@@ -214,8 +214,9 @@
             Unity.Mathematics.float3 solution_alt = q + t * v;
 
             if (solution.Equals(solution_alt)) return solution;
-
+            
             UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
+            
             return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
                 UnityEngine.Mathf.Infinity);
         }

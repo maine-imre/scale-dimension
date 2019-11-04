@@ -312,16 +312,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allFigures:
-  - {fileID: 238493597}
+  - {fileID: 1324381050}
   animateFold: 0
   animateUp: 1
-  foldOverride: 0
+  foldOverride: 1
   foldOverrideValue: 0
   hyperPlane:
-    x: -1
-    y: -1
-    z: -1
-    w: 9
+    x: 0
+    y: 0
+    z: 0
+    w: 0
   NorthPole:
     x: 1
     y: 0
@@ -330,16 +330,16 @@ MonoBehaviour:
   obliquePlaneNormal:
     x: 0
     y: 1
-    z: 1
+    z: 0
     w: 0
   origin:
     x: 0
-    y: -1
+    y: 0
     z: 0
     w: 0
   orthographicOverride: 0
   pointPrefab: {fileID: 0}
-  projectionMethod: 1
+  projectionMethod: 2
   subdiv: 4
 --- !u!1 &238493597
 GameObject:
@@ -640,7 +640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1324381051
 Transform:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ namespace IMRE.ScaleDimension.CrossSections
     {
 
         public void crossSectTetrahedron(float3 point, float3 normalDirection, float3[] vertices,
-            LineRenderer crossSectionRenderer, MeshRenderer crossSectionMesh)
+            LineRenderer crossSectionRenderer, Mesh crossSectionMesh)
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
             float3 a = vertices[0];
@@ -60,6 +60,24 @@ namespace IMRE.ScaleDimension.CrossSections
             crossSection3.crossSectTri(testpoint, testdirection, triangle3, crossSectionRenderer);
             crossSection4.crossSectTri(testpoint, testdirection, triangle4, crossSectionRenderer);
             
+            //verts
+            Vector3[] verts = new Vector3[4];
+            verts[1] = ;
+            verts[2] = ;
+            verts[3] = ;
+            verts[4] = ;
+
+            crossSectionMesh.vertices = verts;
+           
+            //tris
+            Vector3[] tris = ;
+            crossSectionMesh.triangles = tris;
+
+            //uvs
+            
+            //normals
+
+
         }
 
         /// <summary>
@@ -67,29 +85,28 @@ namespace IMRE.ScaleDimension.CrossSections
         /// using mathematics described here http://geomalgorithms.com/a05-_intersect-1.html
         /// </summary>
         /// <returns></returns>
-        public float3 intersectPlanes(float3 plane1Point, float3 normal1, float3 plane2Point, float3 normal2)
+        public float3[] intersectPlanes(float3 plane1Point, float3 normal1, float3 plane2Point, float3 normal2)
         {
             //TODO ^^^ the return can't be a float3, need to return a point and a direciton to describe a line.
-            
-            //TODO normalize this
-            float3 u = math.cross(normal1, normal2);
+            float3 u = Vector3.Normalize(math.cross(normal1, normal2));
 
-            //TODO normalize this
-            float3 lineDirInPlane2 = math.cross(normal2, u);
+            float3 lineDirInPlane2 = Vector3.Normalize(math.cross(normal2, u));
 
             //TODO check that the dot product is used correctly for projection
             float3 lineDirInPlane2_prime = lineDirInPlane2 - math.dot(normal1, lineDirInPlane2) * normal1;
 
             //TODO normalize this
-            float3 p2p_prime = plane2Point- math.dot(plane2Point - plane1Point, normal1) * normal1;
+            float3 p2_prime = Vector3.Normalize( plane2Point- math.dot(plane2Point - plane1Point, normal1) * normal1);
             
             //TODO intersect two lines, gives a point on desired line (with dir u)
             //Line 1: point = p2p_prime & dir = lineDirInPlane2_prime
             //Line 2: point = plane2point & dir = lineDirInPlane2
             
-            
-            
-            return new float3();
+            float3[] result = new float3[2];
+            //result[1] = point;
+            result[2] = u;
+
+            return result;
         }
     }
 }

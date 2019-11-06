@@ -9,7 +9,7 @@ namespace IMRE.ScaleDimension.CrossSections
     public class TetrahderonCrossSection : UnityEngine.MonoBehaviour
     {
         public void crossSectTetrahedron(float3 point, float3 normalDirection, float3[] vertices,
-            LineRenderer tetrahedronRenderer, Mesh crossSectionMesh)
+            LineRenderer tetrahedronRenderer, Mesh tetrahedronMesh)
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
             float3 a = vertices[0];
@@ -17,26 +17,11 @@ namespace IMRE.ScaleDimension.CrossSections
             float3 c = vertices[2];
             float3 d = vertices[3];
 
-            float3[] triangle1 = new float3[3];
-            triangle1[0] = a;
-            triangle1[1] = b;
-            triangle1[2] = c;
-
-            float3[] triangle2 = new float3[3];
-            triangle1[0] = a;
-            triangle1[1] = c;
-            triangle1[2] = d;
-
-            float3[] triangle3 = new float3[3];
-            triangle1[0] = a;
-            triangle1[1] = d;
-            triangle1[2] = b;
-
-            float3[] triangle4 = new float3[3];
-            triangle1[0] = b;
-            triangle1[1] = c;
-            triangle1[2] = d;
-
+            float3[] triangle1 = {a, b, c};
+            float3[] triangle2 = {a, c, d};
+            float3[] triangle3 = {a, d, b};
+            float3[] triangle4 = {b, c, d};
+            
             float3 triangle1Normal = math.cross(Vector3.Normalize(c - a), Vector3.Normalize(b - a));
             float3 triangle2Normal = math.cross(Vector3.Normalize(c - a), Vector3.Normalize(d - a));
             float3 triangle3Normal = math.cross(Vector3.Normalize(d - a), Vector3.Normalize(b - a));
@@ -56,14 +41,6 @@ namespace IMRE.ScaleDimension.CrossSections
 
             float3 tri4Point = intersectPlanes(testpoint, testdirection, triangle4Normal, b)[0];
             float3 tri4Dir = intersectPlanes(testpoint, testdirection, triangle4Normal, b)[1];
-
-            //move this to a start function, setup game objects with these components
-            //use the line renderers to render perimeter
-            //check if these are necessary
-            TriangleCrossSection crossSection1 = new TriangleCrossSection();
-            TriangleCrossSection crossSection2 = new TriangleCrossSection();
-            TriangleCrossSection crossSection3 = new TriangleCrossSection();
-            TriangleCrossSection crossSection4 = new TriangleCrossSection();
 
             LineRenderer crossSectionRenderer1 = crossSectTri(tri1Point, tri1Dir, triangle1, tetrahedronRenderer);
             LineRenderer crossSectionRenderer2 = crossSectTri(tri2Point, tri2Dir, triangle2, tetrahedronRenderer);
@@ -135,11 +112,11 @@ namespace IMRE.ScaleDimension.CrossSections
                    verts[2] = crossSectionRenderer4.GetPosition(0);
                }
                
-               crossSectionMesh.vertices = verts;
+               tetrahedronMesh.vertices = verts;
 
                //tris
-               int[] tris = new[] {0, 1, 2};
-               crossSectionMesh.triangles = tris;
+               int[] tris = {0, 1, 2};
+               tetrahedronMesh.triangles = tris;
             }
            //Intersection is quadrilateral
             else if(vertCount == 4)
@@ -151,16 +128,16 @@ namespace IMRE.ScaleDimension.CrossSections
                 verts[2] = crossSectionRenderer3.GetPosition(0);
                 verts[3] = crossSectionRenderer4.GetPosition(0);
 
-                crossSectionMesh.vertices = verts;
+                tetrahedronMesh.vertices = verts;
 
                 //tris
                 int[] tris = {0, 1, 3, 1, 2, 3};
-                crossSectionMesh.triangles = tris;
+                tetrahedronMesh.triangles = tris;
             }
-
 
         }
 
+        //TODO: check that this function is correct - also make sure that case where planes do not intersect is met, i.e. 
         /// <summary>
         /// function that calculates intersection of two planes, returns a line segment
         /// using mathematics described here http://geomalgorithms.com/a05-_intersect-1.html
@@ -168,7 +145,6 @@ namespace IMRE.ScaleDimension.CrossSections
         /// <returns></returns>
         public float3[] intersectPlanes(float3 plane1Point, float3 normal1, float3 plane2Point, float3 normal2)
         {
-            //TODO ^^^ the return can't be a float3, need to return a point and a direciton to describe a line.
             float3 u = Vector3.Normalize(math.cross(normal1, normal2));
 
             float3 lineDirInPlane2 = Vector3.Normalize(math.cross(normal2, u));
@@ -176,7 +152,6 @@ namespace IMRE.ScaleDimension.CrossSections
             //TODO check that the dot product is used correctly for projection
             float3 lineDirInPlane2_prime = lineDirInPlane2 - math.dot(normal1, lineDirInPlane2) * normal1;
 
-            //TODO normalize this
             float3 p2_prime = Vector3.Normalize(plane2Point - math.dot(plane2Point - plane1Point, normal1) * normal1);
 
             //TODO intersect two lines, gives a point on desired line (with dir u)

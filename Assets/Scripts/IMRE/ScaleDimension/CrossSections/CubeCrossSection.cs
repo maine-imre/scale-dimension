@@ -84,5 +84,6 @@ namespace IMRE.ScaleDimension.CrossSections
             result[1] = dir;
 
             return result;
+        }
     }
 }

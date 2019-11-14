@@ -1,8 +1,37 @@
-﻿namespace IMRE.ScaleDimension.CrossSections
+﻿using Unity.Mathematics;
+
+namespace IMRE.ScaleDimension.CrossSections
 
 {
     public class TriangleCrossSection : UnityEngine.MonoBehaviour
     {
+        public Unity.Mathematics.float3x3 triangleVerticies;
+        public Unity.Mathematics.float3 linePos;
+        public Unity.Mathematics.float3 lineDir;
+
+        private UnityEngine.LineRenderer xc;
+        private UnityEngine.LineRenderer obj;
+
+        private void Start()
+        {
+            xc= gameObject.AddComponent<UnityEngine.LineRenderer>();
+            //obj= gameObject.AddComponent<UnityEngine.LineRenderer>();
+            //obj.SetPositions(new [] {(UnityEngine.Vector3) triangleVerticies.c0,(UnityEngine.Vector3) triangleVerticies.c1,(UnityEngine.Vector3) triangleVerticies.c2});
+            //obj.startWidth = 0.1f;
+            //obj.endWidth = 0.1f;
+            //obj.loop = true;
+            //obj.useWorldSpace = true;
+            xc.useWorldSpace = true;
+            xc.startWidth = 0.1f;
+            xc.endWidth = 0.1f;
+            xc.loop = false;
+        }
+
+        private void Update()
+        {
+            crossSectTri(linePos, lineDir,new [] {triangleVerticies.c0,triangleVerticies.c1,triangleVerticies.c2},xc);
+        }
+
         /// <summary>
         ///     Function to render the intersection of a plane and a triangle
         /// </summary>
@@ -20,17 +49,15 @@
             //bottom left
             Unity.Mathematics.float3 c = vertices[2];
 
-            Unity.Mathematics.float3 lineDirection = direction - point;
-
             //intermediate calculations 
             Unity.Mathematics.float3 ac_hat = (c - a) / UnityEngine.Vector3.Magnitude(c - a);
             Unity.Mathematics.float3 ab_hat = (b - a) / UnityEngine.Vector3.Magnitude(b - a);
             Unity.Mathematics.float3 bc_hat = (c - b) / UnityEngine.Vector3.Magnitude(c - b);
 
             //points of intersection on each line segment
-            Unity.Mathematics.float3 ac_star = intersectLines(point, lineDirection, a, ac_hat);
-            Unity.Mathematics.float3 ab_star = intersectLines(point, lineDirection, a, ab_hat);
-            Unity.Mathematics.float3 bc_star = intersectLines(point, lineDirection, b, bc_hat);
+            Unity.Mathematics.float3 ac_star = intersectLines(point, direction, a, ac_hat);
+            Unity.Mathematics.float3 ab_star = intersectLines(point, direction, a, ab_hat);
+            Unity.Mathematics.float3 bc_star = intersectLines(point, direction, b, bc_hat);
 
             //boolean values for if intersection hits only a vertex of the triangle
             bool ac_star_isEndpoint;
@@ -60,6 +87,8 @@
             if (bc_star_isEndpoint)
                 endpointCount++;
 
+            float3 a_ab_intersection = intersectLines(point, direction, a, ab_star);
+
             //If plane does not hit triangle
             if (!(ab_star_onSegment || ac_star_onSegment || bc_star_onSegment))
             {
@@ -78,20 +107,20 @@
                 {
                     //find out which case is trivial and use the other two vertices; if it is trivial the intersection will just be the value passed in to the function
                     //a is trivial
-                    if (intersectLines(point, lineDirection, a, ab_star).Equals(point) ||
-                        intersectLines(point, lineDirection, a, ac_star).Equals(point))
+                    if (a_ab_intersection.Equals(point) ||
+                        intersectLines(point, direction, a, ac_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, b);
                         crossSectionRenderer.SetPosition(1, c);
                     }
                     //b is trivial
-                    else if (intersectLines(point, lineDirection, b, ab_star).Equals(point))
+                    else if (intersectLines(point, direction, b, ab_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, c);
                     }
                     //c is trivial
-                    else if (intersectLines(point, lineDirection, c, ac_star).Equals(point))
+                    else if (intersectLines(point, direction, c, ac_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, b);
@@ -99,18 +128,18 @@
                 }
                 else if (!ab_star.Equals(bc_star))
                 {
-                    if (intersectLines(point, lineDirection, a, ab_star).Equals(point))
+                    if (a_ab_intersection.Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, b);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, lineDirection, b, ab_star).Equals(point) ||
-                             intersectLines(point, lineDirection, b, bc_star).Equals(point))
+                    else if (intersectLines(point, direction, b, ab_star).Equals(point) ||
+                             intersectLines(point, direction, b, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, lineDirection, c, bc_star).Equals(point))
+                    else if (intersectLines(point, direction, c, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, b);
@@ -119,18 +148,18 @@
 
                 if (!ac_star.Equals(bc_star))
                 {
-                    if (intersectLines(point, lineDirection, a, ac_star).Equals(point))
+                    if (intersectLines(point, direction, a, ac_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, b);
                         crossSectionRenderer.SetPosition(1, c);
                     }
-                    else if (intersectLines(point, lineDirection, c, ac_star).Equals(point) ||
-                             intersectLines(point, lineDirection, c, bc_star).Equals(point))
+                    else if (intersectLines(point, direction, c, ac_star).Equals(point) ||
+                             intersectLines(point, direction, c, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, b);
                     }
-                    else if (intersectLines(point, lineDirection, b, bc_star).Equals(point))
+                    else if (intersectLines(point, direction, b, bc_star).Equals(point))
                     {
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, c);
@@ -201,24 +230,26 @@
             Unity.Mathematics.float3 v_perp =
                 Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), v));
             Unity.Mathematics.float3 u_perp =
-                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), u));
-            float s = Unity.Mathematics.math.dot(-1 * v_perp, w) / Unity.Mathematics.math.dot(-1 * v_perp, u);
+                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(v,u), u));
+            float s = Unity.Mathematics.math.dot(-1 * v_perp, w) / Unity.Mathematics.math.dot(v_perp, u);
 
             //note if s == 0, lines are parallel
             Unity.Mathematics.float3 solution = p + s * u;
 
             //the next couple of lines don't calculate a solution but can validate our solution.
-            float t = Unity.Mathematics.math.dot(-1 * u_perp, w) / Unity.Mathematics.math.dot(-1 * u_perp, v);
+            float t = Unity.Mathematics.math.dot(u_perp, w) / Unity.Mathematics.math.dot(u_perp, v);
 
             //note that if t == 0, lines are parallel
             Unity.Mathematics.float3 solution_alt = q + t * v;
 
-            if (solution.Equals(solution_alt)) return solution;
+            //if (solution.Equals(solution_alt)) 
+            return solution_alt;
             
-            UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
+            //UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
             
-            return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
-                UnityEngine.Mathf.Infinity);
+            //return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
+               //UnityEngine.Mathf.Infinity);
         }
+        
     }
 }

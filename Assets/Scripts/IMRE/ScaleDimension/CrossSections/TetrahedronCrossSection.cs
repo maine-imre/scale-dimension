@@ -49,7 +49,7 @@ namespace IMRE.ScaleDimension.CrossSections
 
             int vertCount = 0;
 
-            bool line1, line2, line3, line4;
+            bool line1 = false, line2 = false, line3 = false, line4 = false;
 
             if (crossSectionRenderer1.enabled == true)
             {

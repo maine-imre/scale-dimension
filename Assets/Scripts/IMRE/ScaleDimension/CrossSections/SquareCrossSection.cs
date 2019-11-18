@@ -1,15 +1,47 @@
-﻿namespace IMRE.ScaleDimension.CrossSections
+﻿using UnityEngine;
+using Unity.Mathematics;
+
+namespace IMRE.ScaleDimension.CrossSections
 {
     public class SquareCrossSection : UnityEngine.MonoBehaviour
     {
+        
+        public Unity.Mathematics.float3 planeNormal;
+        public Unity.Mathematics.float3 planePos;
+        private UnityEngine.LineRenderer obj;
+        public Unity.Mathematics.float3x4 squareVertices;
+
+        private UnityEngine.LineRenderer xc;
+
+        private void Start()
+        {
+            xc = gameObject.AddComponent<UnityEngine.LineRenderer>();
+            //obj= gameObject.AddComponent<UnityEngine.LineRenderer>();
+            //obj.SetPositions(new [] {(UnityEngine.Vector3) triangleVerticies.c0,(UnityEngine.Vector3) triangleVerticies.c1,(UnityEngine.Vector3) triangleVerticies.c2});
+            //obj.startWidth = 0.1f;
+            //obj.endWidth = 0.1f;
+            //obj.loop = true;
+            //obj.useWorldSpace = true;
+            xc.useWorldSpace = true;
+            xc.startWidth = 0.1f;
+            xc.endWidth = 0.1f;
+            xc.loop = false;
+        }
+        
+        private void Update()
+        {
+            crossSectSquare(planePos, planeNormal, new[] {squareVertices.c0, squareVertices.c1, squareVertices.c2, squareVertices.c3},
+                xc);
+        }
+
         /// <summary>
-        ///     Function to render the intersection of a plane and a square
+        /// Function to render the intersection of a plane and a square
         /// </summary>
         /// <param name="height"></param>
         /// <param name="vertices"></param>
         /// <param name="crossSectionRenderer"></param>
-        public void crossSectSquare(Unity.Mathematics.float3 point, Unity.Mathematics.float3 direction,
-            UnityEngine.Vector3[] vertices,
+        public void crossSectSquare(Unity.Mathematics.float3 point, Unity.Mathematics.float3 normalDirection,
+            float3[] vertices,
             UnityEngine.LineRenderer crossSectionRenderer)
         {
             //Vertices are organized in clockwise manner starting from top left
@@ -22,8 +54,6 @@
             //bottom left
             Unity.Mathematics.float3 d = vertices[3];
 
-            Unity.Mathematics.float3 lineDirection = direction - point;
-
             //intermediate calculations
             Unity.Mathematics.float3 ab_hat = (b - a) / UnityEngine.Vector3.Magnitude(b - a);
             Unity.Mathematics.float3 bc_hat = (c - b) / UnityEngine.Vector3.Magnitude(c - b);
@@ -31,11 +61,11 @@
             Unity.Mathematics.float3 da_hat = (a - d) / UnityEngine.Vector3.Magnitude(a - d);
 
             //calculations for point of intersection on different segments
-            Unity.Mathematics.float3 ab_star = intersectLines(point, lineDirection, a, ab_hat);
-            Unity.Mathematics.float3 bc_star = intersectLines(point, lineDirection, b, bc_hat);
-            Unity.Mathematics.float3 cd_star = intersectLines(point, lineDirection, c, cd_hat);
-            Unity.Mathematics.float3 da_star = intersectLines(point, lineDirection, d, da_hat);
-
+            Unity.Mathematics.float3 ab_star = SegmentPlaneIntersection(a, b, point, normalDirection);
+            Unity.Mathematics.float3 bc_star = SegmentPlaneIntersection(b, c, point, normalDirection);
+            Unity.Mathematics.float3 cd_star = SegmentPlaneIntersection(c, d, point, normalDirection);
+            Unity.Mathematics.float3 da_star = SegmentPlaneIntersection(d, a, point, normalDirection);
+            
             //booleans for if the intersection hits a vertex 
             bool ab_star_isEndpoint = ab_star.Equals(a) || ab_star.Equals(b);
             bool bc_star_isEndpoint = bc_star.Equals(b) || bc_star.Equals(c);
@@ -44,17 +74,18 @@
 
             //booleans for if the intersection hits somewhere on the segments besides the vertices
             bool ab_star_onSegment =
-                UnityEngine.Vector3.Magnitude(ab_star - a) > UnityEngine.Vector3.Magnitude(b - a) ||
-                UnityEngine.Vector3.Magnitude(ab_star - b) > UnityEngine.Vector3.Magnitude(b - a);
+                !ab_star.Equals(new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity));
             bool bc_star_onSegment =
-                UnityEngine.Vector3.Magnitude(bc_star - b) > UnityEngine.Vector3.Magnitude(c - b) ||
-                UnityEngine.Vector3.Magnitude(bc_star - c) > UnityEngine.Vector3.Magnitude(c - b);
+                !bc_star.Equals(new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity));
             bool cd_star_onSegment =
-                UnityEngine.Vector3.Magnitude(cd_star - c) > UnityEngine.Vector3.Magnitude(d - c) ||
-                UnityEngine.Vector3.Magnitude(cd_star - d) > UnityEngine.Vector3.Magnitude(d - c);
+                !cd_star.Equals(new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity));
             bool da_star_onSegment =
-                UnityEngine.Vector3.Magnitude(da_star - d) > UnityEngine.Vector3.Magnitude(a - d) ||
-                UnityEngine.Vector3.Magnitude(da_star - a) > UnityEngine.Vector3.Magnitude(a - d);
+                !da_star.Equals(new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity));
+            
+            Debug.Log(ab_star);
+            Debug.Log(bc_star);
+            Debug.Log(cd_star);
+            Debug.Log(da_star);
 
             //track how many vertices are hit in the intersection
             int endpointCount = 0;
@@ -91,14 +122,19 @@
                     //there are only two pairs of opposite sides.  if it's not one, it's the other.
                     result0 = bc_star;
                     result1 = da_star;
+                    
+                    crossSectionRenderer.SetPosition(0, result0);
+                    crossSectionRenderer.SetPosition(1, result1);
                 }
-
-                crossSectionRenderer.SetPosition(0, result0);
-                crossSectionRenderer.SetPosition(1, result1);
+                else
+                {
+                    Debug.LogWarning("Error in calculation of line plane intersection");
+                    crossSectionRenderer.enabled = false;
+                }
+                
             }
-
             //intersection hits one vertice and somewhere on a segment
-            if (endpointCount == 2 && (ab_star.Equals(bc_star) || bc_star.Equals(cd_star) || cd_star.Equals(da_star)))
+            else if (endpointCount == 2 && (ab_star.Equals(bc_star) || bc_star.Equals(cd_star) || cd_star.Equals(da_star)))
             {
                 //find which vertex is in the intersection, and from there find which of the two possible segments are the other point of intersection
                 //the same logic carries through all of these subcases
@@ -141,7 +177,7 @@
                         crossSectionRenderer.SetPosition(1, bc_star);
                     }
                 }
-                else
+                else if(da_star.Equals(ab_star))
                 {
                     if (cd_star_onSegment)
                     {
@@ -154,6 +190,11 @@
                         crossSectionRenderer.SetPosition(0, a);
                         crossSectionRenderer.SetPosition(1, bc_star);
                     }
+                }
+                else
+                {
+                    Debug.LogWarning("Error in calculation of line plane intersection");
+                    crossSectionRenderer.enabled = false;
                 }
             }
             //intersection hits two segments of the square
@@ -186,12 +227,18 @@
                     crossSectionRenderer.SetPosition(0, bc_star);
                     crossSectionRenderer.SetPosition(1, cd_star);
                 }
-                else
+                else if(cd_star_onSegment && da_star_onSegment)
                 {
                     crossSectionRenderer.SetPosition(0, cd_star);
                     crossSectionRenderer.SetPosition(1, da_star);
                 }
+                else
+                {
+                    Debug.LogWarning("Error in calculation of line plane intersection");
+                    crossSectionRenderer.enabled = false;
+                }
             }
+
         }
 
         //these are simply copy-pasted for now
@@ -199,40 +246,78 @@
         #region functions
 
         /// <summary>
-        ///     Returns the point of intersection of two lines
+        /// Finds the point of intersection between a line and a plane
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="u"></param>
-        /// <param name="q"></param>
-        /// <param name="v"></param>
+        /// <param name="linePos">A point on the line</param>
+        /// <param name="lineDir">The normalDirection of the line</param>
+        /// <param name="planePos">A point on the plane</param>
+        /// <param name="planeNorm">The normal normalDirection of the plane</param>
         /// <returns></returns>
-        private Unity.Mathematics.float3 intersectLines(Unity.Mathematics.float3 p, Unity.Mathematics.float3 u,
-            Unity.Mathematics.float3 q, Unity.Mathematics.float3 v)
+        internal static Unity.Mathematics.float3 SegmentPlaneIntersection(Unity.Mathematics.float3 segmentA,
+            Unity.Mathematics.float3 segmentB, Unity.Mathematics.float3 planePos, Unity.Mathematics.float3 planeNorm)
         {
-            //using method described here: http://geomalgorithms.com/a05-_intersect-1.html
-            Unity.Mathematics.float3 w = q - p;
-            Unity.Mathematics.float3 v_perp =
-                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), v));
-            Unity.Mathematics.float3 u_perp =
-                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), u));
-            float s = Unity.Mathematics.math.dot(-1 * v_perp, w) / Unity.Mathematics.math.dot(-1 * v_perp, u);
+            //  0 = disjoint (no intersection)
+            //  1 =  intersection in the unique point *I0
+            //  2 = the  segment lies in the plane
+            int type  = 0;
+            float3 result;
 
-            //note if s == 0, lines are parallel
-            Unity.Mathematics.float3 solution = p + s * u;
+            float tolerance = .00001f;
+            
+            //segmenta and segmentb are endpoints of a segment
+            float3 u = segmentB - segmentA;
+            float3 w = segmentA - planePos;
 
-            //the next couple of lines don't calculate a solution but can validate our solution.
-            float t = Unity.Mathematics.math.dot(-1 * u_perp, w) / Unity.Mathematics.math.dot(-1 * u_perp, v);
+            float D = Unity.Mathematics.math.dot(planeNorm, u);
+            float N = -Unity.Mathematics.math.dot(planeNorm, w);
 
-            //note that if t == 0, lines are parallel
-            Unity.Mathematics.float3 solution_alt = q + t * v;
+            Debug.Log(D);
+            Debug.Log(N);
+                
+            if (Mathf.Abs(D) < tolerance)
+            {
+                // segment is parallel to plane
+                if (N == 0f)
+                {
+                    // segment lies in plane
+                    type = 2;
+                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+                }
 
-            if (solution.Equals(solution_alt)) return solution;
+                else
+                {
+                    type = 0; // no intersection
+                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+                }
 
-            UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
-            return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
-                UnityEngine.Mathf.Infinity);
+            }
+            else
+            {
+
+                // they are not parallel
+                // compute intersect param
+                float sI = N / D;
+                if (sI < 0 || sI > 1)
+                {
+                    type = 0; // no intersection
+                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+
+                }
+                else
+                {
+                    result = segmentA + sI * u; // compute segment intersect point
+                    type = 1;
+                }
+            }
+
+/*            if (type != 1)
+            {
+                Debug.Log(type);
+            }*/
+
+            return result;
         }
+    }
 
         #endregion
-    }
 }

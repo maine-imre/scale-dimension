@@ -1,21 +1,97 @@
-﻿namespace IMRE.ScaleDimension.CrossSections
+﻿using System.Linq;
+
+namespace IMRE.ScaleDimension.CrossSections
 {
-    public class TetrahderonCrossSection : UnityEngine.MonoBehaviour
+    public class TetrahedronCrossSection : UnityEngine.MonoBehaviour
     {
+        public Unity.Mathematics.float3x4 verticies;
+        private System.Collections.Generic.List<TriangleCrossSection> triXC;
+
+        public Unity.Mathematics.float3 planePos;
+        public Unity.Mathematics.float3 planeNormal;
+        
+        private void Start()
+        {
+            //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
+            Unity.Mathematics.float3 a = verticies[0];
+            Unity.Mathematics.float3 b = verticies[1];
+            Unity.Mathematics.float3 c = verticies[2];
+            Unity.Mathematics.float3 d = verticies[3];
+
+            Unity.Mathematics.float3x3 triangle1 = new Unity.Mathematics.float3x3(a, b, c);
+            Unity.Mathematics.float3x3 triangle2 =  new Unity.Mathematics.float3x3(a, c, d);
+            Unity.Mathematics.float3x3 triangle3 =  new Unity.Mathematics.float3x3(a, d, b);
+            Unity.Mathematics.float3x3 triangle4 =  new Unity.Mathematics.float3x3(b, c, d);
+
+            triXC = new System.Collections.Generic.List<TriangleCrossSection>();
+            BuildTriangle(triangle1, planePos, planeNormal);
+            BuildTriangle(triangle2, planePos, planeNormal);
+            BuildTriangle(triangle3, planePos, planeNormal);
+            BuildTriangle(triangle4, planePos, planeNormal);
+
+            gameObject.AddComponent<UnityEngine.LineRenderer>();
+            gameObject.AddComponent<UnityEngine.MeshRenderer>();
+            gameObject.AddComponent<UnityEngine.MeshFilter>();
+        }
+
+        private void Update()
+        {
+            UpdateTriangles();
+            crossSectTetrahedron(planePos,planeNormal,verticies,GetComponent<UnityEngine.LineRenderer>(), GetComponent<UnityEngine.MeshFilter>().mesh);
+        }
+
+        private void BuildTriangle(Unity.Mathematics.float3x3 verticies, Unity.Mathematics.float3 planePos,
+            Unity.Mathematics.float3 planeNorm)
+        {
+            UnityEngine.GameObject tri1_go = new UnityEngine.GameObject();
+            tri1_go.transform.parent = this.transform;
+            tri1_go.AddComponent<TriangleCrossSection>();
+            triXC.Add(tri1_go.GetComponent<TriangleCrossSection>());
+            tri1_go.GetComponent<TriangleCrossSection>().triangleVerticies = verticies;
+            tri1_go.GetComponent<TriangleCrossSection>().planePos = planePos;
+            tri1_go.GetComponent<TriangleCrossSection>().planeNormal = planeNorm;
+        }
+
+        private void UpdateTriangles()
+        {
+            //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
+            Unity.Mathematics.float3 a = verticies[0];
+            Unity.Mathematics.float3 b = verticies[1];
+            Unity.Mathematics.float3 c = verticies[2];
+            Unity.Mathematics.float3 d = verticies[3];
+
+            Unity.Mathematics.float3x3 triangle1 = new Unity.Mathematics.float3x3(a, b, c);
+            Unity.Mathematics.float3x3 triangle2 =  new Unity.Mathematics.float3x3(a, c, d);
+            Unity.Mathematics.float3x3 triangle3 =  new Unity.Mathematics.float3x3(a, d, b);
+            Unity.Mathematics.float3x3 triangle4 =  new Unity.Mathematics.float3x3(b, c, d);
+            
+            triXC.ForEach(p => p.planePos = planePos);
+            triXC.ForEach(p => p.planeNormal = planeNormal);
+            triXC[0].triangleVerticies = triangle1;
+            triXC[1].triangleVerticies = triangle2;
+            triXC[2].triangleVerticies = triangle3;
+            triXC[3].triangleVerticies = triangle4;   
+        }
+
         public void crossSectTetrahedron(Unity.Mathematics.float3 point, Unity.Mathematics.float3 normalDirection,
-            Unity.Mathematics.float3[] vertices,
+            Unity.Mathematics.float3x4 vertices,
             UnityEngine.LineRenderer tetrahedronRenderer, UnityEngine.Mesh tetrahedronMesh)
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
-            Unity.Mathematics.float3 a = vertices[0];
-            Unity.Mathematics.float3 b = vertices[1];
-            Unity.Mathematics.float3 c = vertices[2];
-            Unity.Mathematics.float3 d = vertices[3];
+            Unity.Mathematics.float3 a = vertices.c0;
+            Unity.Mathematics.float3 b = vertices.c1;
+            Unity.Mathematics.float3 c = vertices.c2;
+            Unity.Mathematics.float3 d = vertices.c3;
 
             Unity.Mathematics.float3[] triangle1 = {a, b, c};
             Unity.Mathematics.float3[] triangle2 = {a, c, d};
             Unity.Mathematics.float3[] triangle3 = {a, d, b};
             Unity.Mathematics.float3[] triangle4 = {b, c, d};
+
+            Unity.Mathematics.float3 triangle1point = a;
+            Unity.Mathematics.float3 triangle2point = a;
+            Unity.Mathematics.float3 triangle3point = a;
+            Unity.Mathematics.float3 triangle4point = b;
 
             Unity.Mathematics.float3 triangle1Normal =
                 Unity.Mathematics.math.cross(UnityEngine.Vector3.Normalize(c - a),
@@ -30,29 +106,11 @@
                 Unity.Mathematics.math.cross(UnityEngine.Vector3.Normalize(c - b),
                     UnityEngine.Vector3.Normalize(d - b));
 
-            Unity.Mathematics.float3 testpoint = new Unity.Mathematics.float3();
-            Unity.Mathematics.float3 testdirection = new Unity.Mathematics.float3();
-
-            Unity.Mathematics.float3 tri1Point = intersectPlanes(testpoint, testdirection, triangle1Normal, a)[0];
-            Unity.Mathematics.float3 tri1Dir = intersectPlanes(testpoint, testdirection, triangle1Normal, a)[1];
-
-            Unity.Mathematics.float3 tri2Point = intersectPlanes(testpoint, testdirection, triangle2Normal, a)[0];
-            Unity.Mathematics.float3 tri2Dir = intersectPlanes(testpoint, testdirection, triangle2Normal, a)[1];
-
-            Unity.Mathematics.float3 tri3Point = intersectPlanes(testpoint, testdirection, triangle3Normal, a)[0];
-            Unity.Mathematics.float3 tri3Dir = intersectPlanes(testpoint, testdirection, triangle3Normal, a)[1];
-
-            Unity.Mathematics.float3 tri4Point = intersectPlanes(testpoint, testdirection, triangle4Normal, b)[0];
-            Unity.Mathematics.float3 tri4Dir = intersectPlanes(testpoint, testdirection, triangle4Normal, b)[1];
-
-            UnityEngine.LineRenderer crossSectionRenderer1 =
-                crossSectTri(tri1Point, tri1Dir, triangle1, tetrahedronRenderer);
-            UnityEngine.LineRenderer crossSectionRenderer2 =
-                crossSectTri(tri2Point, tri2Dir, triangle2, tetrahedronRenderer);
-            UnityEngine.LineRenderer crossSectionRenderer3 =
-                crossSectTri(tri3Point, tri3Dir, triangle3, tetrahedronRenderer);
-            UnityEngine.LineRenderer crossSectionRenderer4 =
-                crossSectTri(tri4Point, tri4Dir, triangle4, tetrahedronRenderer);
+            //TODO make this pretty
+            UnityEngine.LineRenderer crossSectionRenderer1 = triXC[0].GetComponent<UnityEngine.LineRenderer>();
+            UnityEngine.LineRenderer crossSectionRenderer2 = triXC[1].GetComponent<UnityEngine.LineRenderer>();
+            UnityEngine.LineRenderer crossSectionRenderer3 = triXC[2].GetComponent<UnityEngine.LineRenderer>();
+            UnityEngine.LineRenderer crossSectionRenderer4 = triXC[3].GetComponent<UnityEngine.LineRenderer>();
 
             int vertCount = 0;
 
@@ -107,22 +165,47 @@
                 else if (line1 && line2 && line4)
                 {
                     verts[0] = crossSectionRenderer1.GetPosition(0);
-                    verts[1] = crossSectionRenderer4.GetPosition(0);
-                    verts[2] = crossSectionRenderer2.GetPosition(0);
+                    verts[1] = crossSectionRenderer1.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer2.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                    
+                    //verts[0] = crossSectionRenderer1.GetPosition(0);
+                    //verts[1] = crossSectionRenderer4.GetPosition(0);
+                    //verts[2] = crossSectionRenderer2.GetPosition(0);
                 }
 
                 else if (line1 && line3 && line4)
                 {
-                    verts[0] = crossSectionRenderer3.GetPosition(0);
-                    verts[1] = crossSectionRenderer4.GetPosition(0);
-                    verts[2] = crossSectionRenderer1.GetPosition(0);
+                    verts[0] = crossSectionRenderer1.GetPosition(0);
+                    verts[1] = crossSectionRenderer1.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer3.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer3.GetPosition(0)
+                            : crossSectionRenderer3.GetPosition(1);
+                    
+                    //verts[0] = crossSectionRenderer3.GetPosition(0);
+                    //verts[1] = crossSectionRenderer4.GetPosition(0);
+                    //verts[2] = crossSectionRenderer1.GetPosition(0);
                 }
 
                 else if (line2 && line3 && line4)
-                {
+                { 
                     verts[0] = crossSectionRenderer2.GetPosition(0);
-                    verts[1] = crossSectionRenderer4.GetPosition(0);
-                    verts[2] = crossSectionRenderer3.GetPosition(0);
+                    verts[1] = crossSectionRenderer2.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer3.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer3.GetPosition(0)
+                            : crossSectionRenderer3.GetPosition(1);
+                    
+                    
+                    //verts[0] = crossSectionRenderer2.GetPosition(0);
+                    //verts[1] = crossSectionRenderer4.GetPosition(0);
+                    //verts[2] = crossSectionRenderer3.GetPosition(0);
                 }
 
                 tetrahedronMesh.vertices = verts;
@@ -149,253 +232,6 @@
                 int[] tris = {0, 1, 3, 1, 2, 3};
                 tetrahedronMesh.triangles = tris;
             }
-        }
-
-        //TODO: check that this function is correct - also make sure that case where planes do not intersect is met, i.e. 
-        /// <summary>
-        ///     function that calculates intersection of two planes, returns a line segment
-        ///     using mathematics described here http://geomalgorithms.com/a05-_intersect-1.html
-        /// </summary>
-        /// <returns></returns>
-        public Unity.Mathematics.float3[] intersectPlanes(Unity.Mathematics.float3 plane1Point,
-            Unity.Mathematics.float3 normal1, Unity.Mathematics.float3 plane2Point, Unity.Mathematics.float3 normal2)
-        {
-            Unity.Mathematics.float3 u = UnityEngine.Vector3.Normalize(Unity.Mathematics.math.cross(normal1, normal2));
-
-            Unity.Mathematics.float3 lineDirInPlane2 =
-                UnityEngine.Vector3.Normalize(Unity.Mathematics.math.cross(normal2, u));
-
-            //TODO check that the dot product is used correctly for projection
-            Unity.Mathematics.float3 lineDirInPlane2_prime =
-                lineDirInPlane2 - Unity.Mathematics.math.dot(normal1, lineDirInPlane2) * normal1;
-
-            Unity.Mathematics.float3 p2_prime =
-                UnityEngine.Vector3.Normalize(plane2Point -
-                                              Unity.Mathematics.math.dot(plane2Point - plane1Point, normal1) * normal1);
-
-            //TODO intersect two lines, gives a point on desired line (with dir u)
-            Unity.Mathematics.float3 point = p2_prime;
-            Unity.Mathematics.float3 dir = lineDirInPlane2_prime;
-            //Line 2: point = plane2point & dir = lineDirInPlane2
-
-            Unity.Mathematics.float3[] result = new Unity.Mathematics.float3[2];
-            result[0] = point;
-            result[1] = dir;
-
-            return result;
-        }
-
-        private UnityEngine.LineRenderer crossSectTri(Unity.Mathematics.float3 point,
-            Unity.Mathematics.float3 direction,
-            Unity.Mathematics.float3[] vertices, UnityEngine.LineRenderer crossSectionRenderer)
-        {
-            //Vertices are organized in clockwise manner starting from top
-            //top vertex
-            Unity.Mathematics.float3 a = vertices[0];
-            //bottom right
-            Unity.Mathematics.float3 b = vertices[1];
-            //bottom left
-            Unity.Mathematics.float3 c = vertices[2];
-
-            Unity.Mathematics.float3 lineDirection = direction - point;
-
-            //intermediate calculations 
-            Unity.Mathematics.float3 ac_hat = (c - a) / UnityEngine.Vector3.Magnitude(c - a);
-            Unity.Mathematics.float3 ab_hat = (b - a) / UnityEngine.Vector3.Magnitude(b - a);
-            Unity.Mathematics.float3 bc_hat = (c - b) / UnityEngine.Vector3.Magnitude(c - b);
-
-            //points of intersection on each line segment
-            Unity.Mathematics.float3 ac_star = intersectLines(point, lineDirection, a, ac_hat);
-            Unity.Mathematics.float3 ab_star = intersectLines(point, lineDirection, a, ab_hat);
-            Unity.Mathematics.float3 bc_star = intersectLines(point, lineDirection, b, bc_hat);
-
-            //boolean values for if intersection hits only a vertex of the triangle
-            bool ac_star_isEndpoint;
-            ac_star_isEndpoint = ac_star.Equals(a) || ac_star.Equals(c);
-            bool ab_star_isEndpoint;
-            ab_star_isEndpoint = ab_star.Equals(a) || ab_star.Equals(b);
-            bool bc_star_isEndpoint;
-            bc_star_isEndpoint = bc_star.Equals(c) || bc_star.Equals(c);
-
-            //booleans for if intersection hits somewhere on the segments
-            bool ac_star_onSegment =
-                UnityEngine.Vector3.Magnitude(ac_star - a) > UnityEngine.Vector3.Magnitude(c - a) ||
-                UnityEngine.Vector3.Magnitude(ac_star - c) > UnityEngine.Vector3.Magnitude(c - a);
-            bool ab_star_onSegment =
-                UnityEngine.Vector3.Magnitude(ab_star - a) > UnityEngine.Vector3.Magnitude(b - a) ||
-                UnityEngine.Vector3.Magnitude(ab_star - c) > UnityEngine.Vector3.Magnitude(b - a);
-            bool bc_star_onSegment =
-                UnityEngine.Vector3.Magnitude(bc_star - b) > UnityEngine.Vector3.Magnitude(c - b) ||
-                UnityEngine.Vector3.Magnitude(bc_star - c) > UnityEngine.Vector3.Magnitude(c - b);
-
-            //track how many vertices the intersection hits
-            int endpointCount = 0;
-            if (ac_star_isEndpoint)
-                endpointCount++;
-            if (ab_star_isEndpoint)
-                endpointCount++;
-            if (bc_star_isEndpoint)
-                endpointCount++;
-
-            //If plane does not hit triangle
-            if (!(ab_star_onSegment || ac_star_onSegment || bc_star_onSegment))
-            {
-                crossSectionRenderer.enabled = false;
-                UnityEngine.Debug.Log("Line does not intersect with any of triangle sides.");
-
-                return crossSectionRenderer;
-            }
-
-            //intersection is a segment (edge) of the triangle
-            //the concept for choosing the right points of the cross section is the same for each of these subcases
-
-            if (endpointCount >= 2 &&
-                (!ab_star.Equals(ac_star) || !ab_star.Equals(bc_star) || !ac_star.Equals(bc_star)))
-            {
-                crossSectionRenderer.enabled = true;
-                //ab_star and ac_star both do not equal a
-                if (!ab_star.Equals(ac_star))
-                {
-                    //find out which case is trivial and use the other two vertices; if it is trivial the intersection will just be the value passed in to the function
-                    //a is trivial
-                    if (intersectLines(point, lineDirection, a, ab_star).Equals(point) ||
-                        intersectLines(point, lineDirection, a, ac_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, b);
-                        crossSectionRenderer.SetPosition(1, c);
-                    }
-                    //b is trivial
-                    else if (intersectLines(point, lineDirection, b, ab_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, a);
-                        crossSectionRenderer.SetPosition(1, c);
-                    }
-                    //c is trivial
-                    else if (intersectLines(point, lineDirection, c, ac_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, a);
-                        crossSectionRenderer.SetPosition(1, b);
-                    }
-                }
-                else if (!ab_star.Equals(bc_star))
-                {
-                    if (intersectLines(point, lineDirection, a, ab_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, b);
-                        crossSectionRenderer.SetPosition(1, c);
-                    }
-                    else if (intersectLines(point, lineDirection, b, ab_star).Equals(point) ||
-                             intersectLines(point, lineDirection, b, bc_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, a);
-                        crossSectionRenderer.SetPosition(1, c);
-                    }
-                    else if (intersectLines(point, lineDirection, c, bc_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, a);
-                        crossSectionRenderer.SetPosition(1, b);
-                    }
-                }
-
-                if (!ac_star.Equals(bc_star))
-                {
-                    if (intersectLines(point, lineDirection, a, ac_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, b);
-                        crossSectionRenderer.SetPosition(1, c);
-                    }
-                    else if (intersectLines(point, lineDirection, c, ac_star).Equals(point) ||
-                             intersectLines(point, lineDirection, c, bc_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, a);
-                        crossSectionRenderer.SetPosition(1, b);
-                    }
-                    else if (intersectLines(point, lineDirection, b, bc_star).Equals(point))
-                    {
-                        crossSectionRenderer.SetPosition(0, a);
-                        crossSectionRenderer.SetPosition(1, c);
-                    }
-                }
-
-                return crossSectionRenderer;
-            }
-
-            //intersection hits one vertex on triangle and one of the segments
-
-            if (endpointCount == 2 && ab_star.Equals(ac_star) || ab_star.Equals(bc_star) ||
-                ac_star.Equals(bc_star))
-            {
-                crossSectionRenderer.enabled = true;
-
-                //if point of intersection hits a, it must hit bc_star; same logic applies to remaining subcases
-                if (ab_star.Equals(ac_star))
-                {
-                    crossSectionRenderer.SetPosition(0, a);
-                    crossSectionRenderer.SetPosition(1, bc_star);
-                }
-                else if (ab_star.Equals(bc_star))
-                {
-                    crossSectionRenderer.SetPosition(0, b);
-                    crossSectionRenderer.SetPosition(1, ac_star);
-                }
-                else if (ac_star.Equals(bc_star))
-                {
-                    crossSectionRenderer.SetPosition(0, c);
-                    crossSectionRenderer.SetPosition(1, ab_star);
-                }
-
-                return crossSectionRenderer;
-            }
-            //intersection hits somewhere on two different segments of triangle; last remaining case
-
-            crossSectionRenderer.enabled = true;
-
-            //find out which two segments are intersected and use their calculated intersections
-            if (ac_star_onSegment && ab_star_onSegment)
-            {
-                crossSectionRenderer.SetPosition(0, ac_star);
-                crossSectionRenderer.SetPosition(1, ab_star);
-            }
-            else if (ac_star_onSegment && bc_star_onSegment)
-            {
-                crossSectionRenderer.SetPosition(0, ac_star);
-                crossSectionRenderer.SetPosition(1, bc_star);
-            }
-            else
-            {
-                crossSectionRenderer.SetPosition(0, ab_star);
-                crossSectionRenderer.SetPosition(1, bc_star);
-            }
-
-            return crossSectionRenderer;
-        }
-
-        private Unity.Mathematics.float3 intersectLines(Unity.Mathematics.float3 p, Unity.Mathematics.float3 u,
-            Unity.Mathematics.float3 q, Unity.Mathematics.float3 v)
-        {
-            //using method described here: http://geomalgorithms.com/a05-_intersect-1.html
-            Unity.Mathematics.float3 w = q - p;
-            Unity.Mathematics.float3 v_perp =
-                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), v));
-            Unity.Mathematics.float3 u_perp =
-                Unity.Mathematics.math.normalize(Unity.Mathematics.math.cross(Unity.Mathematics.math.cross(u, v), u));
-            float s = Unity.Mathematics.math.dot(-1 * v_perp, w) / Unity.Mathematics.math.dot(-1 * v_perp, u);
-
-            //note if s == 0, lines are parallel
-            Unity.Mathematics.float3 solution = p + s * u;
-
-            //the next couple of lines don't calculate a solution but can validate our solution.
-            float t = Unity.Mathematics.math.dot(-1 * u_perp, w) / Unity.Mathematics.math.dot(-1 * u_perp, v);
-
-            //note that if t == 0, lines are parallel
-            Unity.Mathematics.float3 solution_alt = q + t * v;
-
-            if (solution.Equals(solution_alt)) return solution;
-
-            UnityEngine.Debug.LogWarning("Invalid Solution to Intersection of Lines");
-
-            return new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity,
-                UnityEngine.Mathf.Infinity);
         }
     }
 }

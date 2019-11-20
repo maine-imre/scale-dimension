@@ -5,7 +5,8 @@ namespace IMRE.ScaleDimension.CrossSections
 {
     public class SquareCrossSection : UnityEngine.MonoBehaviour
     {
-        
+        public Material mat;
+
         public Unity.Mathematics.float3 planeNormal;
         public Unity.Mathematics.float3 planePos;
         private UnityEngine.LineRenderer obj;
@@ -26,6 +27,9 @@ namespace IMRE.ScaleDimension.CrossSections
             xc.startWidth = 0.1f;
             xc.endWidth = 0.1f;
             xc.loop = false;
+            
+            xc.material = mat;
+
         }
         
         private void Update()

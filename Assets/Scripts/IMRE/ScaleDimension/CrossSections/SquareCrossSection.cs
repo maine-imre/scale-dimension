@@ -27,14 +27,15 @@ namespace IMRE.ScaleDimension.CrossSections
             xc.startWidth = 0.1f;
             xc.endWidth = 0.1f;
             xc.loop = false;
-            
+
             xc.material = mat;
 
         }
-        
+
         private void Update()
         {
-            crossSectSquare(planePos, planeNormal, new[] {squareVertices.c0, squareVertices.c1, squareVertices.c2, squareVertices.c3},
+            crossSectSquare(planePos, planeNormal,
+                new[] {squareVertices.c0, squareVertices.c1, squareVertices.c2, squareVertices.c3},
                 xc);
         }
 
@@ -65,11 +66,11 @@ namespace IMRE.ScaleDimension.CrossSections
             Unity.Mathematics.float3 da_hat = (a - d) / UnityEngine.Vector3.Magnitude(a - d);
 
             //calculations for point of intersection on different segments
-            Unity.Mathematics.float3 ab_star = SegmentPlaneIntersection(a, b, point, normalDirection);
-            Unity.Mathematics.float3 bc_star = SegmentPlaneIntersection(b, c, point, normalDirection);
-            Unity.Mathematics.float3 cd_star = SegmentPlaneIntersection(c, d, point, normalDirection);
-            Unity.Mathematics.float3 da_star = SegmentPlaneIntersection(d, a, point, normalDirection);
-            
+            Unity.Mathematics.float3 ab_star = IMRE.Math.Operations.SegmentPlaneIntersection(a, b, point, normalDirection);
+            Unity.Mathematics.float3 bc_star = IMRE.Math.Operations.SegmentPlaneIntersection(b, c, point, normalDirection);
+            Unity.Mathematics.float3 cd_star = IMRE.Math.Operations.SegmentPlaneIntersection(c, d, point, normalDirection);
+            Unity.Mathematics.float3 da_star = IMRE.Math.Operations.SegmentPlaneIntersection(d, a, point, normalDirection);
+
             //booleans for if the intersection hits a vertex 
             bool ab_star_isEndpoint = ab_star.Equals(a) || ab_star.Equals(b);
             bool bc_star_isEndpoint = bc_star.Equals(b) || bc_star.Equals(c);
@@ -85,7 +86,7 @@ namespace IMRE.ScaleDimension.CrossSections
                 !cd_star.Equals(new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity));
             bool da_star_onSegment =
                 !da_star.Equals(new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity));
-            
+
             Debug.Log(ab_star);
             Debug.Log(bc_star);
             Debug.Log(cd_star);
@@ -126,7 +127,7 @@ namespace IMRE.ScaleDimension.CrossSections
                     //there are only two pairs of opposite sides.  if it's not one, it's the other.
                     result0 = bc_star;
                     result1 = da_star;
-                    
+
                     crossSectionRenderer.SetPosition(0, result0);
                     crossSectionRenderer.SetPosition(1, result1);
                 }
@@ -135,10 +136,11 @@ namespace IMRE.ScaleDimension.CrossSections
                     Debug.LogWarning("Error in calculation of line plane intersection");
                     crossSectionRenderer.enabled = false;
                 }
-                
+
             }
             //intersection hits one vertice and somewhere on a segment
-            else if (endpointCount == 2 && (ab_star.Equals(bc_star) || bc_star.Equals(cd_star) || cd_star.Equals(da_star)))
+            else if (endpointCount == 2 &&
+                     (ab_star.Equals(bc_star) || bc_star.Equals(cd_star) || cd_star.Equals(da_star)))
             {
                 //find which vertex is in the intersection, and from there find which of the two possible segments are the other point of intersection
                 //the same logic carries through all of these subcases
@@ -181,7 +183,7 @@ namespace IMRE.ScaleDimension.CrossSections
                         crossSectionRenderer.SetPosition(1, bc_star);
                     }
                 }
-                else if(da_star.Equals(ab_star))
+                else if (da_star.Equals(ab_star))
                 {
                     if (cd_star_onSegment)
                     {
@@ -231,7 +233,7 @@ namespace IMRE.ScaleDimension.CrossSections
                     crossSectionRenderer.SetPosition(0, bc_star);
                     crossSectionRenderer.SetPosition(1, cd_star);
                 }
-                else if(cd_star_onSegment && da_star_onSegment)
+                else if (cd_star_onSegment && da_star_onSegment)
                 {
                     crossSectionRenderer.SetPosition(0, cd_star);
                     crossSectionRenderer.SetPosition(1, da_star);
@@ -245,83 +247,5 @@ namespace IMRE.ScaleDimension.CrossSections
 
         }
 
-        //these are simply copy-pasted for now
-
-        #region functions
-
-        /// <summary>
-        /// Finds the point of intersection between a line and a plane
-        /// </summary>
-        /// <param name="linePos">A point on the line</param>
-        /// <param name="lineDir">The normalDirection of the line</param>
-        /// <param name="planePos">A point on the plane</param>
-        /// <param name="planeNorm">The normal normalDirection of the plane</param>
-        /// <returns></returns>
-        internal static Unity.Mathematics.float3 SegmentPlaneIntersection(Unity.Mathematics.float3 segmentA,
-            Unity.Mathematics.float3 segmentB, Unity.Mathematics.float3 planePos, Unity.Mathematics.float3 planeNorm)
-        {
-            //  0 = disjoint (no intersection)
-            //  1 =  intersection in the unique point *I0
-            //  2 = the  segment lies in the plane
-            int type  = 0;
-            float3 result;
-
-            float tolerance = .00001f;
-            
-            //segmenta and segmentb are endpoints of a segment
-            float3 u = segmentB - segmentA;
-            float3 w = segmentA - planePos;
-
-            float D = Unity.Mathematics.math.dot(planeNorm, u);
-            float N = -Unity.Mathematics.math.dot(planeNorm, w);
-
-            Debug.Log(D);
-            Debug.Log(N);
-                
-            if (Mathf.Abs(D) < tolerance)
-            {
-                // segment is parallel to plane
-                if (N == 0f)
-                {
-                    // segment lies in plane
-                    type = 2;
-                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-                }
-
-                else
-                {
-                    type = 0; // no intersection
-                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-                }
-
-            }
-            else
-            {
-
-                // they are not parallel
-                // compute intersect param
-                float sI = N / D;
-                if (sI < 0 || sI > 1)
-                {
-                    type = 0; // no intersection
-                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-
-                }
-                else
-                {
-                    result = segmentA + sI * u; // compute segment intersect point
-                    type = 1;
-                }
-            }
-
-/*            if (type != 1)
-            {
-                Debug.Log(type);
-            }*/
-
-            return result;
-        }
     }
-
-        #endregion
 }

@@ -18,8 +18,8 @@ namespace IMRE.ScaleDimension.CrossSections
             lr.SetPositions(new Vector3[] {verticies.c0, verticies.c1, verticies.c2, verticies.c3});
     
             lr.useWorldSpace = true;
-            lr.startWidth = 0.1f;
-            lr.endWidth = 0.1f;
+            lr.startWidth = 0.01f;
+            lr.endWidth = 0.01f;
             lr.loop = true;
             
             lr.material = mat;

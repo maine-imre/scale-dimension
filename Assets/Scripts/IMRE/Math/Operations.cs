@@ -84,5 +84,76 @@
         {
             return Unity.Mathematics.math.dot(v, dir) * Unity.Mathematics.math.normalize(dir);
         }
+        
+        
+        /// <summary>
+        /// Finds the point of intersection between a line and a plane
+        /// </summary>
+        /// <param name="linePos">A point on the line</param>
+        /// <param name="lineDir">The normalDirection of the line</param>
+        /// <param name="planePos">A point on the plane</param>
+        /// <param name="planeNorm">The normal normalDirection of the plane</param>
+        /// <returns></returns>
+        internal static Unity.Mathematics.float3 SegmentPlaneIntersection(Unity.Mathematics.float3 segmentA,
+            Unity.Mathematics.float3 segmentB, Unity.Mathematics.float3 planePos, Unity.Mathematics.float3 planeNorm)
+        {
+            //  0 = disjoint (no intersection)
+            //  1 =  intersection in the unique point *I0
+            //  2 = the  segment lies in the plane
+            int type  = 0;
+            Unity.Mathematics.float3 result;
+
+            float tolerance = .00001f;
+            
+            //segmenta and segmentb are endpoints of a segment
+            Unity.Mathematics.float3 u = segmentB - segmentA;
+            Unity.Mathematics.float3 w = segmentA - planePos;
+
+            float D = Unity.Mathematics.math.dot(planeNorm, u);
+            float N = -Unity.Mathematics.math.dot(planeNorm, w);
+
+            if (UnityEngine.Mathf.Abs(D) < tolerance)
+            {
+                // segment is parallel to plane
+                if (N == 0f)
+                {
+                    // segment lies in plane
+                    type = 2;
+                    result = new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity);
+                }
+
+                else
+                {
+                    type = 0; // no intersection
+                    result = new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity);
+                }
+
+            }
+            else
+            {
+
+                // they are not parallel
+                // compute intersect param
+                float sI = N / D;
+                if (sI < 0 || sI > 1)
+                {
+                    type = 0; // no intersection
+                    result = new Unity.Mathematics.float3(UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity, UnityEngine.Mathf.Infinity);
+
+                }
+                else
+                {
+                    result = segmentA + sI * u; // compute segment intersect point
+                    type = 1;
+                }
+            }
+
+/*            if (type != 1)
+            {
+                Debug.Log(type);
+            }*/
+
+            return result;
+        }
     }
 }

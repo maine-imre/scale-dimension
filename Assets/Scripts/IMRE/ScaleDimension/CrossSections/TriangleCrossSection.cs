@@ -12,6 +12,9 @@ namespace IMRE.ScaleDimension.CrossSections
         public Unity.Mathematics.float3x3 triangleVerticies;
 
         private UnityEngine.LineRenderer xc;
+        
+        public Material mat;
+
 
         private void Start()
         {
@@ -23,9 +26,10 @@ namespace IMRE.ScaleDimension.CrossSections
             //obj.loop = true;
             //obj.useWorldSpace = true;
             xc.useWorldSpace = true;
-            xc.startWidth = 0.1f;
-            xc.endWidth = 0.1f;
+            xc.startWidth = 0.01f;
+            xc.endWidth = 0.01f;
             xc.loop = false;
+            xc.material = mat;
         }
 
         private void Update()
@@ -57,9 +61,9 @@ namespace IMRE.ScaleDimension.CrossSections
             Unity.Mathematics.float3 bc_hat = (c - b) / UnityEngine.Vector3.Magnitude(c - b);
             
             //points of intersection on each line segment
-            Unity.Mathematics.float3 ac_star = SegmentPlaneIntersection(a,c, point, normalDirection);
-            Unity.Mathematics.float3 ab_star = SegmentPlaneIntersection(a, b,  point, normalDirection);
-            Unity.Mathematics.float3 bc_star = SegmentPlaneIntersection(b, c, point, normalDirection);
+            Unity.Mathematics.float3 ac_star = IMRE.Math.Operations.SegmentPlaneIntersection(a,b,point,normalDirection);
+            Unity.Mathematics.float3 ab_star = IMRE.Math.Operations.SegmentPlaneIntersection(a, b,  point, normalDirection);
+            Unity.Mathematics.float3 bc_star = IMRE.Math.Operations.SegmentPlaneIntersection(b, c, point, normalDirection);
            
            //boolean values for if intersection hits only a vertex of the triangle
             bool ac_star_isEndpoint;
@@ -181,76 +185,6 @@ namespace IMRE.ScaleDimension.CrossSections
                 }
             }
             
-        }
-
-        /// <summary>
-        /// Finds the point of intersection between a line and a plane
-        /// </summary>
-        /// <param name="linePos">A point on the line</param>
-        /// <param name="lineDir">The normalDirection of the line</param>
-        /// <param name="planePos">A point on the plane</param>
-        /// <param name="planeNorm">The normal normalDirection of the plane</param>
-        /// <returns></returns>
-        internal static Unity.Mathematics.float3 SegmentPlaneIntersection(Unity.Mathematics.float3 segmentA,
-            Unity.Mathematics.float3 segmentB, Unity.Mathematics.float3 planePos, Unity.Mathematics.float3 planeNorm)
-        {
-            //  0 = disjoint (no intersection)
-            //  1 =  intersection in the unique point *I0
-            //  2 = the  segment lies in the plane
-            int type  = 0;
-            float3 result;
-
-            float tolerance = .00001f;
-            
-            //segmenta and segmentb are endpoints of a segment
-            float3 u = segmentB - segmentA;
-            float3 w = segmentA - planePos;
-
-            float D = Unity.Mathematics.math.dot(planeNorm, u);
-            float N = -Unity.Mathematics.math.dot(planeNorm, w);
-
-            if (Mathf.Abs(D) < tolerance)
-            {
-                // segment is parallel to plane
-                if (N == 0f)
-                {
-                    // segment lies in plane
-                    type = 2;
-                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-                }
-
-                else
-                {
-                    type = 0; // no intersection
-                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-                }
-
-            }
-            else
-            {
-
-                // they are not parallel
-                // compute intersect param
-                float sI = N / D;
-                if (sI < 0 || sI > 1)
-                {
-                    type = 0; // no intersection
-                    result = new float3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-
-                }
-                else
-                {
-                    result = segmentA + sI * u; // compute segment intersect point
-                    type = 1;
-                }
-            }
-
-/*            if (type != 1)
-            {
-                Debug.Log(type);
-            }*/
-
-            return result;
         }
     }
 }

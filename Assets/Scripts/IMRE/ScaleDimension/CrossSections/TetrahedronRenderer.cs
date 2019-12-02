@@ -23,6 +23,7 @@ namespace IMRE.ScaleDimension.CrossSections
             };
 
             mesh.triangles = tris;
+            mesh.RecalculateNormals();
 
             gameObject.AddComponent<MeshFilter>();
             gameObject.AddComponent<MeshRenderer>();

@@ -45,11 +45,11 @@ namespace IMRE.ScaleDimension
 
             #endregion
 
-            #region Normales		
+            #region Normals		
 
-            UnityEngine.Vector3[] normales = new UnityEngine.Vector3[vertices.Length];
+            UnityEngine.Vector3[] normals = new UnityEngine.Vector3[vertices.Length];
             for (int j = 0; j < vertices.Length; j++)
-                normales[j] = vertices[j].normalized;
+                normals[j] = vertices[j].normalized;
 
             #endregion
 
@@ -112,7 +112,7 @@ namespace IMRE.ScaleDimension
             #endregion
 
             crossSectionRenderer.vertices = vertices;
-            crossSectionRenderer.normals = normales;
+            crossSectionRenderer.normals = normals;
             crossSectionRenderer.uv = uvs;
             crossSectionRenderer.triangles = triangles;
 

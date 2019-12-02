@@ -13,6 +13,8 @@ namespace IMRE.ScaleDimension.CrossSections
 
         private UnityEngine.LineRenderer xc;
 
+        public Material mat;
+
         private void Start()
         {
             xc = gameObject.AddComponent<UnityEngine.LineRenderer>();
@@ -23,9 +25,11 @@ namespace IMRE.ScaleDimension.CrossSections
             //obj.loop = true;
             //obj.useWorldSpace = true;
             xc.useWorldSpace = true;
-            xc.startWidth = 0.1f;
-            xc.endWidth = 0.1f;
+            xc.startWidth = 0.01f;
+            xc.endWidth = 0.01f;
             xc.loop = false;
+
+            xc.material = mat;
         }
 
         private void Update()

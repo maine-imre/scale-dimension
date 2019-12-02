@@ -1,22 +1,23 @@
 ﻿using System.Linq;
+using UnityEngine;
 
 namespace IMRE.ScaleDimension.CrossSections
 {
     public class TetrahedronCrossSection : UnityEngine.MonoBehaviour
     {
-        public Unity.Mathematics.float3x4 verticies;
+        public Unity.Mathematics.float3x4 vertices;
         private System.Collections.Generic.List<TriangleCrossSection> triXC;
 
         public Unity.Mathematics.float3 planePos;
         public Unity.Mathematics.float3 planeNormal;
-        
+        public Material mat;
         private void Start()
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
-            Unity.Mathematics.float3 a = verticies[0];
-            Unity.Mathematics.float3 b = verticies[1];
-            Unity.Mathematics.float3 c = verticies[2];
-            Unity.Mathematics.float3 d = verticies[3];
+            Unity.Mathematics.float3 a = vertices[0];
+            Unity.Mathematics.float3 b = vertices[1];
+            Unity.Mathematics.float3 c = vertices[2];
+            Unity.Mathematics.float3 d = vertices[3];
 
             Unity.Mathematics.float3x3 triangle1 = new Unity.Mathematics.float3x3(a, b, c);
             Unity.Mathematics.float3x3 triangle2 =  new Unity.Mathematics.float3x3(a, c, d);
@@ -29,36 +30,37 @@ namespace IMRE.ScaleDimension.CrossSections
             BuildTriangle(triangle3, planePos, planeNormal);
             BuildTriangle(triangle4, planePos, planeNormal);
 
-            gameObject.AddComponent<UnityEngine.LineRenderer>();
             gameObject.AddComponent<UnityEngine.MeshRenderer>();
             gameObject.AddComponent<UnityEngine.MeshFilter>();
+            gameObject.GetComponent<MeshRenderer>().material = mat;
         }
 
         private void Update()
         {
             UpdateTriangles();
-            crossSectTetrahedron(planePos,planeNormal,verticies,GetComponent<UnityEngine.LineRenderer>(), GetComponent<UnityEngine.MeshFilter>().mesh);
+            crossSectTetrahedron(planePos,planeNormal,vertices,GetComponent<UnityEngine.MeshFilter>().mesh);
         }
 
-        private void BuildTriangle(Unity.Mathematics.float3x3 verticies, Unity.Mathematics.float3 planePos,
+        private void BuildTriangle(Unity.Mathematics.float3x3 vertices, Unity.Mathematics.float3 planePos,
             Unity.Mathematics.float3 planeNorm)
         {
             UnityEngine.GameObject tri1_go = new UnityEngine.GameObject();
             tri1_go.transform.parent = this.transform;
             tri1_go.AddComponent<TriangleCrossSection>();
             triXC.Add(tri1_go.GetComponent<TriangleCrossSection>());
-            tri1_go.GetComponent<TriangleCrossSection>().triangleVerticies = verticies;
+            tri1_go.GetComponent<TriangleCrossSection>().triangleVerticies = vertices;
             tri1_go.GetComponent<TriangleCrossSection>().planePos = planePos;
             tri1_go.GetComponent<TriangleCrossSection>().planeNormal = planeNorm;
+            tri1_go.GetComponent<TriangleCrossSection>().mat = mat;
         }
 
         private void UpdateTriangles()
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
-            Unity.Mathematics.float3 a = verticies[0];
-            Unity.Mathematics.float3 b = verticies[1];
-            Unity.Mathematics.float3 c = verticies[2];
-            Unity.Mathematics.float3 d = verticies[3];
+            Unity.Mathematics.float3 a = vertices[0];
+            Unity.Mathematics.float3 b = vertices[1];
+            Unity.Mathematics.float3 c = vertices[2];
+            Unity.Mathematics.float3 d = vertices[3];
 
             Unity.Mathematics.float3x3 triangle1 = new Unity.Mathematics.float3x3(a, b, c);
             Unity.Mathematics.float3x3 triangle2 =  new Unity.Mathematics.float3x3(a, c, d);
@@ -74,8 +76,7 @@ namespace IMRE.ScaleDimension.CrossSections
         }
 
         public void crossSectTetrahedron(Unity.Mathematics.float3 point, Unity.Mathematics.float3 normalDirection,
-            Unity.Mathematics.float3x4 vertices,
-            UnityEngine.LineRenderer tetrahedronRenderer, UnityEngine.Mesh tetrahedronMesh)
+            Unity.Mathematics.float3x4 vertices, UnityEngine.Mesh tetrahedronMesh)
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
             Unity.Mathematics.float3 a = vertices.c0;
@@ -156,10 +157,7 @@ namespace IMRE.ScaleDimension.CrossSections
                         crossSectionRenderer2.GetPosition(1) == verts[1]
                             ? crossSectionRenderer2.GetPosition(0)
                             : crossSectionRenderer2.GetPosition(1);
-
-                    //verts[0] = crossSectionRenderer1.GetPosition(0);
-                    //verts[1] = crossSectionRenderer2.GetPosition(0);
-                    //verts[2] = crossSectionRenderer3.GetPosition(0);
+                    
                 }
 
                 else if (line1 && line2 && line4)
@@ -171,10 +169,7 @@ namespace IMRE.ScaleDimension.CrossSections
                         crossSectionRenderer2.GetPosition(1) == verts[1]
                             ? crossSectionRenderer2.GetPosition(0)
                             : crossSectionRenderer2.GetPosition(1);
-                    
-                    //verts[0] = crossSectionRenderer1.GetPosition(0);
-                    //verts[1] = crossSectionRenderer4.GetPosition(0);
-                    //verts[2] = crossSectionRenderer2.GetPosition(0);
+ 
                 }
 
                 else if (line1 && line3 && line4)
@@ -186,10 +181,7 @@ namespace IMRE.ScaleDimension.CrossSections
                         crossSectionRenderer3.GetPosition(1) == verts[1]
                             ? crossSectionRenderer3.GetPosition(0)
                             : crossSectionRenderer3.GetPosition(1);
-                    
-                    //verts[0] = crossSectionRenderer3.GetPosition(0);
-                    //verts[1] = crossSectionRenderer4.GetPosition(0);
-                    //verts[2] = crossSectionRenderer1.GetPosition(0);
+
                 }
 
                 else if (line2 && line3 && line4)
@@ -201,13 +193,8 @@ namespace IMRE.ScaleDimension.CrossSections
                         crossSectionRenderer3.GetPosition(1) == verts[1]
                             ? crossSectionRenderer3.GetPosition(0)
                             : crossSectionRenderer3.GetPosition(1);
-                    
-                    
-                    //verts[0] = crossSectionRenderer2.GetPosition(0);
-                    //verts[1] = crossSectionRenderer4.GetPosition(0);
-                    //verts[2] = crossSectionRenderer3.GetPosition(0);
-                }
 
+                }
                 tetrahedronMesh.vertices = verts;
 
                 //tris

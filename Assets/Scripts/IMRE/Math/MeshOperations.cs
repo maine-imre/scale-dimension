@@ -250,14 +250,17 @@ namespace IMRE.HandWaver.ScaleDimension
             Unity.Mathematics.float4 planePos = IMRE.ScaleDimension.SpencerStudyControl.ins.hyperPlane;
             Unity.Mathematics.float4 planeNormal = IMRE.ScaleDimension.SpencerStudyControl.ins.hyperPlaneNormal;
 
-            //normalized direction
             Unity.Mathematics.float4 dir = (tmpVert - origin) / IMRE.Math.Operations.magnitude(tmpVert - origin);
+
+            float4 pos = Operations.SegmentPlaneIntersection(origin, tmpVert, planePos, planeNormal);
+            
+/*            //normalized direction
             Unity.Mathematics.float4 projOnPlane =
                 tmpVert - IMRE.Math.HigherDimensionsMaths.project(tmpVert - planePos, planeNormal);
             //TODO consider if mathf.cos takes an absolute value here
             float diff = IMRE.Math.Operations.magnitude(tmpVert - projOnPlane) /
                          UnityEngine.Mathf.Cos(IMRE.Math.Operations.Angle(planeNormal, dir));
-            Unity.Mathematics.float4 pos = tmpVert + diff * dir;
+            Unity.Mathematics.float4 pos = tmpVert + diff * dir;*/
 
             //this basis system might be unstable as the axis is moved.  Consider defining axis by basis.
             Unity.Mathematics.float4x3 basis = IMRE.Math.HigherDimensionsMaths.basisSystem(planeNormal);

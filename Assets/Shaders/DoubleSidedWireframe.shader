@@ -116,7 +116,7 @@ Shader "Custom/DoubleSidedWireframe"
                 // Smooth our line out
                 float t = exp2(-2 * minDistanceToEdge * minDistanceToEdge);
 
-                const fixed4 colors[11] = {
+/*                const fixed4 colors[11] = {
                         fixed4(1.0, 1.0, 1.0, 1.0),  // White
                         fixed4(1.0, 0.0, 0.0, 1.0),  // Red
                         fixed4(0.0, 1.0, 0.0, 1.0),  // Green
@@ -131,8 +131,8 @@ Shader "Custom/DoubleSidedWireframe"
                     };
 
                 float cameraToVertexDistance = length(_WorldSpaceCameraPos - i.worldSpacePosition);
-                int index = clamp(floor(cameraToVertexDistance), 0, 10);
-                fixed4 wireColor = colors[index];
+                int index = clamp(floor(cameraToVertexDistance), 0, 10);*/
+                fixed4 wireColor = fixed4(1.0,1.0,1.0,.3);
 
                 fixed4 finalColor = lerp(float4(0,0,0,1), wireColor, t);
                 finalColor.a = t;

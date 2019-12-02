@@ -5,19 +5,22 @@ namespace IMRE.ScaleDimension.CrossSections
 {
     public class TetrahedronCrossSection : UnityEngine.MonoBehaviour
     {
-        public Unity.Mathematics.float3x4 vertices;
+        public UnityEngine.Material mat;
+        
+        public Unity.Mathematics.float3x4 tetrahderonVertices;
         private System.Collections.Generic.List<TriangleCrossSection> triXC;
 
         public Unity.Mathematics.float3 planePos;
         public Unity.Mathematics.float3 planeNormal;
-        public Material mat;
         private void Start()
         {
+            transform.position = UnityEngine.Vector3.zero;
+            
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
-            Unity.Mathematics.float3 a = vertices[0];
-            Unity.Mathematics.float3 b = vertices[1];
-            Unity.Mathematics.float3 c = vertices[2];
-            Unity.Mathematics.float3 d = vertices[3];
+            Unity.Mathematics.float3 a = tetrahderonVertices[0];
+            Unity.Mathematics.float3 b = tetrahderonVertices[1];
+            Unity.Mathematics.float3 c = tetrahderonVertices[2];
+            Unity.Mathematics.float3 d = tetrahderonVertices[3];
 
             Unity.Mathematics.float3x3 triangle1 = new Unity.Mathematics.float3x3(a, b, c);
             Unity.Mathematics.float3x3 triangle2 =  new Unity.Mathematics.float3x3(a, c, d);
@@ -38,7 +41,8 @@ namespace IMRE.ScaleDimension.CrossSections
         private void Update()
         {
             UpdateTriangles();
-            crossSectTetrahedron(planePos,planeNormal,vertices,GetComponent<UnityEngine.MeshFilter>().mesh);
+            crossSectTetrahedron(planePos,planeNormal,tetrahderonVertices,
+                GetComponent<UnityEngine.MeshFilter>().mesh);
         }
 
         private void BuildTriangle(Unity.Mathematics.float3x3 vertices, Unity.Mathematics.float3 planePos,
@@ -57,10 +61,10 @@ namespace IMRE.ScaleDimension.CrossSections
         private void UpdateTriangles()
         {
             //take vertices and organize them into clockwise triangles to be passed to triangle intersection function
-            Unity.Mathematics.float3 a = vertices[0];
-            Unity.Mathematics.float3 b = vertices[1];
-            Unity.Mathematics.float3 c = vertices[2];
-            Unity.Mathematics.float3 d = vertices[3];
+            Unity.Mathematics.float3 a = tetrahderonVertices[0];
+            Unity.Mathematics.float3 b = tetrahderonVertices[1];
+            Unity.Mathematics.float3 c = tetrahderonVertices[2];
+            Unity.Mathematics.float3 d = tetrahderonVertices[3];
 
             Unity.Mathematics.float3x3 triangle1 = new Unity.Mathematics.float3x3(a, b, c);
             Unity.Mathematics.float3x3 triangle2 =  new Unity.Mathematics.float3x3(a, c, d);

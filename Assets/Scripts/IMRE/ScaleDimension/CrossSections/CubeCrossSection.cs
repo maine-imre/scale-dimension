@@ -1,12 +1,100 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace IMRE.ScaleDimension.CrossSections
 {
+    
     public class CubeCrossSection : UnityEngine.MonoBehaviour
     {
+
+        public Material mat;
+        
+        public float3[] cubeVertices = new float3[8];
+        private List<SquareCrossSection> squareXC;
+
+        public float3 planePos;
+        public float3 planeNorm;
+
+        private void Start()
+        {
+            //using same orientation as cross section function
+            Unity.Mathematics.float3 a = cubeVertices[0];
+            Unity.Mathematics.float3 b = cubeVertices[1];
+            Unity.Mathematics.float3 c = cubeVertices[2];
+            Unity.Mathematics.float3 d = cubeVertices[3];
+            Unity.Mathematics.float3 e = cubeVertices[4];
+            Unity.Mathematics.float3 f = cubeVertices[5];
+            Unity.Mathematics.float3 g = cubeVertices[6];
+            Unity.Mathematics.float3 h = cubeVertices[7];
+            
+            float3x4 square1 = new float3x4(a, b, c, d);
+            float3x4 square2 = new float3x4(e, f, g, h);
+            float3x4 square3 = new float3x4(d, c, g, h);
+            float3x4 square4 = new float3x4(b, a, e, f);
+            float3x4 square5 = new float3x4(c, b, f, g);
+            float3x4 square6 = new float3x4(a, d, h, e);
+            
+            squareXC = new List<SquareCrossSection>();
+
+            gameObject.AddComponent<MeshRenderer>();
+            gameObject.AddComponent<MeshFilter>();
+            gameObject.GetComponent<MeshRenderer>().material = mat;
+        }
+
+        private void Update()
+        {
+            updateSquares();
+            crossSectCube(planePos, planeNorm, cubeVertices, GetComponent<MeshFilter>().mesh);
+        }
+
+        private void BuildSquare(float3x4 vertices, float3 planePos, float3 planeNorm)
+        {
+            GameObject square1_go = new GameObject();
+            square1_go.transform.parent = this.transform;
+            square1_go.AddComponent<SquareCrossSection>();
+            square1_go.GetComponent<SquareCrossSection>().squareVertices = vertices;
+            square1_go.GetComponent<SquareCrossSection>().planePos = planePos;
+            square1_go.GetComponent<SquareCrossSection>().planeNormal = planeNorm;
+            square1_go.GetComponent<SquareCrossSection>().mat = mat;
+        }
+
+        private void updateSquares()
+        {
+            Unity.Mathematics.float3 a = cubeVertices[0];
+            Unity.Mathematics.float3 b = cubeVertices[1];
+            Unity.Mathematics.float3 c = cubeVertices[2];
+            Unity.Mathematics.float3 d = cubeVertices[3];
+            Unity.Mathematics.float3 e = cubeVertices[4];
+            Unity.Mathematics.float3 f = cubeVertices[5];
+            Unity.Mathematics.float3 g = cubeVertices[6];
+            Unity.Mathematics.float3 h = cubeVertices[7];
+            
+            float3x4 square1 = new float3x4(a, b, c, d);
+            float3x4 square2 = new float3x4(e, f, g, h);
+            float3x4 square3 = new float3x4(d, c, g, h);
+            float3x4 square4 = new float3x4(b, a, e, f);
+            float3x4 square5 = new float3x4(c, b, f, g);
+            float3x4 square6 = new float3x4(a, d, h, e);
+            
+            squareXC.ForEach(p => p.planePos = planePos);
+            squareXC.ForEach(p => p.planeNormal = planeNorm);
+
+            squareXC[0].squareVertices = square1;
+            squareXC[1].squareVertices = square2;
+            squareXC[2].squareVertices = square3;
+            squareXC[3].squareVertices = square4;
+            squareXC[4].squareVertices = square5;
+            squareXC[5].squareVertices = square6;
+
+        }
+
+
         public void crossSectCube(Unity.Mathematics.float3 point, Unity.Mathematics.float3 direction,
-            float3[] vertices, UnityEngine.LineRenderer cubeRenderer, Mesh cubeMesh)
+            float3[] vertices, Mesh cubeMesh)
         {
             //8 vertices for cube
             float3 a = vertices[0];

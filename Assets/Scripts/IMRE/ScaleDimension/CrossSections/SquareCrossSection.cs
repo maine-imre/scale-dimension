@@ -24,8 +24,8 @@ namespace IMRE.ScaleDimension.CrossSections
             //obj.loop = true;
             //obj.useWorldSpace = true;
             xc.useWorldSpace = true;
-            xc.startWidth = 0.1f;
-            xc.endWidth = 0.1f;
+            xc.startWidth = 0.01f;
+            xc.endWidth = 0.01f;
             xc.loop = false;
 
             xc.material = mat;

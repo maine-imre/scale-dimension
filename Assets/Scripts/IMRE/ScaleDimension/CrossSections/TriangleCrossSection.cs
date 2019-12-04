@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace IMRE.ScaleDimension.CrossSections
@@ -61,11 +62,11 @@ namespace IMRE.ScaleDimension.CrossSections
             Unity.Mathematics.float3 bc_hat = (c - b) / UnityEngine.Vector3.Magnitude(c - b);
             
             //points of intersection on each line segment
-            Unity.Mathematics.float3 ac_star = IMRE.Math.Operations.SegmentPlaneIntersection(a,b,point,normalDirection);
+            Unity.Mathematics.float3 ac_star = IMRE.Math.Operations.SegmentPlaneIntersection(a,c,point,normalDirection);
             Unity.Mathematics.float3 ab_star = IMRE.Math.Operations.SegmentPlaneIntersection(a, b,  point, normalDirection);
             Unity.Mathematics.float3 bc_star = IMRE.Math.Operations.SegmentPlaneIntersection(b, c, point, normalDirection);
-           
-           //boolean values for if intersection hits only a vertex of the triangle
+            
+            //boolean values for if intersection hits only a vertex of the triangle
             bool ac_star_isEndpoint;
             ac_star_isEndpoint = ac_star.Equals(a) || ac_star.Equals(c);
             bool ab_star_isEndpoint;
@@ -184,7 +185,11 @@ namespace IMRE.ScaleDimension.CrossSections
                     crossSectionRenderer.enabled = false;
                 }
             }
+
+            
             
         }
+        
+        
     }
 }

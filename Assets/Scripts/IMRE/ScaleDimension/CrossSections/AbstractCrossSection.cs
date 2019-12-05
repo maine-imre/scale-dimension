@@ -3,8 +3,8 @@
     public class AbstractCrossSection : UnityEngine.MonoBehaviour
     {
         public UnityEngine.Material mat;
-        
-        public Unity.Mathematics.float3 planePos;
-        public Unity.Mathematics.float3 planeNormal;
+        internal Unity.Mathematics.float3 planeNormal;
+
+        internal Unity.Mathematics.float3 planePos;
     }
 }

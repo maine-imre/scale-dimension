@@ -5,17 +5,12 @@ using UnityEngine;
 namespace IMRE.ScaleDimension.CrossSections
 
 {
-    public class TriangleCrossSection : UnityEngine.MonoBehaviour
+    public class TriangleCrossSection : AbstractCrossSection
     {
-        public Unity.Mathematics.float3 planeNormal;
-        public Unity.Mathematics.float3 planePos;
         private UnityEngine.LineRenderer obj;
         public Unity.Mathematics.float3x3 triangleVerticies;
 
         private UnityEngine.LineRenderer xc;
-
-        public Material mat;
-
         private void Start()
         {
             xc = gameObject.AddComponent<UnityEngine.LineRenderer>();

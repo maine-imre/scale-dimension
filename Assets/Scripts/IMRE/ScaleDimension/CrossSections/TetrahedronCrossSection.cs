@@ -3,15 +3,11 @@ using UnityEngine;
 
 namespace IMRE.ScaleDimension.CrossSections
 {
-    public class TetrahedronCrossSection : UnityEngine.MonoBehaviour
-    {
-        public UnityEngine.Material mat;
-        
+    public class TetrahedronCrossSection : AbstractCrossSection
+    {        
         public Unity.Mathematics.float3x4 tetrahderonVertices;
         private System.Collections.Generic.List<TriangleCrossSection> triXC;
 
-        public Unity.Mathematics.float3 planePos;
-        public Unity.Mathematics.float3 planeNormal;
         private void Start()
         {
             transform.position = UnityEngine.Vector3.zero;

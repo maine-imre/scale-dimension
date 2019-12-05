@@ -8,16 +8,10 @@ using System.Collections.Generic;
 namespace IMRE.ScaleDimension.CrossSections
 {
     
-    public class CubeCrossSection : UnityEngine.MonoBehaviour
-    {
-
-        public Material mat;
-        
+    public class CubeCrossSection : AbstractCrossSection
+    {        
         public float3[] cubeVertices = new float3[8];
         private List<SquareCrossSection> squareXC;
-
-        public float3 planePos;
-        public float3 planeNorm;
 
         private void Start()
         {
@@ -48,7 +42,7 @@ namespace IMRE.ScaleDimension.CrossSections
         private void Update()
         {
             updateSquares();
-            crossSectCube(planePos, planeNorm, cubeVertices, GetComponent<MeshFilter>().mesh);
+            crossSectCube(planePos, planeNormal, cubeVertices, GetComponent<MeshFilter>().mesh);
         }
 
         private void BuildSquare(float3x4 vertices, float3 planePos, float3 planeNorm)
@@ -81,7 +75,7 @@ namespace IMRE.ScaleDimension.CrossSections
             float3x4 square6 = new float3x4(a, d, h, e);
             
             squareXC.ForEach(p => p.planePos = planePos);
-            squareXC.ForEach(p => p.planeNormal = planeNorm);
+            squareXC.ForEach(p => p.planeNormal = planeNormal);
 
             squareXC[0].squareVertices = square1;
             squareXC[1].squareVertices = square2;

@@ -3,12 +3,8 @@ using Unity.Mathematics;
 
 namespace IMRE.ScaleDimension.CrossSections
 {
-    public class SquareCrossSection : UnityEngine.MonoBehaviour
+    public class SquareCrossSection : AbstractCrossSection
     {
-        public Material mat;
-
-        public Unity.Mathematics.float3 planeNormal;
-        public Unity.Mathematics.float3 planePos;
         private UnityEngine.LineRenderer obj;
         public Unity.Mathematics.float3x4 squareVertices;
 

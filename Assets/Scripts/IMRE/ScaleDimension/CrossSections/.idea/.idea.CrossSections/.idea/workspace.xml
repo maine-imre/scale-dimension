@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ddb7d09e-c0e4-4def-a19c-5e3f8c42735c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../CrossSections.DotSettings.user.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TetrahedronCrossSection.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TetrahedronCrossSection.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SquareCrossSection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SquareCrossSection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TriangleCrossSection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TriangleCrossSection.cs" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TriangleCrossSection.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="459">
+              <caret line="162" column="100" selection-start-line="162" selection-start-column="100" selection-end-line="162" selection-end-column="100" />
+              <folding>
+                <marker date="1571257213367" expanded="false" signature="6:43" ph="..." />
+                <marker date="1571257213367" expanded="true" signature="89:10104" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="157:10102" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="172:424" ph="/// Function to render the intersection of a plane and a triangle ... " />
+                <marker date="1571257213367" expanded="true" signature="544:8725" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="567:654" ph="/* Vertices are organized in clockwise manner starting from top ... */" />
+                <marker date="1571257213367" expanded="true" signature="2907:3071" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="3085:3251" ph="/* intersection is a segment (edge) of the triangle ... */" />
+                <marker date="1571257213367" expanded="true" signature="3399:6713" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="3570:4759" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="3969:4141" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="4269:4441" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="4569:4741" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="4810:5731" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="4916:5088" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="5276:5448" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="5541:5713" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="5778:6699" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="5884:6056" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="6244:6416" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="6509:6681" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="6938:7764" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="7164:7326" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="7376:7538" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="7588:7750" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="7882:8715" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="8111:8279" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="8344:8512" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="8533:8701" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="8735:9010" ph="/// Returns the point of intersection of two lines ... " />
+                <marker date="1571257213367" expanded="true" signature="9088:10096" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="9910:9971" ph="{...}" />
+                <marker date="1571257213367" expanded="true" signature="9988:10086" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SquareCrossSection.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="40" column="20" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
+              <folding>
+                <marker date="1571257341334" expanded="true" signature="154:10194" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="169:419" ph="/// Function to render the intersection of a plane and a square ... " />
+                <marker date="1571257341334" expanded="true" signature="554:8698" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="577:667" ph="/* Vertices are organized in clockwise manner starting from top left ... */" />
+                <marker date="1571257341334" expanded="true" signature="4856:7107" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="5113:5573" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="5174:5352" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="5377:5555" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="5623:6083" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="5684:5862" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="5887:6065" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="6133:6593" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="6194:6372" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="6397:6575" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="6614:7093" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="6675:6853" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="6897:7075" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="7183:8688" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="7385:7553" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="7618:7786" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="7851:8019" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="8084:8252" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="8317:8485" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="8506:8674" ph="{...}" />
+                <marker date="1571257341334" expanded="false" signature="8756:10188" ph="functions" />
+                <marker date="1571257341334" expanded="true" signature="8783:9058" ph="/// Returns the point of intersection of two lines ... " />
+                <marker date="1571257341334" expanded="true" signature="9136:10168" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="9958:10019" ph="{...}" />
+                <marker date="1571257341334" expanded="true" signature="10036:10158" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../Nets/tetrahedronNet.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1105">
+              <caret line="66" column="60" selection-start-line="66" selection-start-column="60" selection-end-line="66" selection-end-column="60" />
+              <folding>
+                <element signature="e#0#61#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Camden Bock &lt;camden.bock@maine.edu&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../Nets/tetrahedronNet.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SquareCrossSection.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TriangleCrossSection.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/TriangleCrossSection.cs" />
+        <option value="$PROJECT_DIR$/SquareCrossSection.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="x" value="1894" />
+    <option name="y" value="-17" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="FileSystemExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="FileSystemExplorer" />
+      <pane id="AssemblyExplorer" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ddb7d09e-c0e4-4def-a19c-5e3f8c42735c" name="Default Changelist" comment="" />
+      <created>1571254059229</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1571254059229</updated>
+      <workItem from="1571254062444" duration="142000" />
+      <workItem from="1571254471354" duration="1441000" />
+      <workItem from="1571256023324" duration="1320000" />
+    </task>
+    <task id="LOCAL-00001" summary="@Camden please fill in missing case.">
+      <created>1571254175000</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1571254175000</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="2903000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="1920" y="0" width="1920" height="1080" extended-state="0" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2553305" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Capture Tool" order="3" />
+      <window_info id="Favorites" order="4" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="NuGet" order="7" />
+      <window_info anchor="bottom" id="Performance Profiler" order="8" />
+      <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Database Changes" order="11" />
+      <window_info anchor="bottom" id="Unit Tests" order="12" />
+      <window_info anchor="bottom" id="Terminal" order="13" />
+      <window_info anchor="bottom" id="Event Log" order="14" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="right" id="Errors In Solution" order="4" />
+      <window_info anchor="right" id="Database" order="5" />
+      <window_info anchor="right" id="Unit Tests Coverage" order="6" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="@Camden please fill in missing case." />
+    <option name="LAST_COMMIT_MESSAGE" value="@Camden please fill in missing case." />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/TetrahedronCrossSection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#78#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Nets/tetrahedronNet.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1105">
+          <caret line="66" column="60" selection-start-line="66" selection-start-column="60" selection-end-line="66" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TriangleCrossSection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="162" column="100" selection-start-line="162" selection-start-column="100" selection-end-line="162" selection-end-column="100" />
+          <folding>
+            <marker date="1571257213367" expanded="false" signature="6:43" ph="..." />
+            <marker date="1571257213367" expanded="true" signature="89:10104" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="157:10102" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="172:424" ph="/// Function to render the intersection of a plane and a triangle ... " />
+            <marker date="1571257213367" expanded="true" signature="544:8725" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="567:654" ph="/* Vertices are organized in clockwise manner starting from top ... */" />
+            <marker date="1571257213367" expanded="true" signature="2907:3071" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="3085:3251" ph="/* intersection is a segment (edge) of the triangle ... */" />
+            <marker date="1571257213367" expanded="true" signature="3399:6713" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="3570:4759" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="3969:4141" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="4269:4441" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="4569:4741" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="4810:5731" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="4916:5088" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="5276:5448" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="5541:5713" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="5778:6699" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="5884:6056" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="6244:6416" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="6509:6681" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="6938:7764" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="7164:7326" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="7376:7538" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="7588:7750" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="7882:8715" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="8111:8279" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="8344:8512" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="8533:8701" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="8735:9010" ph="/// Returns the point of intersection of two lines ... " />
+            <marker date="1571257213367" expanded="true" signature="9088:10096" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="9910:9971" ph="{...}" />
+            <marker date="1571257213367" expanded="true" signature="9988:10086" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SquareCrossSection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="40" column="20" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
+          <folding>
+            <marker date="1571257341334" expanded="true" signature="154:10194" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="169:419" ph="/// Function to render the intersection of a plane and a square ... " />
+            <marker date="1571257341334" expanded="true" signature="554:8698" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="577:667" ph="/* Vertices are organized in clockwise manner starting from top left ... */" />
+            <marker date="1571257341334" expanded="true" signature="4856:7107" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="5113:5573" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="5174:5352" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="5377:5555" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="5623:6083" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="5684:5862" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="5887:6065" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="6133:6593" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="6194:6372" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="6397:6575" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="6614:7093" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="6675:6853" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="6897:7075" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="7183:8688" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="7385:7553" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="7618:7786" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="7851:8019" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="8084:8252" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="8317:8485" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="8506:8674" ph="{...}" />
+            <marker date="1571257341334" expanded="false" signature="8756:10188" ph="functions" />
+            <marker date="1571257341334" expanded="true" signature="8783:9058" ph="/// Returns the point of intersection of two lines ... " />
+            <marker date="1571257341334" expanded="true" signature="9136:10168" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="9958:10019" ph="{...}" />
+            <marker date="1571257341334" expanded="true" signature="10036:10158" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

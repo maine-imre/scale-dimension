@@ -20,6 +20,18 @@ namespace IMRE.ScaleDimension.CrossSections
 
             int[] tris =
             {
+                0, 1, 3, 
+                3, 1, 2, 
+                4, 5, 7, 
+                7, 5, 6,
+                3, 2, 7, 
+                7, 3,6, 
+                1, 0, 5, 
+                5, 0, 4, 
+                2, 1, 6, 
+                6, 1, 5, 
+                0, 3, 4, 
+                4, 3, 7
                 
             };
 

@@ -15,6 +15,8 @@ namespace IMRE.ScaleDimension.CrossSections
 
         private void Start()
         {
+            transform.position = Vector3.zero;
+        
             //using same orientation as cross section function
             Unity.Mathematics.float3 a = cubeVertices[0];
             Unity.Mathematics.float3 b = cubeVertices[1];
@@ -33,7 +35,13 @@ namespace IMRE.ScaleDimension.CrossSections
             float3x4 square6 = new float3x4(a, d, h, e);
             
             squareXC = new List<SquareCrossSection>();
-
+            BuildSquare(square1, planePos, planeNormal);
+            BuildSquare(square2, planePos, planeNormal);
+            BuildSquare(square3, planePos, planeNormal);
+            BuildSquare(square4, planePos, planeNormal);
+            BuildSquare(square5, planePos, planeNormal);
+            BuildSquare(square6, planePos, planeNormal);
+            
             gameObject.AddComponent<MeshRenderer>();
             gameObject.AddComponent<MeshFilter>();
             gameObject.GetComponent<MeshRenderer>().material = mat;
@@ -97,8 +105,8 @@ namespace IMRE.ScaleDimension.CrossSections
             float3 d = vertices[3];
             float3 e = vertices[4];
             float3 f = vertices[5];
-            float3 g = vertices[7];
-            float3 h = vertices[8];
+            float3 g = vertices[6];
+            float3 h = vertices[7];
             
             //different faces of cube arranged in clockwise manner
             float3[] topFace = {a, b, c, d};
@@ -112,60 +120,98 @@ namespace IMRE.ScaleDimension.CrossSections
             float3 topBottomNormal = math.cross(Vector3.Normalize(b - a), Vector3.Normalize(d - a));
             float3 frontBackNormal = math.cross(Vector3.Normalize(c - d), Vector3.Normalize(h - d));
             float3 rightLeftNormal = math.cross(Vector3.Normalize(b - c), Vector3.Normalize(g - c));
+
+            LineRenderer crossSectionRenderer1 = squareXC[0].GetComponent<LineRenderer>();
+            LineRenderer crossSectionRenderer2 = squareXC[1].GetComponent<LineRenderer>();
+            LineRenderer crossSectionRenderer3 = squareXC[2].GetComponent<LineRenderer>();
+            LineRenderer crossSectionRenderer4 = squareXC[3].GetComponent<LineRenderer>();
+            LineRenderer crossSectionRenderer5 = squareXC[4].GetComponent<LineRenderer>();
+            LineRenderer crossSectionRenderer6 = squareXC[5].GetComponent<LineRenderer>();
+
+            int vertCount = 0;
             
-            float3 testpoint = new float3();
-            float3 testdirection = new float3();
+            bool line1 = false, line2 = false, line3 = false, line4 = false, line5 = false, line6 = false;
 
-            float3 topPoint = intersectPlanes(testpoint, testdirection, a, topBottomNormal)[0];
-            float3 topDir = intersectPlanes(testpoint, testdirection, a, topBottomNormal)[1];
-
-            float3 bottomPoint = intersectPlanes(testpoint, testdirection, e, topBottomNormal)[0];
-            float3 bottomDir = intersectPlanes(testpoint, testdirection, e, topBottomNormal)[1];
-
-            float3 frontPoint = intersectPlanes(testpoint, testdirection, d, frontBackNormal)[0];
-            float3 fronDir = intersectPlanes(testpoint, testdirection, d, frontBackNormal)[1];
+            if (crossSectionRenderer1.enabled == true)
+            {
+                vertCount++;
+                line1 = true;
+            }
             
-            float3 backPoint = intersectPlanes(testpoint, testdirection, b, frontBackNormal)[0];
-            float3 backDir = intersectPlanes(testpoint, testdirection, b, frontBackNormal)[1];
+            if (crossSectionRenderer2.enabled == true)
+            {
+                vertCount++;
+                line2 = true;
+            }
             
-            float3 rightPoint = intersectPlanes(testpoint, testdirection, c, rightLeftNormal)[0];
-            float3 rightDir = intersectPlanes(testpoint, testdirection, c, rightLeftNormal)[1];
+            if (crossSectionRenderer3.enabled == true)
+            {
+                vertCount++;
+                line3 = true;
+            }
+            
+            if (crossSectionRenderer4.enabled == true)
+            {
+                vertCount++;
+                line4 = true;
+            }
+            
+            if (crossSectionRenderer5.enabled == true)
+            {
+                vertCount++;
+                line5 = true;
+            }
+            
+            if (crossSectionRenderer6.enabled == true)
+            {
+                vertCount++;
+                line6 = true;
+            }
 
-            float3 leftPoint = intersectPlanes(testpoint, testdirection, a, rightLeftNormal)[0];
-            float3 leftDir = intersectPlanes(testpoint, testdirection, a, rightLeftNormal)[1];
-
+            if (vertCount == 3)
+            {
+                Vector3[] verts = new Vector3[3];
+                
+                if (line1 && line2 && line3)
+                {
+                    verts[0] = crossSectionRenderer1.GetPosition(0);
+                    verts[1] = crossSectionRenderer1.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer2.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                }
+                else if (line1 && line2 && line4)
+                {
+                    verts[0] = crossSectionRenderer1.GetPosition(0);
+                    verts[1] = crossSectionRenderer1.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer2.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                }
+            }
+            else if (vertCount == 4)
+            {
+                Vector3[] verts = new Vector3[4];
+                
+            }
+            else if (vertCount == 5)
+            {
+                Vector3[] verts = new Vector3[5];
+                
+            }
+            else if (vertCount == 6)
+            {
+                Vector3[] verts = new Vector3[6];
+                
+            }
 
             
+
         }
         
-        /// <summary>
-        /// function that calculates intersection of two planes, returns a line segment
-        /// using mathematics described here http://geomalgorithms.com/a05-_intersect-1.html
-        /// </summary>
-        /// <returns></returns>
-        public float3[] intersectPlanes(float3 plane1Point, float3 normal1, float3 plane2Point, float3 normal2)
-        {
-            //TODO ^^^ the return can't be a float3, need to return a point and a direciton to describe a line.
-            float3 u = Vector3.Normalize(math.cross(normal1, normal2));
-
-            float3 lineDirInPlane2 = Vector3.Normalize(math.cross(normal2, u));
-
-            //TODO check that the dot product is used correctly for projection
-            float3 lineDirInPlane2_prime = lineDirInPlane2 - math.dot(normal1, lineDirInPlane2) * normal1;
-
-            //TODO normalize this
-            float3 p2_prime = Vector3.Normalize(plane2Point - math.dot(plane2Point - plane1Point, normal1) * normal1);
-
-            //TODO intersect two lines, gives a point on desired line (with dir u)
-            float3 point = p2_prime;
-            float3 dir = lineDirInPlane2_prime;
-            //Line 2: point = plane2point & dir = lineDirInPlane2
-
-            float3[] result = new float3[2];
-            result[0] = point;
-            result[1] = dir;
-
-            return result;
-        }
     }
 }

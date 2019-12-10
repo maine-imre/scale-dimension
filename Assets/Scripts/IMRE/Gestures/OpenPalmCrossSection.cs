@@ -24,8 +24,8 @@
 
         private void updateCrossSections(Valve.VR.SteamVR_Behaviour_Pose arg0, Valve.VR.SteamVR_Input_Sources arg1)
         {
-            pos = pose.origin.position;
-            normal = pose.origin.up;
+           pos = pose.origin.position;
+           normal = pose.origin.up;
             setCrossSections(pose.origin.position, pose.origin.up);
         }
 

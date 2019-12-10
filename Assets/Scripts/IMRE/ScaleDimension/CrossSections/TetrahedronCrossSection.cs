@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace IMRE.ScaleDimension.CrossSections
@@ -207,16 +208,55 @@ namespace IMRE.ScaleDimension.CrossSections
                 //verts
                 UnityEngine.Vector3[] verts = new UnityEngine.Vector3[4];
 
-
-                verts[0] = crossSectionRenderer1.GetPosition(0);
-                verts[1] = crossSectionRenderer2.GetPosition(0);
-                verts[2] = crossSectionRenderer3.GetPosition(0);
-                verts[3] = crossSectionRenderer4.GetPosition(0);
+                verts[0] = crossSectionRenderer2.GetPosition(0);
+                verts[1] = crossSectionRenderer2.GetPosition(1);
+                verts[2] =
+                    (crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                    crossSectionRenderer3.GetPosition(1) == verts[1])
+                        ? crossSectionRenderer3.GetPosition(0)
+                        : crossSectionRenderer3.GetPosition(1);
+                verts[3] =
+                    (crossSectionRenderer4.GetPosition(1) == verts[0] ||
+                    crossSectionRenderer4.GetPosition(1) == verts[1] ||
+                    crossSectionRenderer4.GetPosition(1) == verts[2])
+                        ? crossSectionRenderer4.GetPosition(0)
+                        : crossSectionRenderer4.GetPosition(1);
 
                 tetrahedronMesh.vertices = verts;
 
                 //tris
-                int[] tris = {0, 1, 3, 1, 2, 3};
+                //find the opposite corner to #0
+                //assume 0,1,2,3
+                float3 cross0 = Unity.Mathematics.math.cross(verts[3] - verts[0], verts[1] - verts[0]);
+                float3 cross1 = Unity.Mathematics.math.cross(verts[0] - verts[1], verts[2] - verts[1]);
+                float3 cross2 = Unity.Mathematics.math.cross(verts[1] - verts[2], verts[3] - verts[2]);
+                float3 cross3 = Unity.Mathematics.math.cross(verts[2] - verts[3], verts[0] - verts[3]);
+                
+                int[] tris = {0, 1, 2, 0, 2, 3};
+                if (!(cross0.Equals(cross1) && cross1.Equals(cross2) && cross2.Equals(cross3)))
+                { 
+                    //assume 0,1,3,2
+                   cross0 = Unity.Mathematics.math.cross(verts[2] - verts[0], verts[1] - verts[0]);
+                   cross1 = Unity.Mathematics.math.cross(verts[0] - verts[1], verts[3] - verts[1]);
+                   cross2 = Unity.Mathematics.math.cross(verts[1] - verts[3], verts[2] - verts[3]);
+                   cross3 = Unity.Mathematics.math.cross(verts[3] - verts[2], verts[0] - verts[2]);
+                   
+                   tris = new int[] {0, 1, 3, 0, 3, 2};
+                   
+                   if (!(cross0.Equals(cross1) && cross1.Equals(cross2) && cross2.Equals(cross3)))
+                   {
+                       //assume 0,2,1,3 (switch 1 and 2)
+                       cross0 = Unity.Mathematics.math.cross(verts[3] - verts[0], verts[2] - verts[0]);
+                       cross1 = Unity.Mathematics.math.cross(verts[0] - verts[2], verts[1] - verts[2]);
+                       cross2 = Unity.Mathematics.math.cross(verts[2] - verts[1], verts[3] - verts[1]);
+                       cross3 = Unity.Mathematics.math.cross(verts[1] - verts[3], verts[0] - verts[3]);
+                       tris = new int[] {0, 2, 1, 0, 1, 3};
+
+                   }
+
+                }
+
+                
                 tetrahedronMesh.triangles = tris;
             }
         }

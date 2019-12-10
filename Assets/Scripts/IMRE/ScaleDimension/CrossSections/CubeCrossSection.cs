@@ -172,30 +172,92 @@ namespace IMRE.ScaleDimension.CrossSections
             {
                 Vector3[] verts = new Vector3[3];
                 
-                if (line1 && line2 && line3)
+                if (line1 && line5 && line3)
                 {
                     verts[0] = crossSectionRenderer1.GetPosition(0);
                     verts[1] = crossSectionRenderer1.GetPosition(1);
                     verts[2] =
-                        crossSectionRenderer2.GetPosition(1) == verts[0] ||
-                        crossSectionRenderer2.GetPosition(1) == verts[1]
-                            ? crossSectionRenderer2.GetPosition(0)
-                            : crossSectionRenderer2.GetPosition(1);
+                        crossSectionRenderer5.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer5.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer5.GetPosition(0)
+                            : crossSectionRenderer5.GetPosition(1);
                 }
-                else if (line1 && line2 && line4)
+                else if (line1 && line3 && line6)
                 {
                     verts[0] = crossSectionRenderer1.GetPosition(0);
                     verts[1] = crossSectionRenderer1.GetPosition(1);
                     verts[2] =
-                        crossSectionRenderer2.GetPosition(1) == verts[0] ||
-                        crossSectionRenderer2.GetPosition(1) == verts[1]
-                            ? crossSectionRenderer2.GetPosition(0)
-                            : crossSectionRenderer2.GetPosition(1);
+                        crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer3.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer3.GetPosition(0)
+                            : crossSectionRenderer3.GetPosition(1);
+                }
+                else if (line1 && line6 && line4)
+                {
+                    verts[0] = crossSectionRenderer1.GetPosition(0);
+                    verts[1] = crossSectionRenderer1.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer6.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer6.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer6.GetPosition(0)
+                            : crossSectionRenderer6.GetPosition(1);
+                }
+                else if (line1 && line4 && line5)
+                {
+                    verts[0] = crossSectionRenderer1.GetPosition(0);
+                    verts[1] = crossSectionRenderer1.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer4.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer4.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer4.GetPosition(0)
+                            : crossSectionRenderer4.GetPosition(1);
+                }
+                else if (line2 && line3 && line5)
+                {
+                    verts[0] = crossSectionRenderer2.GetPosition(0);
+                    verts[1] = crossSectionRenderer2.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer3.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer3.GetPosition(0)
+                            : crossSectionRenderer3.GetPosition(1);
+                }
+                else if (line2 && line6 && line3)
+                {
+                    verts[0] = crossSectionRenderer2.GetPosition(0);
+                    verts[1] = crossSectionRenderer2.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer6.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer6.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer6.GetPosition(0)
+                            : crossSectionRenderer6.GetPosition(1);
+                }
+                else if (line2 && line4 && line6)
+                {
+                    verts[0] = crossSectionRenderer2.GetPosition(0);
+                    verts[1] = crossSectionRenderer2.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer4.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer4.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer4.GetPosition(0)
+                            : crossSectionRenderer4.GetPosition(1);
+                }
+                else if (line2 && line5 && line4)
+                {
+                    verts[0] = crossSectionRenderer2.GetPosition(0);
+                    verts[1] = crossSectionRenderer2.GetPosition(1);
+                    verts[2] =
+                        crossSectionRenderer5.GetPosition(1) == verts[0] ||
+                        crossSectionRenderer5.GetPosition(1) == verts[1]
+                            ? crossSectionRenderer5.GetPosition(0)
+                            : crossSectionRenderer5.GetPosition(1);
                 }
             }
             else if (vertCount == 4)
             {
                 Vector3[] verts = new Vector3[4];
+                
+                
                 
             }
             else if (vertCount == 5)

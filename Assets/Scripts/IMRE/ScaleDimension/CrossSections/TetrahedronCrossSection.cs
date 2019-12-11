@@ -227,7 +227,9 @@ namespace IMRE.ScaleDimension.CrossSections
                 //tris
                 //find the opposite corner to #0
                 //assume 0,1,2,3
-                float3 cross0 = Unity.Mathematics.math.cross(verts[3] - verts[0], verts[1] - verts[0]);
+                float3 cross0 = IMRE.Math.Operations.AngleCrossProduct(verts, 3, 0, 1);
+                //float3 cross1 = Unity.Mathematics.math.cross(verts[3] - verts[0], verts[1] - verts[0]);
+                //float3 cross1 = Unity.Mathematics.math.cross(verts[a] - verts[b], verts[c] - verts[b]);
                 float3 cross1 = Unity.Mathematics.math.cross(verts[0] - verts[1], verts[2] - verts[1]);
                 float3 cross2 = Unity.Mathematics.math.cross(verts[1] - verts[2], verts[3] - verts[2]);
                 float3 cross3 = Unity.Mathematics.math.cross(verts[2] - verts[3], verts[0] - verts[3]);
@@ -250,6 +252,10 @@ namespace IMRE.ScaleDimension.CrossSections
                        cross1 = Unity.Mathematics.math.cross(verts[0] - verts[2], verts[1] - verts[2]);
                        cross2 = Unity.Mathematics.math.cross(verts[2] - verts[1], verts[3] - verts[1]);
                        cross3 = Unity.Mathematics.math.cross(verts[1] - verts[3], verts[0] - verts[3]);
+                       if (!(cross0.Equals(cross1) && cross1.Equals(cross2) && cross2.Equals(cross3)))
+                       {
+                           UnityEngine.Debug.LogWarning("failed check on vertex ordering");
+                       }
                        tris = new int[] {0, 2, 1, 0, 1, 3};
 
                    }

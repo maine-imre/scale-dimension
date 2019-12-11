@@ -232,5 +232,20 @@
 
             return result;
         }
+        
+        
+        /// <summary>
+        /// returns the cross product for angle ABC
+        /// </summary>
+        /// <param name="verts"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        internal static Unity.Mathematics.float3 AngleCrossProduct(UnityEngine.Vector3[] verts, int a, int b, int c)
+        {
+            return Unity.Mathematics.math.cross(verts[a] - verts[b], verts[c] - verts[b]) /
+                   magnitude(Unity.Mathematics.math.cross(verts[a] - verts[b], verts[c] - verts[b]));
+        }
     }
 }

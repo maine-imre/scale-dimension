@@ -36,15 +36,15 @@ namespace IMRE.ScaleDimension.CrossSections
             float4[] cube6 = {a, b, c, d, e, f, g, h};
             float4[] cube7 = {a, b, c, d, e, f, g, h};
             float4[] cube8 = {a, b, c, d, e, f, g, h};
-            
-            BuildCube(cube1, planePos,planeNormal);
-            BuildCube(cube2, planePos,planeNormal);
-            BuildCube(cube3, planePos,planeNormal);
-            BuildCube(cube4, planePos,planeNormal);
-            BuildCube(cube5, planePos,planeNormal);
-            BuildCube(cube6, planePos,planeNormal);
-            BuildCube(cube7, planePos,planeNormal);
-            BuildCube(cube8, planePos,planeNormal);
+
+            BuildCube(cube1, planePos, planeNormal);
+            BuildCube(cube2, planePos, planeNormal);
+            BuildCube(cube3, planePos, planeNormal);
+            BuildCube(cube4, planePos, planeNormal);
+            BuildCube(cube5, planePos, planeNormal);
+            BuildCube(cube6, planePos, planeNormal);
+            BuildCube(cube7, planePos, planeNormal);
+            BuildCube(cube8, planePos, planeNormal);
         }
 
         private void BuildCube(Unity.Mathematics.float4[] vertices, Unity.Mathematics.float3 planePos,
@@ -80,7 +80,7 @@ namespace IMRE.ScaleDimension.CrossSections
             float4 n = eightCellVertices[13];
             float4 o = eightCellVertices[14];
             float4 p = eightCellVertices[15];
-            
+
             float4[] cube1 = {a, b, c, d, e, f, g, h};
             float4[] cube2 = {a, b, c, d, e, f, g, h};
             float4[] cube3 = {a, b, c, d, e, f, g, h};
@@ -89,18 +89,21 @@ namespace IMRE.ScaleDimension.CrossSections
             float4[] cube6 = {a, b, c, d, e, f, g, h};
             float4[] cube7 = {a, b, c, d, e, f, g, h};
             float4[] cube8 = {a, b, c, d, e, f, g, h};
-            
-            hyperCubeXC.ForEach(p => p.planePos = planePos);
-            hyperCubeXC.ForEach(p => p.planeNormal = planeNormal);
 
-            /*hyperCubeXC[0].cubeVertices = cube1;
-            hyperCubeXC[1].cubeVertices = cube2;
-            hyperCubeXC[2].cubeVertices = cube3;
-            hyperCubeXC[3].cubeVertices = cube4;
-            hyperCubeXC[4].cubeVertices = cube5;
-            hyperCubeXC[5].cubeVertices = cube6;
-            hyperCubeXC[6].cubeVertices = cube7;
-            hyperCubeXC[7].cubeVertices = cube8;
+            hyperCubeXC.ForEach(q => q.planePos = planePos);
+            hyperCubeXC.ForEach(q => q.planeNormal = planeNormal);
         }
     }
+}
+
+/*hyperCubeXC[0].cubeVertices = cube1;
+hyperCubeXC[1].cubeVertices = cube2;
+hyperCubeXC[2].cubeVertices = cube3;
+hyperCubeXC[3].cubeVertices = cube4;
+hyperCubeXC[4].cubeVertices = cube5;
+hyperCubeXC[5].cubeVertices = cube6;
+hyperCubeXC[6].cubeVertices = cube7;
+hyperCubeXC[7].cubeVertices = cube8;
+}
+}
 }

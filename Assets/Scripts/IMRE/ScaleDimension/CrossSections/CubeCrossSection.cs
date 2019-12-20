@@ -407,11 +407,174 @@ namespace IMRE.ScaleDimension.CrossSections
             else if (vertCount == 5)
             {
                 Vector3[] verts = new Vector3[5];
-                
+
+                if (line1 && line4 && line5 && line2 && line3)
+                {
+                    verts[0] = crossSectionRenderer4.GetPosition(0);
+                    verts[1] = crossSectionRenderer4.GetPosition(1);
+                    verts[2] =
+                        (crossSectionRenderer5.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer5.GetPosition(1) == verts[1])
+                            ? crossSectionRenderer5.GetPosition(0)
+                            : crossSectionRenderer5.GetPosition(1);
+                    verts[3] =
+                        (crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[1] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[2])
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                    verts[4] = crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                               crossSectionRenderer3.GetPosition(1) == verts[1] ||
+                               crossSectionRenderer3.GetPosition(1) == verts[2] ||
+                               crossSectionRenderer3.GetPosition(1) == verts[3]
+                        ? crossSectionRenderer3.GetPosition(0)
+                        : crossSectionRenderer3.GetPosition(1);
+
+                    cubeMesh.vertices = verts;
+                }
+                else if (line1 && line3 && line6 && line2 && line4)
+                {
+                    verts[0] = crossSectionRenderer3.GetPosition(0);
+                    verts[1] = crossSectionRenderer3.GetPosition(1);
+                    verts[2] =
+                        (crossSectionRenderer6.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer6.GetPosition(1) == verts[1])
+                            ? crossSectionRenderer6.GetPosition(0)
+                            : crossSectionRenderer6.GetPosition(1);
+                    verts[3] =
+                        (crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[1] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[2])
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                    verts[4] = crossSectionRenderer4.GetPosition(1) == verts[0] ||
+                               crossSectionRenderer4.GetPosition(1) == verts[1] ||
+                               crossSectionRenderer4.GetPosition(1) == verts[2] ||
+                               crossSectionRenderer4.GetPosition(1) == verts[3]
+                        ? crossSectionRenderer4.GetPosition(0)
+                        : crossSectionRenderer4.GetPosition(1);
+
+                    cubeMesh.vertices = verts;
+                }
+                else if (line1 && line6 && line4 && line2 && line5)
+                {
+                    verts[0] = crossSectionRenderer6.GetPosition(0);
+                    verts[1] = crossSectionRenderer6.GetPosition(1);
+                    verts[2] =
+                        (crossSectionRenderer4.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer4.GetPosition(1) == verts[1])
+                            ? crossSectionRenderer4.GetPosition(0)
+                            : crossSectionRenderer4.GetPosition(1);
+                    verts[3] =
+                        (crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[1] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[2])
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                    verts[4] = crossSectionRenderer5.GetPosition(1) == verts[0] ||
+                               crossSectionRenderer5.GetPosition(1) == verts[1] ||
+                               crossSectionRenderer5.GetPosition(1) == verts[2] ||
+                               crossSectionRenderer5.GetPosition(1) == verts[3]
+                        ? crossSectionRenderer5.GetPosition(0)
+                        : crossSectionRenderer5.GetPosition(1);
+
+                    cubeMesh.vertices = verts;
+                }
+                else if (line1 && line5 && line3 && line2 && line6)
+                {
+                    verts[0] = crossSectionRenderer5.GetPosition(0);
+                    verts[1] = crossSectionRenderer5.GetPosition(1);
+                    verts[2] =
+                        (crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer3.GetPosition(1) == verts[1])
+                            ? crossSectionRenderer3.GetPosition(0)
+                            : crossSectionRenderer3.GetPosition(1);
+                    verts[3] =
+                        (crossSectionRenderer2.GetPosition(1) == verts[0] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[1] ||
+                         crossSectionRenderer2.GetPosition(1) == verts[2])
+                            ? crossSectionRenderer2.GetPosition(0)
+                            : crossSectionRenderer2.GetPosition(1);
+                    verts[4] = crossSectionRenderer6.GetPosition(1) == verts[0] ||
+                               crossSectionRenderer6.GetPosition(1) == verts[1] ||
+                               crossSectionRenderer6.GetPosition(1) == verts[2] ||
+                               crossSectionRenderer6.GetPosition(1) == verts[3]
+                        ? crossSectionRenderer6.GetPosition(0)
+                        : crossSectionRenderer6.GetPosition(1);
+
+                    cubeMesh.vertices = verts;
+                }
+
+                //tris
+                //find the opposite corner to #0
+                //assume 0,1,2,3, 4
+                float3 cross0 = IMRE.Math.Operations.AngleCrossProduct(verts, 3, 0, 1);
+                //float3 cross1 = Unity.Mathematics.math.cross(verts[3] - verts[0], verts[1] - verts[0]);
+                //float3 cross1 = Unity.Mathematics.math.cross(verts[a] - verts[b], verts[c] - verts[b]);
+                float3 cross1 = IMRE.Math.Operations.AngleCrossProduct(verts, 0, 1, 2);
+                float3 cross2 = IMRE.Math.Operations.AngleCrossProduct(verts, 1, 2, 3);
+                float3 cross3 = IMRE.Math.Operations.AngleCrossProduct(verts, 2, 3, 0);
+
+                int[] tris = {0, 1, 2, 0, 2, 3};
+                if (!(cross0.Equals(cross1) && cross1.Equals(cross2) && cross2.Equals(cross3)))
+                {
+                    //assume 0,1,3,2
+                    cross0 = IMRE.Math.Operations.AngleCrossProduct(verts, 2, 0, 1);
+                    cross1 = IMRE.Math.Operations.AngleCrossProduct(verts, 0, 1, 3);
+                    cross2 = IMRE.Math.Operations.AngleCrossProduct(verts, 1, 3, 2);
+                    cross3 = IMRE.Math.Operations.AngleCrossProduct(verts, 3, 2, 0);
+
+                    tris = new int[] {0, 1, 3, 0, 3, 2};
+
+                    if (!(cross0.Equals(cross1) && cross1.Equals(cross2) && cross2.Equals(cross3)))
+                    {
+                        //assume 0,2,1,3 (switch 1 and 2)
+                        cross0 = IMRE.Math.Operations.AngleCrossProduct(verts, 3, 0, 2);
+                        cross1 = IMRE.Math.Operations.AngleCrossProduct(verts, 0, 2, 1);
+                        cross2 = IMRE.Math.Operations.AngleCrossProduct(verts, 2, 1, 3);
+                        cross3 = IMRE.Math.Operations.AngleCrossProduct(verts, 1, 3, 0);
+                        if (!(cross0.Equals(cross1) && cross1.Equals(cross2) && cross2.Equals(cross3)))
+                        {
+                            UnityEngine.Debug.LogWarning("failed check on vertex ordering");
+                        }
+
+                        tris = new int[] {0, 2, 1, 0, 1, 3};
+
+                    }
+                }
             }
             else if (vertCount == 6)
             {
                 Vector3[] verts = new Vector3[6];
+                
+                verts[0] = crossSectionRenderer2.GetPosition(0);
+                verts[1] = crossSectionRenderer2.GetPosition(1);
+                verts[2] =
+                    (crossSectionRenderer3.GetPosition(1) == verts[0] ||
+                     crossSectionRenderer3.GetPosition(1) == verts[1])
+                        ? crossSectionRenderer3.GetPosition(0)
+                        : crossSectionRenderer3.GetPosition(1);
+                verts[3] =
+                    (crossSectionRenderer4.GetPosition(1) == verts[0] ||
+                     crossSectionRenderer4.GetPosition(1) == verts[1] ||
+                     crossSectionRenderer4.GetPosition(1) == verts[2])
+                        ? crossSectionRenderer4.GetPosition(0)
+                        : crossSectionRenderer4.GetPosition(1);
+                verts[4] = crossSectionRenderer5.GetPosition(1) == verts[0] ||
+                           crossSectionRenderer5.GetPosition(1) == verts[1] ||
+                           crossSectionRenderer5.GetPosition(1) == verts[2] ||
+                           crossSectionRenderer5.GetPosition(1) == verts[3]
+                               ? crossSectionRenderer5.GetPosition(0)
+                               : crossSectionRenderer5.GetPosition(1);
+                verts[5] = crossSectionRenderer6.GetPosition(1) == verts[0] ||
+                           crossSectionRenderer6.GetPosition(1) == verts[1] ||
+                           crossSectionRenderer6.GetPosition(1) == verts[2] ||
+                           crossSectionRenderer6.GetPosition(1) == verts[3] ||
+                           crossSectionRenderer6.GetPosition(1) == verts[4] 
+                             ? crossSectionRenderer6.GetPosition(0)
+                             : crossSectionRenderer6.GetPosition(1);
+
+                cubeMesh.vertices = verts;
                 
             }
 

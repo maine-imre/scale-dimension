@@ -106,4 +106,4 @@ hyperCubeXC[6].cubeVertices = cube7;
 hyperCubeXC[7].cubeVertices = cube8;
 }
 }
-}
+

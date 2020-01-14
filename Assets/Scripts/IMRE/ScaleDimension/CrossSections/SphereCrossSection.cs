@@ -1,106 +1,49 @@
-﻿namespace IMRE.ScaleDimension.CrossSections
-{
-    /// <summary>
-    ///     cross section of a sphere, resulting in either a circle, a point, or nothing
-    /// </summary>
-    public class SphereCrossSection : UnityEngine.MonoBehaviour, ISliderInput
-    {
-        //slider to determine cross section height
-        public float slider
-        {
-            //scale value from 0 to 1 range to -1 to 1 range.
-            set => crossSectSphere(-1 + value * 2);
-        }
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-        // Start is called before the first frame update
+namespace IMRE.ScaleDimension.CrossSections
+{
+    public class SphereCrossSection : AbstractCrossSection
+    {
+        public float radius;
+        public Vector3 center;
+        public int n = 5;
+        private UnityEngine.LineRenderer circleRenderer => GetComponent<UnityEngine.LineRenderer>();
+
         private void Start()
         {
-            #region Render Cross-section
+            #region Render
 
-            gameObject.AddComponent<UnityEngine.MeshRenderer>();
-            gameObject.AddComponent<UnityEngine.MeshFilter>();
-            GetComponent<UnityEngine.MeshRenderer>().material = sphereMaterial;
-            gameObject.GetComponent<UnityEngine.MeshRenderer>().enabled = debugRenderer;
-            RenderMethods.RenderSphere(radius, new Unity.Mathematics.float3(0f, 0f, 0f),
-                sphereRenderer, n);
-
-            UnityEngine.GameObject child = new UnityEngine.GameObject();
-            child.transform.parent = transform;
-            child.transform.localPosition = UnityEngine.Vector3.zero;
-            child.AddComponent<UnityEngine.LineRenderer>();
-            crossSectionRenderer.material = crossSectionMaterial;
-            crossSectionRenderer.useWorldSpace = false;
-
-            crossSectionRenderer.startWidth = SpencerStudyControl.lineRendererWidth;
-            crossSectionRenderer.endWidth = SpencerStudyControl.lineRendererWidth;
-            crossSectionRenderer.loop = true;
-
+            gameObject.AddComponent<UnityEngine.LineRenderer>();
+            circleRenderer.material = mat;
+            circleRenderer.startWidth = .005f;
+            circleRenderer.endWidth = .005f;
+            
             #endregion
         }
 
-        /// <summary>
-        ///     Function to calculate cross section of sphere
-        /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="height"></param>
-        public void crossSectSphere(float height)
+        private void Update()
         {
-            //endpoints for line segment if intersection passes through circle
-
-            //if cross section only hits the edge of the circle
-            if (Unity.Mathematics.math.abs(height) == radius)
+            float r = Mathf.Sqrt(Mathf.Pow(radius,2)-Mathf.Pow(Vector3.Project(center-planePos,planeNormal).magnitude,2));
+            
+            Vector3 norm1 = Vector3.Cross(planeNormal, Vector3.up);
+            if (norm1.magnitude == 0)
             {
-                //if top of sphere, create point at intersection
-                if (height == radius)
-                {
-                    UnityEngine.Vector3 segmentEndPoint0 = UnityEngine.Vector3.up * radius;
-                    crossSectionRenderer.enabled = true;
-                    crossSectionRenderer.positionCount = 2;
-                    crossSectionRenderer.SetPosition(0, segmentEndPoint0);
-                    crossSectionRenderer.SetPosition(1, segmentEndPoint0);
-                }
-
-                //if bottom of circle, create point at intersection
-                else if (height == -radius)
-                {
-                    UnityEngine.Vector3 segmentEndPoint0 = UnityEngine.Vector3.down * radius;
-                    crossSectionRenderer.enabled = true;
-                    crossSectionRenderer.positionCount = 2;
-                    crossSectionRenderer.SetPosition(0, segmentEndPoint0);
-                    crossSectionRenderer.SetPosition(1, segmentEndPoint0);
-                }
+                norm1 = Vector3.Cross(planeNormal, Vector3.right);
             }
-
-            //cross section is a circle
-            else if (Unity.Mathematics.math.abs(height) < radius)
-            {
-                //horizontal distance from center of circle to point on line segment
-
-                renderCircle(
-                    UnityEngine.Mathf.Sqrt(UnityEngine.Mathf.Pow(radius, 2) - UnityEngine.Mathf.Pow(height, 2)),
-                    height * UnityEngine.Vector3.up);
-            }
-
-            //height for cross section is outside of circle 
-            else if (Unity.Mathematics.math.abs(height) > radius)
-            {
-                UnityEngine.Debug.Log("Height is out of range of object.");
-                crossSectionRenderer.enabled = false;
-            }
+            Vector3 norm2 = Vector3.Cross(planeNormal, norm1);
+            norm1.Normalize();
+            norm2.Normalize();
+            
+            renderCircle(norm1,norm2, r);
         }
 
         /// <summary>
-        ///     Function that renders a circle using a centerpoint coordinate and a radius
+        ///     Function to render the outline of a circle
         /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="center"></param>
-        private void renderCircle(float radius, UnityEngine.Vector3 center)
+        public void renderCircle(UnityEngine.Vector3 norm1, UnityEngine.Vector3 norm2, float radius)
         {
-            //worldspace rendering of the circle
-
-            //normal vectors
-            UnityEngine.Vector3 norm1 = UnityEngine.Vector3.forward;
-            UnityEngine.Vector3 norm2 = UnityEngine.Vector3.right;
 
             //array of vector3s for vertices
             UnityEngine.Vector3[] vertices = new UnityEngine.Vector3[n];
@@ -108,33 +51,19 @@
             //math for rendering circle
             for (int i = 0; i < n; i++)
             {
-                vertices[i] = radius * (UnityEngine.Mathf.Sin(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm1 +
-                                        UnityEngine.Mathf.Cos(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm2) +
-                              center;
+                vertices[i] = radius * (UnityEngine.Mathf.Sin(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm1) +
+                              radius * (UnityEngine.Mathf.Cos(i * UnityEngine.Mathf.PI * 2 / (n - 1)) * norm2) + center;
             }
 
+            //Render circle
+            UnityEngine.LineRenderer lineRenderer = GetComponent<UnityEngine.LineRenderer>();
             //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-            crossSectionRenderer.positionCount = n;
-            crossSectionRenderer.SetPositions(vertices);
+            lineRenderer.startColor = UnityEngine.Color.blue;
+            lineRenderer.endColor = UnityEngine.Color.blue;
+            lineRenderer.startWidth = IMRE.ScaleDimension.SpencerStudyControl.lineRendererWidth;
+            lineRenderer.endWidth = IMRE.ScaleDimension.SpencerStudyControl.lineRendererWidth;
+            lineRenderer.positionCount = n;
+            lineRenderer.SetPositions(vertices);
         }
-
-        #region variables/components
-
-        public int n;
-        private UnityEngine.Mesh sphereRenderer => GetComponent<UnityEngine.MeshFilter>().mesh;
-
-        private UnityEngine.LineRenderer crossSectionRenderer =>
-            transform.GetChild(0).GetComponent<UnityEngine.LineRenderer>();
-
-        public UnityEngine.Material sphereMaterial;
-        public UnityEngine.Material crossSectionMaterial;
-
-        public float radius = 1f;
-        public UnityEngine.Vector3 center = UnityEngine.Vector3.zero;
-        public UnityEngine.Vector3 normal = UnityEngine.Vector3.up;
-
-        public bool debugRenderer = SpencerStudyControl.debugRendererXC;
-
-        #endregion
     }
 }

@@ -95,15 +95,3 @@ namespace IMRE.ScaleDimension.CrossSections
         }
     }
 }
-
-/*hyperCubeXC[0].cubeVertices = cube1;
-hyperCubeXC[1].cubeVertices = cube2;
-hyperCubeXC[2].cubeVertices = cube3;
-hyperCubeXC[3].cubeVertices = cube4;
-hyperCubeXC[4].cubeVertices = cube5;
-hyperCubeXC[5].cubeVertices = cube6;
-hyperCubeXC[6].cubeVertices = cube7;
-hyperCubeXC[7].cubeVertices = cube8;
-}
-}
-
